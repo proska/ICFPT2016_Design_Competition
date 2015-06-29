@@ -1,0 +1,77 @@
+[0m[[0minfo[0m] [0mRunning testCodes.HelloWorld [0m
+[0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
+[0m[[0mdebug[0m] [0m  Classpath:[0m
+[0m[[0mdebug[0m] [0m	/home/proska/Desktop/UTTrax/target/scala-2.10/classes[0m
+[0m[[0mdebug[0m] [0m	/home/proska/.sbt/boot/scala-2.10.4/lib/scala-library.jar[0m
+[0m[[0mdebug[0m] [0m	/home/proska/.ivy2/cache/org.scala-lang/scala-swing/jars/scala-swing-2.9.0-1.jar[0m
+[0m[[0mdebug[0m] [0mWaiting for thread run-main-0 to terminate.[0m
+[0m[[0mdebug[0m] [0m	Thread run-main-0 exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread AWT-Shutdown to terminate.[0m
+[0m[[31merror[0m] [0m(AWT-EventQueue-0) java.lang.NoClassDefFoundError: scala/collection/GenTraversableLike$class[0m
+java.lang.NoClassDefFoundError: scala/collection/GenTraversableLike$class
+	at scala.swing.RefSet.<init>(Publisher.scala:167)
+	at scala.swing.Publisher$$anon$1.<init>(Publisher.scala:34)
+	at scala.swing.Publisher$class.$init$(Publisher.scala:34)
+	at scala.swing.Window.<init>(Window.scala:25)
+	at scala.swing.Frame.<init>(RichWindow.scala:77)
+	at scala.swing.MainFrame.<init>(MainFrame.scala:19)
+	at testCodes.HelloWorld$$anon$1.<init>(swingTest.scala:30)
+	at testCodes.HelloWorld$.top(swingTest.scala:30)
+	at testCodes.HelloWorld$.top(swingTest.scala:29)
+	at scala.swing.SimpleSwingApplication.startup(SimpleSwingApplication.scala:7)
+	at scala.swing.SwingApplication$$anonfun$main$1.apply$mcV$sp(SwingApplication.scala:4)
+	at scala.swing.Swing$$anon$10.run(Swing.scala:31)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:312)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:738)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:699)
+	at java.awt.EventQueue$3.run(EventQueue.java:697)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:708)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+Caused by: java.lang.ClassNotFoundException: scala.collection.GenTraversableLike$class
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at scala.swing.RefSet.<init>(Publisher.scala:167)
+	at scala.swing.Publisher$$anon$1.<init>(Publisher.scala:34)
+	at scala.swing.Publisher$class.$init$(Publisher.scala:34)
+	at scala.swing.Window.<init>(Window.scala:25)
+	at scala.swing.Frame.<init>(RichWindow.scala:77)
+	at scala.swing.MainFrame.<init>(MainFrame.scala:19)
+	at testCodes.HelloWorld$$anon$1.<init>(swingTest.scala:30)
+	at testCodes.HelloWorld$.top(swingTest.scala:30)
+	at testCodes.HelloWorld$.top(swingTest.scala:29)
+	at scala.swing.SimpleSwingApplication.startup(SimpleSwingApplication.scala:7)
+	at scala.swing.SwingApplication$$anonfun$main$1.apply$mcV$sp(SwingApplication.scala:4)
+	at scala.swing.Swing$$anon$10.run(Swing.scala:31)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:312)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:738)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:699)
+	at java.awt.EventQueue$3.run(EventQueue.java:697)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:708)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+[0m[[0mdebug[0m] [0m	Thread AWT-Shutdown exited.[0m
+[0m[[0mdebug[0m] [0mInterrupting remaining threads (should be all daemons).[0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[XToolkt-Shutdown-Thread,5,system][0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[Java2D Disposer,10,system][0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[AWT-XAWT,6,system][0m
+[0m[[0mdebug[0m] [0mSandboxed run complete..[0m
+[0m[[0mdebug[0m] [0mExited with code 0[0m
