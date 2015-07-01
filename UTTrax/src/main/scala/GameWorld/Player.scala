@@ -6,13 +6,13 @@ package GameWorld
  * Created by proska on 6/29/15.
  */
 trait Player {
-  def play(state:gameState): Move
+
+  var state = new gameState
+
+  def play(): Move
+  def updateState(move:Move):Unit
+
+
+
 }
 
-
-class testPayer extends Player{
-  def play(state:gameState): Move = {
-
-    new Move(traxTiles.BBWW , 0 , 0)
-  }
-}

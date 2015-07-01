@@ -3,21 +3,36 @@ package GameWorld
 import java.util.concurrent.TimeUnit
 
 import GUI.traxGUI
+import GameWorld.Route.Margin._
 
 import scala.collection.mutable
 
 /**
  * Created by proska on 6/29/15.
  */
+
+object traxColor extends Enumeration {
+  type traxColor = Value
+  val WHITE,BLACK = Value
+}
+
+object Margin extends Enumeration {
+  type Margin = Value
+  val TOP, BOTTOM, LEFT, RIGHT = Value
+}
+
+class Coordinate(_x:Int = 0 , _y :Int = 0){
+  var X:Int = _x
+  var Y:Int = _y
+  def == (that:Coordinate): Boolean ={
+    X == that.X & Y == that.Y
+  }
+}
+
 class Route{
 
-  object Margin extends Enumeration {
-    type Margin = Value
-    val TOP, BOTTOM, LEFT, RIGHT = Value
-  }
-
-  var start = (0,0,Margin.TOP)
-  var end = (0,0,Margin.TOP)
+  var start = (new Coordinate,Margin.TOP)
+  var end = (new Coordinate,Margin.TOP)
 
   var length = 0
 }
@@ -27,10 +42,9 @@ class gameState{
   var blackRoutes = new mutable.LinkedList[Route]
 }
 
-class Move(_tile:traxTiles , posX:Int , posY:Int){
+class Move(_tile:traxTiles , _pos:Coordinate){
   val TileType  = _tile
-  val X         = posX
-  val Y         = posY
+  val pos       = _pos
 }
 
 object traxWorld {
@@ -43,6 +57,10 @@ object traxWorld {
   def startGame: Unit ={
     startGUI()
 
+    testGUI
+  }
+
+  private def testGUI: Unit = {
     var i: Int = 0
     while (i <= 5) {
       {
@@ -57,22 +75,10 @@ object traxWorld {
         System.out.println(">> 1 sec passed!")
       }
       ({
-        i += 1; i - 1
+        i += 1;
+        i - 1
       })
     }
-//    for (i <- 0 until 3) {
-//      {
-//        traxGUI.addTile(i * 2, 0, traxTiles.BBWW)
-//        try {
-//          TimeUnit.SECONDS.sleep(0.1.toLong)
-//        }
-//        catch {
-//          case e: InterruptedException => {
-//          }
-//        }
-//        System.out.println(">> 1 sec passed!")
-//      }
-//    }
   }
 
   private def startGUI(): Unit ={
@@ -86,7 +92,6 @@ object traxWorld {
       }
     )
   }
-
 
   private def addTile(x: Int, y: Int, tile: traxTiles): Unit ={
 

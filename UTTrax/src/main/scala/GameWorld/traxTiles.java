@@ -40,14 +40,14 @@ public enum traxTiles {
     //      b       //  |        |         |
     //      b       //  |        |         |
     //--------------------------------------
-    BWBW(5);    //  | 0 1 0 1|  0 1 1 0|
+    BWBW(5),    //  | 0 1 0 1|  0 1 1 0|
     //      b       //  |        |         |
     //      b       //  |        |         |
     //w w w   b b b //  |        |         |
     //      w       //  |        |         |
     //      w       //  |        |         |
     //--------------------------------------
-
+    INVALID(0);
 
     private int numVal;
     traxTiles(int val){
@@ -70,5 +70,16 @@ public enum traxTiles {
 //    Map(traxType -> 12 , BBWW -> 3 , WBBW -> 9 , BWWB -> 6 , WBWB -> 10 , BWBW -> 5)
 //  }
 
+    public traxTiles flip(){
+        if (this == WWBB) return BBWW;
+        if (this == BBWW) return WWBB;
 
+        if (this == WBWB) return BWBW;
+        if (this == BWBW) return WBWB;
+
+        if (this == WBBW) return BWWB;
+        if (this == BWWB) return WBBW;
+
+        return INVALID;
+    }
 }
