@@ -1,4 +1,4 @@
-package GameWorld;
+package Game.World;
 
 /**
  * Created by proska on 6/10/15.

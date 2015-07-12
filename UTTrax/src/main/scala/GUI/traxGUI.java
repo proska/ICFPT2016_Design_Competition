@@ -1,6 +1,6 @@
 package GUI;
 
-import GameWorld.traxTiles;
+import Game.World.traxTiles;
 
 import java.awt.*;
 
@@ -13,7 +13,6 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 public class traxGUI {
@@ -67,15 +66,18 @@ public class traxGUI {
             shiftAllRigth();
             System.out.println("shiftAllRigth");
         }
-        if(y < -(int)(yZero/TILESIZE)){
-            shiftAllDown();
-            System.out.println("shiftAllDown");
+        if(y < -(int)((FrameHeight - yZero)/TILESIZE)){
+            extendHeight();
+            System.out.println("Height Extended");
+
         }
-        if(x >= (int)(xZero/TILESIZE)){
+        if(x >= (int)((FrameWidth - xZero)/TILESIZE)){
             extendWidth();
+            System.out.println("Width Extended");
         }
         if(y >= (int)(yZero/TILESIZE)){
-            extendHeight();
+            shiftAllDown();
+            System.out.println("shiftAllDown");
         }
         panel.removeAll();
         reDrawPane();
@@ -91,7 +93,7 @@ public class traxGUI {
         //Size and display the window.
         Insets insets = frame.getInsets();
         frame.setSize(  FrameWidth + insets.left + insets.right,
-                        FrameHeight + insets.top + insets.bottom);
+                FrameHeight + insets.top + insets.bottom);
 
         xZero = FrameWidth /2;
         yZero = FrameHeight /2;
@@ -122,8 +124,8 @@ public class traxGUI {
             TileType tmp = (TileType)tilesOnMap.get(i);
 
             tmp.label.setBounds(    xZero + tmp.X * TILESIZE - TILESIZE/2,
-                                    yZero - tmp.Y * TILESIZE - TILESIZE/2,
-                                    TILESIZE, TILESIZE);
+                    yZero - tmp.Y * TILESIZE - TILESIZE/2,
+                    TILESIZE, TILESIZE);
 
 //            System.out.println("("+tmp.label.getAlignmentX()+","+tmp.label.getAlignmentY()+")");
             panel.add(tmp.label);
@@ -131,6 +133,9 @@ public class traxGUI {
         panel.setPreferredSize(new Dimension(FrameWidth, FrameHeight));
         panel.setBackground(Color.green);
 
+
+        assert(frame.getHeight() == FrameHeight);
+        assert(frame.getWidth() == FrameWidth);
 //        System.out.println(tilesOnMap.size());
     }
 
@@ -148,35 +153,30 @@ public class traxGUI {
     }
 
     private static void shiftAllRigth(){
-        for(int i =0 ; i < tilesOnMap.size()  ;i++ ) {
-            TileType tmp = (TileType) tilesOnMap.get(i);
-            tmp.X += 3;
-        }
-        xZero += 3*TILESIZE;
+        xZero += 5*TILESIZE;
         System.out.println("New xZero="+xZero);
     }
     private static void shiftAllDown(){
-        for(int i =0 ; i < tilesOnMap.size()  ;i++ ) {
-            TileType tmp = (TileType) tilesOnMap.get(i);
-            tmp.Y += 3;
-        }
-        yZero += 3*TILESIZE;
+        yZero += 5*TILESIZE;
         System.out.println("New yZero="+yZero);
     }
     private static void extendWidth(){
         FrameWidth  += 5*TILESIZE;
         updateFrameSize();
+//        xZero += 5*TILESIZE;
     }
     private static void extendHeight(){
-
         FrameHeight += 5*TILESIZE;
         updateFrameSize();
-
     }
     private static void updateFrameSize(){
         Insets insets = frame.getInsets();
         frame.setSize(  FrameWidth + insets.left + insets.right,
-                        FrameHeight + insets.top + insets.bottom);
+                FrameHeight + insets.top + insets.bottom);
+
+        assert(frame.getHeight() == FrameHeight);
+        assert(frame.getWidth() == FrameWidth);
+
     }
 
 
@@ -192,14 +192,12 @@ public class traxGUI {
         });
 
 
-//        addTile(0,2, 12);
-//        addTile(0,0, 10);
+//        addTile(0,-10, traxTiles.BBWW);
+//        addTile(14,0, traxTiles.BBWW);
+//        addTile(0,0, traxTiles.BBWW);
 
-        for(int i = 0 ; i <= 2 ; i++){
-            addTile(i*2,0, traxTiles.BBWW);
-            try{
-                TimeUnit.SECONDS.sleep((long)0.1);
-            } catch (InterruptedException e){}
+        for(int i = 0 ; i <= 14 ; i++){
+            addTile(0,-i, traxTiles.BBWW);
             System.out.println(">> 1 sec passed!");
         }
 

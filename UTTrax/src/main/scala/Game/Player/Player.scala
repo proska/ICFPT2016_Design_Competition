@@ -1,4 +1,6 @@
-package GameWorld
+package Game.Player
+
+import Game.World._
 
 //import TraxWorld._
 
