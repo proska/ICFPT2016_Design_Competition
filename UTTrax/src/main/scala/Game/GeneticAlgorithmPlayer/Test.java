@@ -28,6 +28,7 @@ public class Test {
             loserPop.popMaps[i].getFitness(myColor);
         }
 
+
         for (int i = 0; i < 1000 ; i++) {
             Map newMap = new Map(new ArrayList <Tile> (nm.map));
             newMap.fillRandom();
