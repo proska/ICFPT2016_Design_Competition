@@ -12,9 +12,7 @@ trait Player {
   var state = new gameState
 
   def play(): Move
-  def updateState(move:Move):Unit
 
-
-
+  def update(move: Move):Any
 }
 

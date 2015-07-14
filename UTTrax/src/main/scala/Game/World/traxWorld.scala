@@ -1,7 +1,7 @@
 package Game.World
 
 import GUI.traxGUI
-import Game.Player.{moveFinder, Player}
+import Game.Player.{testPayer, moveFinder, Player}
 import Game.World.traxColor.traxColor
 
 import scala.util.control.Breaks._
@@ -16,27 +16,15 @@ object traxWorld extends moveFinder {
 
   var state = new gameState
 
-  var whitePlayer:Player = null
-  var blackPlayer:Player = null
+  var whitePlayer:Player = new testPayer(traxColor.WHITE)
+  var blackPlayer:Player = new testPayer(traxColor.BLACK)
 
   def startGame: Unit ={
     startGUI()
 
-    testGUI
+//    testGUI
 
-//    breakable{
-//      while( isEndofGame() == 0 ){
-//
-//        getPlayerMove(traxColor.WHITE) match {
-//          case Failure(_) => break()
-//        }
-//
-//        getPlayerMove(traxColor.BLACK) match {
-//          case Failure(_) => break()
-//        }
-//
-//      }
-//    }
+    doGame
 
 
     println("GAME ENDED!")
@@ -46,6 +34,22 @@ object traxWorld extends moveFinder {
   ////////////////////////////////////
   ////////////////////////////////////
   ////////////////////////////////////
+
+  def doGame: Unit = {
+    breakable {
+      while (isEndofGame() == 0) {
+
+        getPlayerMove(traxColor.WHITE) match {
+          case Failure(_) => break()
+        }
+
+        getPlayerMove(traxColor.BLACK) match {
+          case Failure(_) => break()
+        }
+
+      }
+    }
+  }
 
   private def testGUI: Unit = {
     var i: Int = 0
@@ -98,9 +102,9 @@ object traxWorld extends moveFinder {
     if(assignMove(move,side)){
 
       if(side == traxColor.WHITE){
-        blackPlayer.updateState(move)
+        blackPlayer.update(move)
       } else {
-        whitePlayer.updateState(move)
+        whitePlayer.update(move)
       }
 
       Success(0)
