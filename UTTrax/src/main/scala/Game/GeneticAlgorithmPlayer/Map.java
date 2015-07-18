@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by mohammad on 7/9/15.
@@ -22,6 +21,7 @@ public class Map {
     Path finishedPath = new Path ();
     static int fixedTileNumber = 0;
     int fitness = 0;
+    int antiFitness = 0;
 
     public Map (){
         this.map = new ArrayList<Tile>();
@@ -30,7 +30,7 @@ public class Map {
     public Map (ArrayList map) {
         this.map = new ArrayList<Tile>(map);
         creatPaths();
-        findTileCandidates();
+        findPointCandidates(this.nextMoveCadidates);
     }
 
     public void addTile (Tile newTile) {
@@ -52,19 +52,19 @@ public class Map {
         //Auto fill of right tile
         np.set(p);
         np.x++;
-        if(findTile(np) == -1) {
+        if(findTile(np, map) == -1) {
             Tile.Direction newDir = Tile.Direction.UP;
             int numOfDirections = 0;
-            int ti = findTile(new Point(np.getX()+1, np.getY()));
+            int ti = findTile(new Point(np.getX()+1, np.getY()), map);
             int tin = 0;
             if (ti != -1 && map.get(ti).dirColor[Tile.left] == tile.dirColor[Tile.right]) {
                 newDir = Tile.Direction.RIGHT; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX(), np.getY()+1));
+            ti = findTile(new Point(np.getX(), np.getY()+1), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.up] == tile.dirColor[Tile.right]) {
                 newDir = Tile.Direction.DOWN; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX(), np.getY()-1));
+            ti = findTile(new Point(np.getX(), np.getY()-1), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.down] == tile.dirColor[Tile.right]) {
                 newDir = Tile.Direction.UP; numOfDirections++; tin = ti;
             }
@@ -87,19 +87,19 @@ public class Map {
         //Auto fill of left tile
         np.set(p);
         np.x--;
-        if(findTile(np) == -1) {
+        if(findTile(np, map) == -1) {
             Tile.Direction newDir = Tile.Direction.UP;
             int numOfDirections = 0;
-            int ti = findTile(new Point(np.getX()-1, np.getY()));
+            int ti = findTile(new Point(np.getX()-1, np.getY()), map);
             int tin = 0;
             if (ti != -1 && map.get(ti).dirColor[Tile.right] == tile.dirColor[Tile.left]) {
                 newDir = Tile.Direction.LEFT; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX(), np.getY()+1));
+            ti = findTile(new Point(np.getX(), np.getY()+1), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.up] == tile.dirColor[Tile.left]) {
                 newDir = Tile.Direction.DOWN; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX(), np.getY()-1));
+            ti = findTile(new Point(np.getX(), np.getY()-1), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.down] == tile.dirColor[Tile.left]) {
                 newDir = Tile.Direction.UP; numOfDirections++; tin = ti;
             }
@@ -122,19 +122,19 @@ public class Map {
         //Auto fill of down tile
         np.set(p);
         np.y++;
-        if(findTile(np) == -1) {
+        if(findTile(np, map) == -1) {
             Tile.Direction newDir = Tile.Direction.UP;
             int numOfDirections = 0;
-            int ti = findTile(new Point(np.getX()+1, np.getY()));
+            int ti = findTile(new Point(np.getX()+1, np.getY()), map);
             int tin = 0;
             if (ti != -1 && map.get(ti).dirColor[Tile.left] == tile.dirColor[Tile.down]) {
                 newDir = Tile.Direction.RIGHT; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX(), np.getY()+1));
+            ti = findTile(new Point(np.getX(), np.getY()+1), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.up] == tile.dirColor[Tile.down]) {
                 newDir = Tile.Direction.DOWN; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX()-1, np.getY()));
+            ti = findTile(new Point(np.getX()-1, np.getY()), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.right] == tile.dirColor[Tile.down]) {
                 newDir = Tile.Direction.LEFT; numOfDirections++; tin = ti;
             }
@@ -157,19 +157,19 @@ public class Map {
         //Auto fill of up tile
         np.set(p);
         np.y--;
-        if(findTile(np) == -1) {
+        if(findTile(np, map) == -1) {
             Tile.Direction newDir = Tile.Direction.UP;
             int numOfDirections = 0;
-            int ti = findTile(new Point(np.getX()+1, np.getY()));
+            int ti = findTile(new Point(np.getX()+1, np.getY()), map);
             int tin = 0;
             if (ti != -1 && map.get(ti).dirColor[Tile.left] == tile.dirColor[Tile.up]) {
                 newDir = Tile.Direction.RIGHT; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX(), np.getY()-1));
+            ti = findTile(new Point(np.getX(), np.getY()-1), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.down] == tile.dirColor[Tile.up]) {
                 newDir = Tile.Direction.UP; numOfDirections++; tin = ti;
             }
-            ti = findTile(new Point(np.getX()-1, np.getY()));
+            ti = findTile(new Point(np.getX()-1, np.getY()), map);
             if (ti != -1 && map.get(ti).dirColor[Tile.right] == tile.dirColor[Tile.up]) {
                 newDir = Tile.Direction.LEFT; numOfDirections++; tin = ti;
             }
@@ -204,35 +204,35 @@ public class Map {
                 Point p = new Point (map.get(tileIndex).coordinate);
                 Point np = new Point(p);
                 np.x++;
-                if (findTile(np) == -1 && !tileCadidate.contains(np)) {
+                if (findTile(np, map) == -1 && !np.existIn(tileCadidate)) {
                     tileCadidate.add(new Point(np));
                 }
                 np.set(p);
                 np.x--;
-                if (findTile(np) == -1 && !tileCadidate.contains(np)) {
+                if (findTile(np, map) == -1 && !np.existIn(tileCadidate)) {
                     tileCadidate.add(new Point(np));
                 }
                 np.set(p);
                 np.y++;
-                if (findTile(np) == -1 && !tileCadidate.contains(np)) {
+                if (findTile(np, map) == -1 && !np.existIn(tileCadidate)) {
                     tileCadidate.add(new Point(np));
                 }
                 np.set(p);
                 np.y--;
-                if (findTile(np) == -1 && !tileCadidate.contains(np)) {
+                if (findTile(np, map) == -1 && !np.existIn(tileCadidate)) {
                     tileCadidate.add(new Point(np));
                 }
             }
             Point newTilePoint = new Point(tileCadidate.get((int) (Math.random() * tileCadidate.size())));
-            Tile.Direction[] newDir = new Tile.Direction[4];
-            boolean[] newColor = new boolean[4];
+            Tile.Direction[] newDir = new Tile.Direction[2];
+            boolean[] newColor = new boolean[2];
             int numOfDirections = 0;
             int ti;
 
             Point np;
             np = new Point(newTilePoint);
             np.x++;
-            ti = findTile(np);
+            ti = findTile(np, map);
             if (ti != -1) {
                 newDir[numOfDirections] = Tile.Direction.RIGHT;
                 newColor[numOfDirections] = map.get(ti).dirColor[Tile.left];
@@ -240,7 +240,7 @@ public class Map {
             }
             np.set(newTilePoint);
             np.x--;
-            ti = findTile(np);
+            ti = findTile(np, map);
             if (ti != -1) {
                 newDir[numOfDirections] = Tile.Direction.LEFT;
                 newColor[numOfDirections] = map.get(ti).dirColor[Tile.right];
@@ -248,7 +248,7 @@ public class Map {
             }
             np.set(newTilePoint);;
             np.y++;
-            ti = findTile(np);
+            ti = findTile(np, map);
             if (ti != -1) {
                 newDir[numOfDirections] = Tile.Direction.DOWN;
                 newColor[numOfDirections] = map.get(ti).dirColor[Tile.up];
@@ -256,7 +256,7 @@ public class Map {
             }
             np.set(newTilePoint);
             np.y--;
-            ti = findTile(np);
+            ti = findTile(np, map);
             if (ti != -1) {
                 newDir[numOfDirections] = Tile.Direction.UP;
                 newColor[numOfDirections] = map.get(ti).dirColor[Tile.down];
@@ -276,27 +276,28 @@ public class Map {
 
     }
 
-    public void findTileCandidates () {
+    public void findPointCandidates(ArrayList<Point> nextMoveCadidates) {
+        nextMoveCadidates.clear();
         for (int tileIndex = 0; tileIndex < map.size(); tileIndex++) {
             Point p = new Point (map.get(tileIndex).coordinate);
             Point np = new Point(p);
             np.x++;
-            if (findTile(np) == -1 && !nextMoveCadidates.contains(np)) {
+            if (findTile(np, map) == -1 && !np.existIn(nextMoveCadidates)) {
                 nextMoveCadidates.add(new Point(np));
             }
             np.set(p);
             np.x--;
-            if (findTile(np) == -1 && !nextMoveCadidates.contains(np)) {
+            if (findTile(np, map) == -1 && !np.existIn(nextMoveCadidates)) {
                 nextMoveCadidates.add(new Point(np));
             }
             np.set(p);
             np.y++;
-            if (findTile(np) == -1 && !nextMoveCadidates.contains(np)) {
+            if (findTile(np, map) == -1 && !np.existIn(nextMoveCadidates)) {
                 nextMoveCadidates.add(new Point(np));
             }
             np.set(p);
             np.y--;
-            if (findTile(np) == -1 && !nextMoveCadidates.contains(np)) {
+            if (findTile(np, map) == -1 && !np.existIn(nextMoveCadidates)) {
                 nextMoveCadidates.add(new Point(np));
             }
         }
@@ -419,7 +420,7 @@ public class Map {
         } else {
             p.x--;
         }
-        newTileIndex = findTile(p);
+        newTileIndex = findTile(p, map);
         while (newTileIndex != -1) {
             if (endOfPath) {
                 path.addToEnd(map.get (newTileIndex));
@@ -437,7 +438,7 @@ public class Map {
             } else {
                 p.x--;
             }
-            newTileIndex = findTile(p);
+            newTileIndex = findTile(p, map);
             if (newTileIndex == tileIndex) {
                 path.closedPath = true;
                 return true;
@@ -446,9 +447,9 @@ public class Map {
         return false;
     }
 
-    public int findTile (Point c ) {
-        for (int i=0 ; i<map.size() ; i++) {
-            if (c.x == (map.get(i).coordinate).x && c.y == (map.get(i).coordinate).y  ) {
+    public int findTile (Point c ,ArrayList<Tile>  searchingArray) {
+        for (int i=0 ; i<searchingArray.size() ; i++) {
+            if (c.x == (searchingArray.get(i).coordinate).x && c.y == (searchingArray.get(i).coordinate).y  ) {
                 return i;
             }
         }
@@ -456,73 +457,182 @@ public class Map {
     }
 
     public int getFitness (boolean playerColor) {
-        int cost = 0;
-        boolean flag = false;
-
-        for (int i=0 ; i<finishedPath.pathSize() ; i++){
-            Point p = new Point(finishedPath.path.get(i).coordinate);
-            int index = findTile(p);
-            if (index >= fixedTileNumber && !finishedPath.path.get(i).fixedAutoTile ) {
-                cost++;
-            }
-            for (int j = 0; j < nextMoveCadidates.size(); j++) {
-                if (p.x == nextMoveCadidates.get(j).getX() && p.y == nextMoveCadidates.get(j).getY()) {
-                    flag = true;
-                }
-            }
+        int mapSize = map.size();
+        for (int i = fixedTileNumber; i < mapSize; i++) {
+            map.remove(fixedTileNumber);
         }
-
-        if (!flag){
-            cost = cost + 10;
-        }
+        int cost = getNumOfMovesToWin();
 
         if (this.winner == playerColor) {
             if (cost == 1) {
-                fitness = 10000;
+                fitness = 40000;
+                antiFitness = -500;
             } else if (cost == 2) {
-                fitness = 100;
+                fitness = 400;
+                antiFitness = -190;
             } else if (cost == 3) {
-                fitness = 30;
+                fitness = 150;
+                antiFitness = -100;
             } else if (cost == 4) {
-                fitness = 18;
+                fitness = 80;
+                antiFitness = -65;
             } else if (cost == 5) {
-                fitness = 14;
+                fitness = 60;
+                antiFitness = -52;
             } else if (cost == 6) {
-                fitness = 12;
+                fitness = 52;
+                antiFitness = -50;
             } else if (cost == 0) {
-                System.out.println("Error Cost = 0");
-                fitness = 10;
+                fitness = 30;
+                antiFitness = -30;
             } else {
-                fitness = 10;
+                fitness = 50;
+                antiFitness = -40;
             }
         } else {
             if (cost == 1) {
-                fitness = -20000;
+                fitness = -100000;
+                antiFitness = 9100;
             } else if (cost == 2) {
-                fitness = -5000;
+                fitness = -9000;
+                antiFitness = 300;
             } else if (cost == 3) {
-                fitness = -60;
+                fitness = -250;
+                antiFitness = 130;
             } else if (cost == 4) {
-                fitness = -24;
+                fitness = -100;
+                antiFitness = 80;
             } else if (cost == 5) {
-                fitness = -15;
+                fitness = -70;
+                antiFitness = 55;
             } else if (cost == 6) {
-                fitness = -12;
+                fitness = -55;
+                antiFitness = 50;
             } else if (cost == 0) {
-                System.out.println("Error Cost = 0");
-                fitness = -10;
+            fitness = -30;
+            antiFitness = 30;
             } else {
-                fitness = -10;
+                fitness = -50;
+                antiFitness = 40;
             }
         }
         return fitness;
     }
 
+    public int getNumOfMovesToWin () {
+        ArrayList<Point> nextMove = new ArrayList<Point>();
+        ArrayList<Tile> movesInPath = new ArrayList<Tile>();
+        int ti = 0;
+        int cost = 0;
+        while (true) {
+            nextMove.clear();
+            movesInPath.clear();
+            findPointCandidates(nextMove);
+            for (int i = 0; i < nextMove.size(); i++) {
+                if ((ti = findTile(nextMove.get(i), finishedPath.path)) != -1) {
+                    movesInPath.add(finishedPath.path.get(ti));
+                }
+            }
+            if (movesInPath.size() == 0) {
+                return cost;
+            }
+            Tile newTile = movesInPath.get((int) (Math.random() * movesInPath.size()));
+            newTile.autoTile = false;
+            map.add(newTile);
+            autoFill();
+            cost++;
+        }
 
-    public void writeToFile () {
+    }
+
+    public boolean equalPath (Map newMap) {
+        if (this.finishedPath.pathSize() != newMap.finishedPath.pathSize()) {
+            return false;
+        }
+        else {
+            for (int i = 0; i < newMap.finishedPath.pathSize(); i++) {
+                if (findTile(newMap.finishedPath.path.get(i).coordinate, this.finishedPath.path) == -1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void findTileCandidates (ArrayList <Point> pointCandidates, ArrayList <Tile> tileCandidates) {
+
+        for (int i=0; i<pointCandidates.size(); i++) {
+            Tile.Direction[] newDir = new Tile.Direction[2];
+            boolean[] newColor = new boolean[2];
+            int numOfDirections = 0;
+            int ti;
+
+            Point np;
+            np = new Point(pointCandidates.get(i));
+            np.x++;
+            ti = findTile(np, map);
+            if (ti != -1) {
+                newDir[numOfDirections] = Tile.Direction.RIGHT;
+                newColor[numOfDirections] = map.get(ti).dirColor[Tile.left];
+                numOfDirections++;
+            }
+            np.set(pointCandidates.get(i));
+            np.x--;
+            ti = findTile(np, map);
+            if (ti != -1) {
+                newDir[numOfDirections] = Tile.Direction.LEFT;
+                newColor[numOfDirections] = map.get(ti).dirColor[Tile.right];
+                numOfDirections++;
+            }
+            np.set(pointCandidates.get(i));
+            ;
+            np.y++;
+            ti = findTile(np, map);
+            if (ti != -1) {
+                newDir[numOfDirections] = Tile.Direction.DOWN;
+                newColor[numOfDirections] = map.get(ti).dirColor[Tile.up];
+                numOfDirections++;
+            }
+            np.set(pointCandidates.get(i));
+            np.y--;
+            ti = findTile(np, map);
+            if (ti != -1) {
+                newDir[numOfDirections] = Tile.Direction.UP;
+                newColor[numOfDirections] = map.get(ti).dirColor[Tile.down];
+                numOfDirections++;
+            }
+
+            if (numOfDirections == 1) {
+                Tile newTile1 = new Tile(new Point(pointCandidates.get(i)));
+                newTile1.setTile('+', newDir[0], newColor[0]);
+                tileCandidates.add(newTile1);
+                Tile newTile2 = new Tile(new Point(pointCandidates.get(i)));
+                newTile2.setTile('/', newDir[0], newColor[0]);
+                tileCandidates.add(newTile2);
+                Tile newTile3 = new Tile(new Point(pointCandidates.get(i)));
+                newTile3.setTile('\\', newDir[0], newColor[0]);
+                tileCandidates.add(newTile3);
+            } else {
+                Tile newTile1 = new Tile(new Point(pointCandidates.get(i)));
+                if (newTile1.setTile('+', newDir[0], newColor[0], newDir[1], newColor[1])) {
+                    tileCandidates.add(newTile1);
+                }
+                Tile newTile2 = new Tile(new Point(pointCandidates.get(i)));
+                if (newTile2.setTile('/', newDir[0], newColor[0], newDir[1], newColor[1])) {
+                    tileCandidates.add(newTile2);
+                }
+                Tile newTile3 = new Tile(new Point(pointCandidates.get(i)));
+                if (newTile3.setTile('\\', newDir[0], newColor[0], newDir[1], newColor[1])) {
+                    tileCandidates.add(newTile3);
+                }
+            }
+        }
+
+    }
+
+    public void writeToFile (String fileName) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("Maps/map" + numOfFiles + ".trx"));
-            numOfFiles++;
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             writer.write ("Trax\n");
             int minX = 0;
             int minY = 0;
@@ -550,10 +660,10 @@ public class Map {
         }
     }
 
-    public void readFromFile () {
+    public void readFromFile (String fileName) {
         map.clear();
         try {
-            BufferedReader br = new BufferedReader(new FileReader("test.trx"));
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
             int minX = 0;
             int minY = 0;
             String line = br.readLine();
@@ -600,16 +710,16 @@ public class Map {
             Tile.Direction dir = Tile.Direction.UP;
             boolean color = Tile.red;
             int ti;
-            if ((ti = findTile(new Point(p.getX()+1,p.getY()))) != -1) {
+            if ((ti = findTile(new Point(p.getX()+1,p.getY()), map)) != -1) {
                 dir = Tile.Direction.RIGHT;
                 color = map.get(ti).dirColor[Tile.left];
-            } else if ((ti = findTile(new Point(p.getX()-1,p.getY()))) != -1) {
+            } else if ((ti = findTile(new Point(p.getX()-1,p.getY()), map)) != -1) {
                 dir = Tile.Direction.LEFT;
                 color = map.get(ti).dirColor[Tile.right];
-            } else if ((ti = findTile(new Point(p.getX(),p.getY()+1))) != -1) {
+            } else if ((ti = findTile(new Point(p.getX(),p.getY()+1), map)) != -1) {
                 dir = Tile.Direction.DOWN;
                 color = map.get(ti).dirColor[Tile.up];
-            } else if ((ti = findTile(new Point(p.getX(),p.getY()-1))) != -1) {
+            } else if ((ti = findTile(new Point(p.getX(),p.getY()-1), map)) != -1) {
                 dir = Tile.Direction.UP;
                 color = map.get(ti).dirColor[Tile.down];
             } else {
@@ -620,7 +730,6 @@ public class Map {
         }
         map.add(newTile);
     }
-
 
 }
 

@@ -31,7 +31,7 @@ public class Population {
 
     public void writePopMapsToFiles () {
         for (int i=0 ; i<popSize ; i++) {
-            popMaps[i].writeToFile();
+            popMaps[i].writeToFile("Maps/" + "Map" + i + ".trx");
         }
     }
 

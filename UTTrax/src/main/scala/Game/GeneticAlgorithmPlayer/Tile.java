@@ -16,6 +16,7 @@ public class Tile {
     static final boolean white = false;
     boolean autoTile = false;
     boolean fixedAutoTile = false;
+    int score = 0;
 
     public Tile (Point coordinate ) {
         this.coordinate = coordinate;
