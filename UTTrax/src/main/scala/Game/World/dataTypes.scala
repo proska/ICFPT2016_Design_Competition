@@ -1,10 +1,12 @@
 package Game.World
 
 //import Game.Margin.Margin
-import Game.Player.moveFinder
+import Game.TestPlayer.moveFinder
 import Game.World.Margin.Margin
+import Game.World.traxColor.traxColor
 
 import scala.collection.mutable
+import scala.util.{Success, Try}
 
 /**
  * Created by proska on 7/12/15.
@@ -103,7 +105,7 @@ class Route extends moveFinder{
 
   }
 
-  private def getNewTerminal(move: Move , margin: Margin):(Coordinate,Margin) = {
+  def getNewTerminal(move: Move , margin: Margin):(Coordinate,Margin) = {
     assert((move.TileType.getVal & (1<< Margin.getVal(margin))) != 0 , "The requested move cannot continue the terminal!")
 
     val otherMargin = move.TileType.getVal - (1<< Margin.getVal(margin))
@@ -134,9 +136,35 @@ class Route extends moveFinder{
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-class gameState{
-  var whiteRoutes = new mutable.LinkedList[Route]
-  var blackRoutes = new mutable.LinkedList[Route]
+class gameState extends moveFinder{
+  var whiteRoutes : List[Route] = _
+  var blackRoutes : List[Route] = _
+
+  def updateState(move: Move,side:traxColor):Try[_]= {
+
+    val myRoute = if(side == traxColor.WHITE) giveCompatibleRoutesWithMove(whiteRoutes,move)
+                  else                        giveCompatibleRoutesWithMove(blackRoutes,move)
+
+    assert(myRoute.length == 1,"Incorrect move!")
+
+    myRoute(0).update(move)
+
+    val oppRoute = if(side ==traxColor.BLACK) giveCompatibleRoutesWithMove(whiteRoutes,move)
+                   else                       giveCompatibleRoutesWithMove(blackRoutes,move)
+
+    assert(oppRoute.length < 2,"Incorrect move: Opponent side")
+
+
+    oppRoute.foreach(_.update(move))
+
+    if(oppRoute.length == 0){
+      val tmpRoute = new Route()
+//      tmpRoute.start = tmpRoute.getNewTerminal(move,)
+    }
+
+    Success()
+  }
+
 }
 
 ////////////////////////////////////////////////////////
@@ -144,8 +172,8 @@ class gameState{
 ////////////////////////////////////////////////////////
 
 case class Move(_tile:traxTiles , _pos:Coordinate){
-  val TileType  = _tile
-  val pos       = _pos
+  var TileType  = _tile
+  var pos       = _pos
 }
 
 ////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-package Game.Player
+package Game.TestPlayer
 
 import Game.World.Margin.Margin
 import Game.World.Margin.Margin
@@ -14,11 +14,11 @@ trait moveFinder {
 
   type Terminal = Tuple2[Coordinate,Margin]
 
-  def giveCompatibleRoutesWithMove( routes:List[Route] , move:Move ): List[Int] = {
-    routes.zipWithIndex.filter( {
-      case (route:Route , index:Int) => (isTerminalCompatibleWithMove(route.start,move) ) ||
+  def giveCompatibleRoutesWithMove( routes:List[Route] , move:Move ): List[Route] = {
+    routes.filter( {
+      case (route:Route) => (isTerminalCompatibleWithMove(route.start,move) ) ||
         (isTerminalCompatibleWithMove(route.end,move) )
-    } ).map(_._2)
+    } )
   }
 
   ///////////////////////////////////////////
@@ -49,10 +49,13 @@ trait moveFinder {
   def giveAllPossibleMoves(state:gameState , side:traxColor): List[Move] = {
     var movesList:List[Move] = null
 
+    val comp = side.compare(traxColor.WHITE) == 0
 
-    for( myRoute <- if(side == traxColor.WHITE)  state.whiteRoutes else state.blackRoutes ){
+    for( myRoute <- if( side.compare(traxColor.WHITE) == 0 )  state.whiteRoutes else state.blackRoutes ){
 
-      movesList ++ giveValidMoves(myRoute.start) ++ giveValidMoves(myRoute.end)
+      val a = giveValidMoves(myRoute.start)
+      val b = a ++ movesList  //movesList =
+      movesList = movesList ++ giveValidMoves(myRoute.end)
 
     }
 
@@ -70,9 +73,8 @@ trait moveFinder {
     }
 
     def giveSharedTerminal(myTerminal: Terminal): Option[Terminal] = {
-      for ((oppRoute, index) <- {
-        if (side == traxColor.WHITE) state.blackRoutes else state.whiteRoutes
-      }.zipWithIndex) {
+      for ( oppRoute <-
+            if (side.compare(traxColor.WHITE) == 0) state.blackRoutes else state.whiteRoutes) {
 
         if (oppRoute.start._1 == myTerminal._1 )
           return Some(oppRoute.start)
@@ -94,18 +96,18 @@ trait moveFinder {
         Success(  List( new Move(traxTiles.WBBW, terminal._1),
           new Move(traxTiles.WBWB, terminal._1),
           new Move(traxTiles.WWBB, terminal._1)))
-      else if(terminal._2 == Margin.TOP)
+      else if(terminal._2 == Margin.DOWN)
+        Success(  List( new Move(traxTiles.BWBW, terminal._1),
+          new Move(traxTiles.WWBB, terminal._1),
+          new Move(traxTiles.BWWB, terminal._1)))
+      else if(terminal._2 == Margin.LEFT)
         Success(  List( new Move(traxTiles.WBBW, terminal._1),
-          new Move(traxTiles.WBBW, terminal._1),
-          new Move(traxTiles.WBBW, terminal._1)))
-      else if(terminal._2 == Margin.TOP)
-        Success(  List( new Move(traxTiles.WBBW, terminal._1),
-          new Move(traxTiles.WBBW, terminal._1),
-          new Move(traxTiles.WBBW, terminal._1)))
-      else if(terminal._2 == Margin.TOP)
-        Success(  List( new Move(traxTiles.WBBW, terminal._1),
-          new Move(traxTiles.WBBW, terminal._1),
-          new Move(traxTiles.WBBW, terminal._1)))
+          new Move(traxTiles.BBWW, terminal._1),
+          new Move(traxTiles.BWBW, terminal._1)))
+      else if(terminal._2 == Margin.RIGHT)
+        Success(  List( new Move(traxTiles.BBWW, terminal._1),
+          new Move(traxTiles.BWWB, terminal._1),
+          new Move(traxTiles.WBWB, terminal._1)))
       else Failure(throw new IllegalArgumentException)
 
     if(color == traxColor.BLACK)
@@ -119,8 +121,4 @@ trait moveFinder {
   ////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////
-
-  def updateState(move: Move,state:gameState):Any = {
-
-  }
 }

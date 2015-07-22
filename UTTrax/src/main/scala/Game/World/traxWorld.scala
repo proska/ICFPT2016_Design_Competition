@@ -1,9 +1,10 @@
 package Game.World
 
 import GUI.traxGUI
-import Game.Player.{testPayer, moveFinder, Player}
+import Game.TestPlayer.{testPlayer, moveFinder, Player}
 import Game.World.traxColor.traxColor
 
+import scala.collection.mutable
 import scala.util.control.Breaks._
 import scala.util.{Failure, Success, Try}
 
@@ -16,13 +17,14 @@ object traxWorld extends moveFinder {
 
   var state = new gameState
 
-  var whitePlayer:Player = new testPayer(traxColor.WHITE)
-  var blackPlayer:Player = new testPayer(traxColor.BLACK)
+  var whitePlayer:Player = new testPlayer(traxColor.WHITE)
+  var blackPlayer:Player = new testPlayer(traxColor.BLACK)
 
   def startGame: Unit ={
     startGUI()
 
 //    testGUI
+    initializeBoard
 
     doGame
 
@@ -119,20 +121,28 @@ object traxWorld extends moveFinder {
 
   private def assignMove(move: Move , side:traxColor):Boolean = {
 
-    val indexes = giveCompatibleRoutesWithMove({if(side == traxColor.WHITE) state.whiteRoutes else state.blackRoutes}
-      .toList, move)
-
-    assert(indexes.length < 2, "Problem in White players routeList")
-
-    if (indexes.length == 0) {
-      println("Invalid move from White player!")
-      return false
-    } else {
-
-      {if(side == traxColor.WHITE) state.whiteRoutes else state.blackRoutes }.apply(indexes(0)).update(move)
-      traxGUI.addTile(move._pos.X, move._pos.Y, move.TileType)
+    traxGUI.addTile(move._pos.X, move._pos.Y, move.TileType)
+    try {
+      state.updateState(move, side)
       return true
     }
+    catch {
+      case _ => return false
+    }
+  }
+  private def initializeBoard(): Unit ={
+    traxGUI.addTile(0,0, traxTiles.WWBB)
+    var tmp = new Route
+    tmp.start = (Coordinate(0,1),Margin.DOWN)
+    tmp.end   = (Coordinate(0,-1),Margin.TOP)
+    tmp.length = 1
+    state.whiteRoutes = List(tmp)
+
+    tmp.start = (Coordinate(1,0),Margin.LEFT)
+    tmp.end   = (Coordinate(-1,0),Margin.RIGHT)
+    tmp.length = 1
+    state.blackRoutes = List(tmp)
+
 
   }
 

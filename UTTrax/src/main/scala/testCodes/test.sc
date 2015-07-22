@@ -1,9 +1,9 @@
-import scala.collection.mutable
+import Game.World._
 
-var tmpList:scala.collection.mutable.MutableList[Int] = null
+val a = 10
 
-
-tmpList = mutable.MutableList(0,1,2,3,4,5,6,7,8,9)
-tmpList = tmpList.filter(_ > 5)
-
-tmpList
+val move = new Move(traxTiles.WWBB , Coordinate(0,0))
+//move.toString
+//val b = List(move,move,move)
+//val c = List(move,move,move)
+//val a = b ++ c

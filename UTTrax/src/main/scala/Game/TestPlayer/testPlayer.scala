@@ -1,4 +1,4 @@
-package Game.Player
+package Game.TestPlayer
 
 import Game.World.Margin.Margin
 import Game.World._
@@ -10,10 +10,11 @@ import scala.util.{Random, Failure, Success, Try}
 /**
  * Created by proska on 7/1/15.
  */
-class testPayer(color:traxColor) extends Player with moveFinder{
+class testPlayer(color:traxColor) extends Player with moveFinder{
 
+  override val side = color
   state = new gameState
-
+  initialize()
   // Gives the indicated move
   override def play(): Move = {
     val moveList = giveAllPossibleMoves(state,color)
@@ -22,13 +23,9 @@ class testPayer(color:traxColor) extends Player with moveFinder{
 
     val move = moveList(r.nextInt(moveList.length))
 
-    updateState(move,state)
+//    updateState(move,state)
+    update(move)
 
     move
   }
-
-  override def update(move: Move):Any = {
-    updateState(move,state)
-  }
-
 }
