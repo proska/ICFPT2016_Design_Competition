@@ -36,10 +36,10 @@ trait moveFinder {
 
   def isPathContinue(dir:Margin , move:Move):Boolean = {
 
-    ((dir == Margin.TOP   )  & ((move.TileType.getVal & (1<<3))==1)) |
-      ((dir == Margin.DOWN)  & ((move.TileType.getVal & (1<<2))==1)) |
-      ((dir == Margin.RIGHT )  & ((move.TileType.getVal & (1<<1))==1)) |
-      ((dir == Margin.LEFT  )  & ((move.TileType.getVal & (1<<0))==1))
+    ((dir == Margin.TOP   )  & ((move.TileType.getVal & (1<<3))!=0)) |
+      ((dir == Margin.DOWN)  & ((move.TileType.getVal & (1<<2))!=0)) |
+      ((dir == Margin.RIGHT )  & ((move.TileType.getVal & (1<<1))!=0)) |
+      ((dir == Margin.LEFT  )  & ((move.TileType.getVal & (1<<0))!=0))
   }
 
   ///////////////////////////////////////////
@@ -47,14 +47,14 @@ trait moveFinder {
   ///////////////////////////////////////////
 
   def giveAllPossibleMoves(state:gameState , side:traxColor): List[Move] = {
-    var movesList:List[Move] = null
+    var movesList:List[Move] = List()
 
     val comp = side.compare(traxColor.WHITE) == 0
 
     for( myRoute <- if( side.compare(traxColor.WHITE) == 0 )  state.whiteRoutes else state.blackRoutes ){
 
-      val a = giveValidMoves(myRoute.start)
-      val b = a ++ movesList  //movesList =
+//      val a = giveValidMoves(myRoute.start)
+      movesList = movesList ++ giveValidMoves(myRoute.start)
       movesList = movesList ++ giveValidMoves(myRoute.end)
 
     }

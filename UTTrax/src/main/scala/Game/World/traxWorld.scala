@@ -132,18 +132,14 @@ object traxWorld extends moveFinder {
   }
   private def initializeBoard(): Unit ={
     traxGUI.addTile(0,0, traxTiles.WWBB)
-    var tmp = new Route
-    tmp.start = (Coordinate(0,1),Margin.DOWN)
-    tmp.end   = (Coordinate(0,-1),Margin.TOP)
-    tmp.length = 1
-    state.whiteRoutes = List(tmp)
 
-    tmp.start = (Coordinate(1,0),Margin.LEFT)
-    tmp.end   = (Coordinate(-1,0),Margin.RIGHT)
-    tmp.length = 1
-    state.blackRoutes = List(tmp)
+    state.whiteRoutes = List( Route( (Coordinate(0,1),Margin.DOWN),
+                                     (Coordinate(0,-1),Margin.TOP),
+                                      1))
 
-
+    state.blackRoutes = List(Route( (Coordinate(1,0),Margin.LEFT),
+                                    (Coordinate(-1,0),Margin.RIGHT),
+                                    1))
   }
 
   ////////////////////////////////////
