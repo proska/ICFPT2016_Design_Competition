@@ -37,18 +37,26 @@ object traxWorld extends moveFinder {
   ////////////////////////////////////
   ////////////////////////////////////
 
+  var counter = 0;
+  val LIMIT = 10;
   def doGame: Unit = {
-    breakable {
-      while (isEndofGame() == 0) {
 
-        getPlayerMove(traxColor.WHITE) match {
-          case Failure(_) => break()
-        }
+    breakable {
+      while (isEndofGame() == 0 && counter < LIMIT ) {
+
+//        getPlayerMove(traxColor.WHITE) match {
+//          case Failure(_) => break()
+//          case Success(_) =>
+//        }
+//        println("----------------------------------")
 
         getPlayerMove(traxColor.BLACK) match {
           case Failure(_) => break()
+          case Success(_) =>
         }
 
+        println("----------------------------------")
+        counter +=1
       }
     }
   }
@@ -83,7 +91,7 @@ object traxWorld extends moveFinder {
   private def isEndofGame():Int = {
 
     def ifLoop(route: Route):Boolean = {
-      route.start._1 == route.end._2
+      route.start._1 == route.end._1
     }
 
 
@@ -104,9 +112,9 @@ object traxWorld extends moveFinder {
     if(assignMove(move,side)){
 
       if(side == traxColor.WHITE){
-        blackPlayer.update(move)
+        blackPlayer.update(move,true)
       } else {
-        whitePlayer.update(move)
+        whitePlayer.update(move,true)
       }
 
       Success(0)
@@ -121,13 +129,19 @@ object traxWorld extends moveFinder {
 
   private def assignMove(move: Move , side:traxColor):Boolean = {
 
+    println("[INFO] Server is adding player "+side+"'s move:"+move+" to Map." )
+
     traxGUI.addTile(move._pos.X, move._pos.Y, move.TileType)
     try {
-      state.updateState(move, side)
+      println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
+      def addTile(move: Move) = {
+        traxGUI.addTile(move.pos.X,move.pos.Y, move.TileType)
+      }
+      state.updateState(move, side,addTile)
       return true
     }
     catch {
-      case _ => return false
+      case _ :Throwable=> throw new IllegalArgumentException("");return false
     }
   }
   private def initializeBoard(): Unit ={
@@ -140,6 +154,17 @@ object traxWorld extends moveFinder {
     state.blackRoutes = List(Route( (Coordinate(1,0),Margin.LEFT),
                                     (Coordinate(-1,0),Margin.RIGHT),
                                     1))
+
+
+
+    assignMove(Move(traxTiles.WBBW,Coordinate(-1,0)),traxColor.BLACK)
+    println("----------------------------------")
+    assignMove(Move(traxTiles.BBWW,Coordinate(-1,-1)),traxColor.BLACK)
+    println("----------------------------------")
+
+    whitePlayer.setState(state)
+    blackPlayer.setState(state)
+
   }
 
   ////////////////////////////////////

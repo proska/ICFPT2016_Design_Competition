@@ -29,8 +29,13 @@ trait Player {
 
   def play(): Move
 
-  def update(move: Move):Any = {
-    state.updateState(move,side)
+  def update(move: Move,reAction:Boolean = false):Any = {
+
+    println("[INFO] Player "+side+" updated its state with "+move + {if(reAction) ",in reaction mode" else ""})
+
+    state.updateState(move, {if(!reAction) side else traxColor.flip(side)})
   }
+
+  def setState(st:gameState) = state = st
 }
 

@@ -74,7 +74,7 @@ trait moveFinder {
 
     def giveSharedTerminal(myTerminal: Terminal): Option[Terminal] = {
       for ( oppRoute <-
-            if (side.compare(traxColor.WHITE) == 0) state.blackRoutes else state.whiteRoutes) {
+            if (side == traxColor.WHITE ) state.blackRoutes else state.whiteRoutes) {
 
         if (oppRoute.start._1 == myTerminal._1 )
           return Some(oppRoute.start)

@@ -22,9 +22,11 @@ class testPlayer(color:traxColor) extends Player with moveFinder{
     val r = new Random()
 
     val move = moveList(r.nextInt(moveList.length))
+//    val move = Move(traxTiles.WBBW , Coordinate(-1,0))
 
-//    updateState(move,state)
     update(move)
+
+    println("[INFO] Player "+side+" returned move:"+move)
 
     move
   }

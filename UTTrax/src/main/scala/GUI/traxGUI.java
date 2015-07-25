@@ -44,7 +44,7 @@ public class traxGUI {
 
     public static void addTile(int x, int y , traxTiles tile) {
 
-//        System.out.println("addTile!");
+        System.out.println("[INFO] Tile:"+tile+" Added to GUI in ("+x+","+y+").");
 
         JLabel    label    = new JLabel();
         ImageIcon icon = createImageIcon("Images/" + tile.getVal() + ".png");

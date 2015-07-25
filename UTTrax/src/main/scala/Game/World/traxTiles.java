@@ -82,4 +82,14 @@ public enum traxTiles {
 
         return INVALID;
     }
+
+    public traxTiles num2Tile(int in){
+        if(in == 12) return WWBB;
+        if(in == 3 ) return BBWW;
+        if(in == 9 ) return WBBW;
+        if(in == 6 ) return BWWB;
+        if(in == 10) return WBWB;
+        if(in == 5) return BWBW;
+        return INVALID;
+    }
 }
