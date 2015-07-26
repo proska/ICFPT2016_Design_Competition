@@ -36,6 +36,6 @@ trait Player {
     state.updateState(move, {if(!reAction) side else traxColor.flip(side)})
   }
 
-  def setState(st:gameState) = state = st
+  def setState(st:gameState) = state = gameState(st)
 }
 

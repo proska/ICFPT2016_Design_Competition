@@ -164,7 +164,6 @@ object traxWorld extends moveFinder {
 
     whitePlayer.setState(state)
     blackPlayer.setState(state)
-
   }
 
   ////////////////////////////////////

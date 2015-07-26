@@ -261,7 +261,7 @@ class gameState extends moveFinder{
       }
     }
     catch {
-      case _ => throw new IllegalArgumentException("add new Route failed!")
+      case _:Throwable => throw new IllegalArgumentException("add new Route failed!")
     }
 
 
@@ -339,16 +339,27 @@ class gameState extends moveFinder{
 
       var tmp = list
 
-      for ((outer, idxOut) <- list.zipWithIndex; (inner, idxIn) <- list.zipWithIndex;if(idxIn != idxOut)) {
+      var flag =true
+
+      var test = 0
+
+      for ((outer,outerIdx) <- list.zipWithIndex;
+           (inner,innerIdx) <- list.zipWithIndex.drop(outerIdx+1)) {
         inner.doMerge(outer,serverF,isBlack) match {
           case Some(x) => {
             tmp = tmp.diff(List(outer)).diff(List(inner)) ++ List(x)
+            flag = false
+            assert(tmp.length == list.length - 1 , "error in modifing routes in auto move")
+            test +=1
           }
           case None => {
-            autoMove += 1
+
           }
         }
       }
+      if(flag)
+        autoMove += 1
+
       tmp
     }
   }
@@ -359,8 +370,8 @@ class gameState extends moveFinder{
 object gameState {
   def apply(state:gameState):gameState = {
     val a = new gameState
-    a.whiteRoutes = state.whiteRoutes
-    a.blackRoutes = state.blackRoutes
+    a.whiteRoutes = state.whiteRoutes.map(x => Route(x))
+    a.blackRoutes = state.blackRoutes.map(x => Route(x))
     a
   }
 }
