@@ -4,7 +4,7 @@ package Game.GeneticAlgorithmPlayer;
  * Created by mohammad on 7/18/15.
  */
 public class Main {
-    private static final boolean myColor = Tile.red;
+    private static final boolean myColor = Tile.white;
 
     public static void main (String[] args) {
         Map nm = new Map ();

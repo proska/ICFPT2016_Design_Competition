@@ -29,9 +29,9 @@ public class Population {
         }
     }
 
-    public void writePopMapsToFiles () {
+    public void writePopMapsToFiles (String mapName ) {
         for (int i=0 ; i<popSize ; i++) {
-            popMaps[i].writeToFile("Maps/" + "Map" + i + ".trx");
+            popMaps[i].writeToFile("Maps/" + mapName + i + ".trx");
         }
     }
 

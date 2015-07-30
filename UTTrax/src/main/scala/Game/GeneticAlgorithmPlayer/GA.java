@@ -6,9 +6,10 @@ import java.util.ArrayList;
  * Created by mohammad on 7/12/15.
  */
 public class GA {
-    Population winnerPop = new Population(20);
-    Population loserPop = new Population(20);
+    Population winnerPop = new Population(50);
+    Population loserPop = new Population(50);
     Map preMap;
+    Tile nextMove;
 
     public GA (Map nm, boolean myColor) {
 
@@ -27,7 +28,7 @@ public class GA {
         }
 
 
-        for (int i = 0; i < 5000 ; i++) {
+        for (int i = 0; i < 2000 ; i++) {
             Map newMap = new Map(new ArrayList <Tile> (nm.map));
             newMap.fillRandom();
             newMap.getFitness(myColor);
@@ -68,8 +69,8 @@ public class GA {
             }
         }
 
-        winnerPop.writePopMapsToFiles();
-        loserPop.writePopMapsToFiles();
+        winnerPop.writePopMapsToFiles("WMap");
+        loserPop.writePopMapsToFiles("LMap");
 
         nm.findPointCandidates(nm.nextMoveCadidates);
         ArrayList <Tile> tileCandidates = new ArrayList<Tile>();
@@ -83,18 +84,18 @@ public class GA {
             }
         }
 
-        nm.addTile(tileCandidates.get(bestTileIndex));
-
-
+        nextMove = tileCandidates.get(bestTileIndex);
+        nm.addTile(nextMove);
+        nm.autoFill();
     }
 
     private void scoring (ArrayList<Tile> tiles) {
-        for (int i=0; i<tiles.size(); i++) {
-            Map newMap = new  Map(new ArrayList<Tile>(preMap.map));
+        for (int i = 0; i < tiles.size(); i++) {
+            Map newMap = new Map(new ArrayList<Tile>(preMap.map));
             newMap.addTile(tiles.get(i));
             newMap.autoFill();
             for (int j = 0; j < winnerPop.popSize; j++) {
-                for (int k=Map.fixedTileNumber; k<newMap.map.size(); k++ ) {
+                for (int k = Map.fixedTileNumber; k < newMap.map.size(); k++) {
                     if (newMap.map.get(k).coordinate.equalPoint(winnerPop.popMaps[j].map.get(Map.fixedTileNumber).coordinate)) {
                         if (newMap.map.get(k).getTileChar() == winnerPop.popMaps[j].map.get(Map.fixedTileNumber).getTileChar()) {
                             tiles.get(i).score += winnerPop.popMaps[j].fitness;
@@ -104,7 +105,7 @@ public class GA {
                         break;
                     }
                 }
-                for (int k=Map.fixedTileNumber; k<newMap.map.size(); k++ ) {
+                for (int k = Map.fixedTileNumber; k < newMap.map.size(); k++) {
                     if (newMap.map.get(k).coordinate.equalPoint(loserPop.popMaps[j].map.get(Map.fixedTileNumber).coordinate)) {
                         if (newMap.map.get(k).getTileChar() == loserPop.popMaps[j].map.get(Map.fixedTileNumber).getTileChar()) {
                             tiles.get(i).score += loserPop.popMaps[j].fitness;
@@ -116,6 +117,9 @@ public class GA {
                 }
             }
         }
+    }
 
+    public Tile getNextMove(){
+        return this.nextMove;
     }
 }
