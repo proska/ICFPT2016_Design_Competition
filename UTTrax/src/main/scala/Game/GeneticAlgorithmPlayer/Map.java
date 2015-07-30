@@ -651,6 +651,9 @@ public class Map {
                     if (y == 0) {
                         minY--;
                     }
+                    if (tileIndex == map.size()-1) {
+                        System.out.println(("  " + number + " " + xchar + y + map.get(tileIndex).getTileChar() + "\n"));
+                    }
                 }
             }
             writer.write("#");
@@ -668,6 +671,9 @@ public class Map {
             int minY = 0;
             String line = br.readLine();
             line = br.readLine();
+            while (line.charAt(0) != ' ') {
+                line = br.readLine();
+            }
             while (line.charAt(0) != '#') {
                 line = line.trim();
                 int index1 = line.indexOf(' ');
