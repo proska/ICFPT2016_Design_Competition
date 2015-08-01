@@ -3,7 +3,7 @@ package Game.World
 //import Game.Margin.Margin
 import Game.TestPlayer.moveFinder
 import Game.World.Margin.Margin
-import Game.World.traxColor.traxColor
+//import Game.World.traxColor.traxColor
 
 import scala.Option
 import scala.collection.mutable
@@ -12,12 +12,12 @@ import scala.util.{Failure, Success, Try}
 /**
  * Created by proska on 7/12/15.
  */
-object traxColor extends Enumeration {
-  type traxColor = Value
-  val WHITE,BLACK = Value
-
-  def flip(in:traxColor) = if(in == WHITE) BLACK else WHITE
-}
+//object traxColor extends Enumeration {
+//  type traxColor = Value
+//  val WHITE,BLACK = Value
+//
+//  def flip(in:traxColor):traxColor = if(in == WHITE) BLACK else WHITE
+//}
 
 
 

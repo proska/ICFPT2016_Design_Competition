@@ -1,8 +1,9 @@
 package Game.World
 
 import GUI.traxGUI
-import Game.TestPlayer.{testPlayer, moveFinder, Player}
-import Game.World.traxColor.traxColor
+import Game.GeneticAlgorithmPlayer.GAPlayer
+import Game.TestPlayer.{Player, testPlayerScala, moveFinder, PlayerScala}
+//import Game.World.traxColor.traxColor
 
 import scala.collection.mutable
 import scala.util.control.Breaks._
@@ -17,8 +18,8 @@ object traxWorld extends moveFinder {
 
   var state = new gameState
 
-  var whitePlayer:Player = new testPlayer(traxColor.WHITE)
-  var blackPlayer:Player = new testPlayer(traxColor.BLACK)
+  var whitePlayer:Player = new GAPlayer(false)//new testPlayerScala(traxColor.WHITE)
+  var blackPlayer:Player = new testPlayerScala(traxColor.BLACK)
 
   def startGame: Unit ={
     startGUI()
@@ -41,8 +42,11 @@ object traxWorld extends moveFinder {
   val LIMIT = 10;
   def doGame: Unit = {
 
+    var gameEnd = 0
+    val a = ()
     breakable {
-      while (isEndofGame() == 0 && counter < LIMIT ) {
+      while ( gameEnd == 0 && counter < LIMIT ) {
+
 
 //        getPlayerMove(traxColor.WHITE) match {
 //          case Failure(_) => break()
@@ -57,14 +61,25 @@ object traxWorld extends moveFinder {
 
         println("----------------------------------")
         counter +=1
+        gameEnd = isEndofGame()
       }
+    }
+
+    if(counter == LIMIT){
+      println("Move Limit Reached")
+    }
+
+    if(gameEnd == 1){
+      println("White Player Won!")
+    } else if(gameEnd == 2){
+      println("Black Player Won!")
     }
   }
 
   private def testGUI: Unit = {
     var i: Int = 0
-    for (i <- 0 to 7) {
-      traxGUI.addTile(i * 2, 0, traxTiles.BBWW)
+    for (i <- 0 to 10) {
+      traxGUI.addTile(0, -i, traxTiles.BBWW)
     }
   }
 
@@ -156,14 +171,15 @@ object traxWorld extends moveFinder {
                                     1))
 
 
+    whitePlayer.initialize()
 
-    assignMove(Move(traxTiles.WBBW,Coordinate(-1,0)),traxColor.BLACK)
-    println("----------------------------------")
-    assignMove(Move(traxTiles.BBWW,Coordinate(-1,-1)),traxColor.BLACK)
-    println("----------------------------------")
-
-    whitePlayer.setState(state)
-    blackPlayer.setState(state)
+//    assignMove(Move(traxTiles.WBBW,Coordinate(-1,0)),traxColor.BLACK)
+//    println("----------------------------------")
+//    assignMove(Move(traxTiles.BBWW,Coordinate(-1,-1)),traxColor.BLACK)
+//    println("----------------------------------")
+//
+//    whitePlayer.setState(state)
+//    blackPlayer.setState(state)
   }
 
   ////////////////////////////////////

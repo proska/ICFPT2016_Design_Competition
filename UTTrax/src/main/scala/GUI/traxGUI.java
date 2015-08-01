@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferStrategy;
 import java.util.*;
 import javax.swing.*;
 
@@ -42,6 +43,8 @@ public class traxGUI {
     static int FrameWidth  = 1300;
     static int FrameHeight = 650;
 
+    ////////////////////////////////////////////////////////////
+
     public static void addTile(int x, int y , traxTiles tile) {
 
         System.out.println("[INFO] Tile:"+tile+" Added to GUI in ("+x+","+y+").");
@@ -59,6 +62,23 @@ public class traxGUI {
         }
 
 //        label.updateUI();
+
+
+//        updateGUI(x, y, label);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                // Here, we can safely update the GUI
+                // because we'll be called from the
+                // event dispatch thread
+                updateGUI(x, y, label);
+            }
+        });
+    }
+
+    ////////////////////////////////////////////////////////////
+
+    private static void updateGUI(int x, int y, JLabel label) {
 
         tilesOnMap.add(new TileType(label, x, y));
 
@@ -83,6 +103,8 @@ public class traxGUI {
         reDrawPane();
     }
 
+    ////////////////////////////////////////////////////////////
+
     //  Create the GUI and show it.  For thread safety,this method should be invoked from the event-dispatching thread.
     public static void startGUI() {
         //Create and set up the window.
@@ -101,6 +123,15 @@ public class traxGUI {
         frame.getContentPane().add(scrol,BorderLayout.CENTER);
         frame.setVisible(true);
 
+
+        // Double Buffering Codes
+        frame.createBufferStrategy(2);
+        frame.setIgnoreRepaint(true);
+
+
+
+        //------------------------//
+
         reDrawPane();
 
         frame.addComponentListener(new ComponentAdapter() {
@@ -110,11 +141,21 @@ public class traxGUI {
                 reDrawPane();
             }
         });
+
+
+
+
+
     }
+
+    ////////////////////////////////////////////////////////////
 
     private static void reDrawPane() {
 
 //        System.out.println(">> Redraw GUI <<");
+
+        BufferStrategy bf = frame.getBufferStrategy();
+
 
         panel.setLayout(null);
         Insets insets = panel.getInsets();
@@ -139,6 +180,8 @@ public class traxGUI {
 //        System.out.println(tilesOnMap.size());
     }
 
+    ////////////////////////////////////////////////////////////
+
     /** Returns an ImageIcon, or null if the path was invalid. */
     private static ImageIcon createImageIcon(String path) {
 
@@ -151,6 +194,10 @@ public class traxGUI {
         }
         return icon;
     }
+
+
+
+    ////////////////////////////////////////////////////////////
 
     private static void shiftAllRigth(){
         xZero += 5*TILESIZE;
@@ -179,6 +226,7 @@ public class traxGUI {
 
     }
 
+    ////////////////////////////////////////////////////////////
 
 
     public static void main(String[] args) {
@@ -196,9 +244,10 @@ public class traxGUI {
 //        addTile(14,0, traxTiles.BBWW);
 //        addTile(0,0, traxTiles.BBWW);
 
-        for(int i = 0 ; i <= 14 ; i++){
-            addTile(0,-i, traxTiles.BBWW);
+        for(int i = 0 ; i <= 10 ; i++){
+            addTile(-i,i, traxTiles.BBWW);
             System.out.println(">> 1 sec passed!");
+
         }
 
     }

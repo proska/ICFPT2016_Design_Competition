@@ -3,7 +3,7 @@ package Game.TestPlayer
 import Game.World.Margin.Margin
 import Game.World.Margin.Margin
 import Game.World._
-import Game.World.traxColor.traxColor
+//import Game.World.traxColor.traxColor
 
 import scala.util.{Failure, Success, Try}
 
@@ -49,9 +49,9 @@ trait moveFinder {
   def giveAllPossibleMoves(state:gameState , side:traxColor): List[Move] = {
     var movesList:List[Move] = List()
 
-    val comp = side.compare(traxColor.WHITE) == 0
+//    val comp = side.compare(traxColor.WHITE) == 0
 
-    for( myRoute <- if( side.compare(traxColor.WHITE) == 0 )  state.whiteRoutes else state.blackRoutes ){
+    for( myRoute <- if( side == traxColor.WHITE )  state.whiteRoutes else state.blackRoutes ){
 
 //      val a = giveValidMoves(myRoute.start)
       movesList = movesList ++ giveValidMoves(myRoute.start)

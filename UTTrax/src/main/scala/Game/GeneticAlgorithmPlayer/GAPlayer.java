@@ -1,6 +1,7 @@
 package Game.GeneticAlgorithmPlayer;
 
 import Game.TestPlayer.Player;
+import Game.TestPlayer.PlayerScala;
 import Game.World.Coordinate;
 import Game.World.Move;
 import Game.World.traxTiles;
@@ -8,12 +9,21 @@ import Game.World.traxTiles;
 /**
  * Created by mohammad on 7/28/15.
  */
-public class GAPlayer {
+public class GAPlayer implements Player {//implements Player
     Map mainMap = new Map();
     boolean myColor = Tile.red;
 
-    //@Override
-    public void update(Move move, boolean reAction) {
+    public GAPlayer(boolean myColor) {
+        this.myColor = myColor;
+    }
+
+    @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public void update(Move move, Boolean reAction)  {
         char ch = '+';
         Tile.Direction dir = Tile.Direction.UP;
         boolean color = Tile.red;
@@ -46,7 +56,7 @@ public class GAPlayer {
         mainMap.autoFill();
     }
 
-    //@Override
+    @Override
     public Move play() {
         GA GeneticAlgorithmTraxPlayer = new GA (mainMap, myColor);
         Tile nextMoveTile = GeneticAlgorithmTraxPlayer.getNextMove();
