@@ -48,11 +48,11 @@ object traxWorld extends moveFinder {
       while ( gameEnd == 0 && counter < LIMIT ) {
 
 
-//        getPlayerMove(traxColor.WHITE) match {
-//          case Failure(_) => break()
-//          case Success(_) =>
-//        }
-//        println("----------------------------------")
+        getPlayerMove(traxColor.WHITE) match {
+          case Failure(_) => break()
+          case Success(_) =>
+        }
+        println("----------------------------------")
 
         getPlayerMove(traxColor.BLACK) match {
           case Failure(_) => break()
@@ -171,7 +171,13 @@ object traxWorld extends moveFinder {
                                     1))
 
 
+
     whitePlayer.initialize()
+
+    /////////////////////////
+    whitePlayer.update(Move(traxTiles.WWBB , Coordinate(0,0)) , false)
+    ////////////////////////
+
 
 //    assignMove(Move(traxTiles.WBBW,Coordinate(-1,0)),traxColor.BLACK)
 //    println("----------------------------------")

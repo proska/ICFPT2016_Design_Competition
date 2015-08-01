@@ -20,6 +20,7 @@ public class GAPlayer implements Player {//implements Player
     @Override
     public void initialize() {
 
+        update(new Move(traxTiles.WWBB , new Coordinate(0,0)) , false);
     }
 
     @Override
