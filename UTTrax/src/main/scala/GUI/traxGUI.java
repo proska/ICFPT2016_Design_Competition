@@ -64,16 +64,16 @@ public class traxGUI {
 //        label.updateUI();
 
 
-//        updateGUI(x, y, label);
+        updateGUI(x, y, label);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // Here, we can safely update the GUI
-                // because we'll be called from the
-                // event dispatch thread
-                updateGUI(x, y, label);
-            }
-        });
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                // Here, we can safely update the GUI
+//                // because we'll be called from the
+//                // event dispatch thread
+//                updateGUI(x, y, label);
+//            }
+//        });
     }
 
     ////////////////////////////////////////////////////////////
