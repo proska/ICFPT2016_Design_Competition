@@ -158,6 +158,7 @@ object traxWorld extends moveFinder {
     catch {
       case _ :Throwable=> throw new IllegalArgumentException("");return false
     }
+
   }
   private def initializeBoard(): Unit ={
     traxGUI.addTile(0,0, traxTiles.WWBB)
