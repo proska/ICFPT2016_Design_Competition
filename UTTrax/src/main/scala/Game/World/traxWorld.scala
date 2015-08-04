@@ -175,10 +175,6 @@ object traxWorld extends moveFinder {
 
     whitePlayer.initialize()
 
-    /////////////////////////
-    whitePlayer.update(Move(traxTiles.WWBB , Coordinate(0,0)) , false)
-    ////////////////////////
-
 
 //    assignMove(Move(traxTiles.WBBW,Coordinate(-1,0)),traxColor.BLACK)
 //    println("----------------------------------")
