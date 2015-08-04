@@ -25,8 +25,8 @@ public class traxGUI {
     private int xZero;
     private int yZero;
 
-    private int screenWidth  = 1200;
-    private int screenHeight = 700;
+    private int screenWidth  = 600;//1200;
+    private int screenHeight = 500;//700;
 
 
     private void updateZero(){
