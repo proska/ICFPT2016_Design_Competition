@@ -1,7 +1,7 @@
 package Game.World
 
 import GUI.traxGUI
-import Game.GeneticAlgorithmPlayer.GAPlayer
+//import Game.GeneticAlgorithmPlayer.GAPlayer
 import Game.TestPlayer.{Player, testPlayerScala, moveFinder, PlayerScala}
 //import Game.World.traxColor.traxColor
 
@@ -18,13 +18,15 @@ object traxWorld extends moveFinder {
 
   var state = new gameState
 
-  var whitePlayer:Player = new GAPlayer(false)//new testPlayerScala(traxColor.WHITE)
+  var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)//new GAPlayer(false)//
   var blackPlayer:Player = new testPlayerScala(traxColor.BLACK)
 
+  val gui = new traxGUI(30)
+
   def startGame: Unit ={
-    startGUI()
 
 //    testGUI
+
     initializeBoard
 
     doGame
@@ -39,7 +41,7 @@ object traxWorld extends moveFinder {
   ////////////////////////////////////
 
   var counter = 0;
-  val LIMIT = 10;
+  val LIMIT = 20;
   def doGame: Unit = {
 
     var gameEnd = 0
@@ -79,7 +81,8 @@ object traxWorld extends moveFinder {
   private def testGUI: Unit = {
     var i: Int = 0
     for (i <- 0 to 10) {
-      traxGUI.addTile(0, -i, traxTiles.BBWW)
+//      gui.addTile(0, -i, traxTiles.BBWW)
+      addMovetoGUI(Move(traxTiles.BBWW,Coordinate(0,-i)))
     }
   }
 
@@ -87,17 +90,6 @@ object traxWorld extends moveFinder {
   ////////////////////////////////////
   ////////////////////////////////////
 
-  private def startGUI(): Unit ={
-    //Schedule a job for the event-dispatching thread:
-    //creating and showing this application's GUI.
-    javax.swing.SwingUtilities.invokeLater(
-      new Runnable {
-        def run {
-          traxGUI.startGUI();
-        }
-      }
-    )
-  }
 
   ////////////////////////////////////
   ////////////////////////////////////
@@ -146,13 +138,12 @@ object traxWorld extends moveFinder {
 
     println("[INFO] Server is adding player "+side+"'s move:"+move+" to Map." )
 
-    traxGUI.addTile(move._pos.X, move._pos.Y, move.TileType)
+    addMovetoGUI(move)
+
+//    gui.addTile(move._pos.X, move._pos.Y, move.TileType)
     try {
       println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
-      def addTile(move: Move) = {
-        traxGUI.addTile(move.pos.X,move.pos.Y, move.TileType)
-      }
-      state.updateState(move, side,addTile)
+      state.updateState(move, side,addMovetoGUI)
       return true
     }
     catch {
@@ -160,8 +151,15 @@ object traxWorld extends moveFinder {
     }
 
   }
+
+  private def addMovetoGUI(move: Move) = {
+    gui.addTile(move.TileType,move.pos)
+  }
+
   private def initializeBoard(): Unit ={
-    traxGUI.addTile(0,0, traxTiles.WWBB)
+
+    addMovetoGUI(Move(traxTiles.WWBB,Coordinate(0,0)))
+//    gui.addTile(0,0, traxTiles.WWBB)
 
     state.whiteRoutes = List( Route( (Coordinate(0,1),Margin.DOWN),
                                      (Coordinate(0,-1),Margin.TOP),
@@ -191,5 +189,6 @@ object traxWorld extends moveFinder {
 
   def main (args: Array[String]): Unit ={
     startGame
+
   }
 }
