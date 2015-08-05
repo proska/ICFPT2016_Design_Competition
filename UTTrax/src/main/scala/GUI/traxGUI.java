@@ -25,8 +25,8 @@ public class traxGUI {
     private int xZero;
     private int yZero;
 
-    private int screenWidth  = 1200;
-    private int screenHeight = 700;
+    private int screenWidth  = 600;//1200;
+    private int screenHeight = 500;//700;
 
 
     private void updateZero(){
@@ -68,6 +68,7 @@ public class traxGUI {
         g.setColor(Color.GREEN);
         g.fillRect(0, 0, screenWidth, screenHeight);
 
+        g.draw(new Rectangle(xZero,yZero,xZero+10,yZero+10));
 
         for(int i=0 ; i < tileList.size() ; i++){
             Sprite sprite = SpriteStore.get().getSprite("GUI/Images/"+tileList.get(i).tile.getVal()+".png");
