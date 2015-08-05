@@ -79,6 +79,7 @@ public class MontecarloAlgorithm implements Player {
             Vector <stateMC> moves = new Vector<stateMC> ();
             scala.collection.immutable.List<Game.World.Move> allmoves ;
             stateMC last = new stateMC();
+
             int r =0;
             boolean flag1 = false;
             boolean flag2 = false;
@@ -99,6 +100,7 @@ public class MontecarloAlgorithm implements Player {
 
                 if (!(B_iswon))
                 {
+
                     allmoves = moveFinder.giveAllPossibleMoves(game.pegah, side);
                     moves = ConvertToState(allmoves,game);
                     Random e = new Random();
