@@ -42,5 +42,8 @@ trait PlayerScala extends Player{
 
 
   def setState(st:gameState) = state = gameState(st)
+
+  override def getState():gameState = state
+
 }
 

@@ -4,7 +4,7 @@
 		module="uttrax$sbt_2.10"
 		revision="1.0"
 		status="integration"
-		publication="20150722192720"
+		publication="20150805162800"
 	/>
 	<configurations>
 		<conf name="default" visibility="public"/>
