@@ -255,6 +255,7 @@ class gameState extends moveFinder{
       case _:Throwable => throw new IllegalArgumentException("giveAllCompatibleRoutes failed!")
     }
 
+
     myRoute(0).update(move,side)
 
     if(oppRoute.length == 1){
