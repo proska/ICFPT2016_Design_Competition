@@ -26,8 +26,13 @@ class testPlayerScala(color:traxColor) extends PlayerScala with moveFinder{
     val move = moveList(r.nextInt(moveList.length))
 //    val move = Move(traxTiles.WBBW , Coordinate(-1,0))
 
+    println("**********************")
+    state.dump
+    println("**********************")
     update(move)
-
+    println("**********************")
+    state.dump
+    println("**********************")
     println("[INFO] Player "+side+" returned move:"+move)
 
     move

@@ -99,11 +99,6 @@ class Route extends moveFinder{
 
   var length = 0
 
-//  def Route={
-//    start = (Coordinate(0,1),Margin.DOWN)
-//    end = (Coordinate(0,-1),Margin.TOP)
-//  }
-
   override def toString: String = start +"<->"+end//super.toString
 
   def isLoop:Boolean = start._1 == end._1
@@ -156,7 +151,7 @@ class Route extends moveFinder{
     isTerminalCompatibleWithMove(start, move)
   }
 
-  def doMerge(that:Route ,serverF:Move => Any = null , isBlack:Boolean = false):Option[Route] = {
+  def doMerge(that:Route ,serverF:Move => Any = null , isBlack:Boolean = false , stateUpdate:Move =>Any = null):Option[Route] = {
     var contact: (Terminal,Terminal) = null
     var out:Option[Route] = None
 
@@ -177,6 +172,7 @@ class Route extends moveFinder{
         case Some(_) => {
           println("[INFO] Automatic move:"+Move(contact._1._1,contact._1._2,contact._2._2,isBlack)+" is done.")
           serverF(Move(contact._1._1,contact._1._2,contact._2._2,isBlack))
+          stateUpdate(Move(contact._1._1,contact._1._2,contact._2._2,isBlack))
         }
         case _ =>
       }
@@ -185,6 +181,13 @@ class Route extends moveFinder{
 
     out
   }
+
+  def compare(that:Route): Boolean = {
+    this.start == that.start &&
+    this.end   == that.end   &&
+    this.length == that.length
+  }
+
 }
 
 object Route extends moveFinder{
@@ -234,6 +237,14 @@ class gameState extends moveFinder{
   var whiteRoutes : List[Route] = _
   var blackRoutes : List[Route] = _
 
+
+  def dump: Any = {
+    println("[TEST] WhiteRoute:");
+    this.whiteRoutes.foreach(x => println(x))
+    println("[TEST] BlackRoutes:");
+    this.blackRoutes.foreach(x => println(x))
+  }
+
   def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
 
 
@@ -246,8 +257,14 @@ class gameState extends moveFinder{
 
     myRoute(0).update(move,side)
 
-    if(oppRoute.length == 1)
+    if(oppRoute.length == 1){
+
+      val prevlen = if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length
+      println("[TEST] RouteUpdated:"+oppRoute)
       oppRoute.foreach(_.update(move,traxColor.flip(side)))
+      println("[TEST] RouteUpdated:"+oppRoute)
+      assert({if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length} == prevlen , "Wrong oppRoute Update!")
+    }
 
     try {
       if (oppRoute.length == 0) {
@@ -289,11 +306,14 @@ class gameState extends moveFinder{
     else if (move.TileType == traxTiles.WBBW) Route(move.pos, Margin.DOWN, Margin.RIGHT, isSideWhite)
     else if (move.TileType == traxTiles.WBWB) Route(move.pos, Margin.DOWN, Margin.LEFT, isSideWhite)
     else if (move.TileType == traxTiles.WWBB) Route(move.pos, Margin.LEFT, Margin.RIGHT, isSideWhite)
-    else new Route
+    else {throw new IllegalArgumentException();new Route}
+
+    println("[TEST] RouteAdded:"+tmpRoute)
 
     tmpRoute.start = tmpRoute.getNewTerminal(move, tmpRoute.start._2,side)
     tmpRoute.end = tmpRoute.getNewTerminal(move, tmpRoute.end._2,side)
 
+    println("[TEST] RouteAdded:"+tmpRoute)
     tmpRoute
   }
 
@@ -343,9 +363,13 @@ class gameState extends moveFinder{
 
       var test = 0
 
+      def selfUpdate(move: Move): Unit ={
+        this.updateState(move,{if(isBlack) traxColor.BLACK else traxColor.WHITE})
+      }
+
       for ((outer,outerIdx) <- list.zipWithIndex;
            (inner,innerIdx) <- list.zipWithIndex.drop(outerIdx+1)) {
-        inner.doMerge(outer,serverF,isBlack) match {
+        inner.doMerge(outer,serverF,isBlack,selfUpdate) match {
           case Some(x) => {
             tmp = tmp.diff(List(outer)).diff(List(inner)) ++ List(x)
             flag = false
@@ -364,6 +388,14 @@ class gameState extends moveFinder{
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  def compare(that:gameState):Boolean = {
+      this.whiteRoutes.zip(that.whiteRoutes).map(x => x._1 compare x._2).reduceLeft(_&&_) &
+      this.blackRoutes.zip(that.blackRoutes).map(x => x._1 compare x._2).reduceLeft(_&&_)
+  }
 
 }
 

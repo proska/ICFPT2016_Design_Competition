@@ -18,4 +18,5 @@ public interface Player {
 
     public void update(Move move , Boolean reAction );
 
+    public gameState getState();
 }
