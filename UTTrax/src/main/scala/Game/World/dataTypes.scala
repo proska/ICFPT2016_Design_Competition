@@ -125,6 +125,7 @@ class Route {
 
   }
 
+
   def getNewTerminal(move: Move , margin: Margin,side:traxColor):(Coordinate,Margin) = {
 
     val tmpMove = if(side == traxColor.WHITE) move else move.flip()
