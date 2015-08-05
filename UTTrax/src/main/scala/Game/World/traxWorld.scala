@@ -67,8 +67,8 @@ object traxWorld {
 
 
 
-        assert(whitePlayer.getState().compare(blackPlayer.getState()) , "")
-        assert(whitePlayer.getState().compare(state) , "")
+//        assert(whitePlayer.getState().compare(blackPlayer.getState()) , "")
+//        assert(whitePlayer.getState().compare(state) , "")
 
         println("----------------------------------")
         println("----------------------------------")
