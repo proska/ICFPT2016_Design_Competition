@@ -1,19 +1,21 @@
 package Game.TestPlayer
 
+import java.lang
+
 import Game.World._
-import Game.World.traxColor.traxColor
+//import Game.World.traxColor.traxColor
 
 //import TraxWorld._
 
 /**
  * Created by proska on 6/29/15.
  */
-trait Player {
+trait PlayerScala extends Player{
 
   val side:traxColor
   var state = new gameState
 
-  def initialize(): Unit ={
+  override def initialize(): Unit ={
     var tmp = new Route
     tmp.start = (Coordinate(0,1),Margin.DOWN)
     tmp.end   = (Coordinate(0,-1),Margin.TOP)
@@ -29,12 +31,15 @@ trait Player {
 
   def play(): Move
 
-  def update(move: Move,reAction:Boolean = false):Any = {
+  override def update(move: Move, reAction: lang.Boolean = false): Unit =  {
 
     println("[INFO] Player "+side+" updated its state with "+move + {if(reAction) ",in reaction mode" else ""})
 
-    state.updateState(move, {if(!reAction) side else traxColor.flip(side)})
+    val sidetmp  = {if(!reAction) side else traxColor.flip(side)}
+
+    state.updateState(move, sidetmp)
   }
+
 
   def setState(st:gameState) = state = gameState(st)
 }

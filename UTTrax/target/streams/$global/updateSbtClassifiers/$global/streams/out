@@ -620,8 +620,8 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#sbt;0.13.7!sbt.jar
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-library;2.10.4!scala-library.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#main;0.13.7!main.jar
-[debug] 	[NOT REQUIRED] org.scala-sbt#compiler-interface;0.13.7!compiler-interface-bin.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#compiler-interface;0.13.7!compiler-interface-src.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#compiler-interface;0.13.7!compiler-interface-bin.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_8_2;0.13.7!compiler-interface-bin.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_9_2;0.13.7!compiler-interface-bin.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_9_3;0.13.7!compiler-interface-bin.jar
@@ -670,9 +670,9 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-agent;0.13.7!test-agent.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.7!apply-macro.jar
-[debug] :: resolution report :: resolve 1979ms :: artifacts dl 57ms
-[debug] 	report for default#uttrax$sbt_2.10;1.0 default produced in /home/proska/Desktop/UTTrax/target/resolution-cache/reports/default-uttrax$sbt_2.10-default.xml
-[debug] 	resolve done (1979ms resolve - 57ms download)
+[debug] :: resolution report :: resolve 2810ms :: artifacts dl 104ms
+[debug] 	report for default#uttrax$sbt_2.10;1.0 default produced in /home/proska/ICFPT2016_Design_Competition/UTTrax/target/resolution-cache/reports/default-uttrax$sbt_2.10-default.xml
+[debug] 	resolve done (2810ms resolve - 104ms download)
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#uttrax$sources_2.10;1.0
 [debug] 	confs: [default]
@@ -744,6 +744,6 @@
 [debug] 	[NOT REQUIRED] org.scala-tools.sbinary#sbinary_2.10;0.4.2!sbinary_2.10.jar(src)
 [debug] 	[NOT REQUIRED] com.jcraft#jsch;0.1.46!jsch.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar(src)
-[debug] :: resolution report :: resolve 36ms :: artifacts dl 7ms
-[debug] 	report for default#uttrax$sources_2.10;1.0 default produced in /home/proska/Desktop/UTTrax/target/resolution-cache/reports/default-uttrax$sources_2.10-default.xml
-[debug] 	resolve done (36ms resolve - 7ms download)
+[debug] :: resolution report :: resolve 33ms :: artifacts dl 7ms
+[debug] 	report for default#uttrax$sources_2.10;1.0 default produced in /home/proska/ICFPT2016_Design_Competition/UTTrax/target/resolution-cache/reports/default-uttrax$sources_2.10-default.xml
+[debug] 	resolve done (33ms resolve - 7ms download)

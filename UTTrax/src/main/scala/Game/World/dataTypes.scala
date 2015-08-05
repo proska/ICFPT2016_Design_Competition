@@ -2,8 +2,11 @@ package Game.World
 
 //import Game.Margin.Margin
 import Game.TestPlayer.moveFinder
+import Game.TestPlayer.moveFinder.Terminal
 import Game.World.Margin.Margin
-import Game.World.traxColor.traxColor
+import Game.montecarlo.MontecarloAlgorithm
+
+//import Game.World.traxColor.traxColor
 
 import scala.Option
 import scala.collection.mutable
@@ -12,12 +15,12 @@ import scala.util.{Failure, Success, Try}
 /**
  * Created by proska on 7/12/15.
  */
-object traxColor extends Enumeration {
-  type traxColor = Value
-  val WHITE,BLACK = Value
-
-  def flip(in:traxColor) = if(in == WHITE) BLACK else WHITE
-}
+//object traxColor extends Enumeration {
+//  type traxColor = Value
+//  val WHITE,BLACK = Value
+//
+//  def flip(in:traxColor):traxColor = if(in == WHITE) BLACK else WHITE
+//}
 
 
 
@@ -92,10 +95,10 @@ object Coordinate {
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-class Route extends moveFinder{
+class Route {
 
-  var start = new Terminal(new Coordinate,Margin.TOP)
-  var end = new Terminal(new Coordinate,Margin.TOP)
+  var start = new moveFinder.Terminal(new Coordinate,Margin.TOP)
+  var end = new moveFinder.Terminal(new Coordinate,Margin.TOP)
 
   var length = 0
 
@@ -149,11 +152,11 @@ class Route extends moveFinder{
   }
 
   private def checkEnd(move: Move): Boolean = {
-    isTerminalCompatibleWithMove(end, move)
+    moveFinder.isTerminalCompatibleWithMove(end, move)
   }
 
   private def checkStart(move: Move): Boolean = {
-    isTerminalCompatibleWithMove(start, move)
+    moveFinder.isTerminalCompatibleWithMove(start, move)
   }
 
   def doMerge(that:Route ,serverF:Move => Any = null , isBlack:Boolean = false):Option[Route] = {
@@ -187,7 +190,7 @@ class Route extends moveFinder{
   }
 }
 
-object Route extends moveFinder{
+object Route {
   def apply(route: Route):Route = {
     val out = new Route
     out.start = new Terminal(route.start._1,route.start._2)
@@ -230,7 +233,7 @@ object Route extends moveFinder{
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-class gameState extends moveFinder{
+class gameState{
   var whiteRoutes : List[Route] = _
   var blackRoutes : List[Route] = _
 
@@ -303,13 +306,13 @@ class gameState extends moveFinder{
   ////////////////////////////////////////////////////////////////////////////
 
   private def giveAllCompatibleRoutes(move: Move, side: traxColor): (List[Route], List[Route]) = {
-    val myRoute = if (side == traxColor.WHITE) giveCompatibleRoutesWithMove(whiteRoutes, move)
-    else giveCompatibleRoutesWithMove(blackRoutes, move.flip())
+    val myRoute = if (side == traxColor.WHITE) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
+    else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
 
     assert(myRoute.length == 1, "Incorrect move!")
 
-    val oppRoute = if (side == traxColor.BLACK) giveCompatibleRoutesWithMove(whiteRoutes, move)
-    else giveCompatibleRoutesWithMove(blackRoutes, move.flip())
+    val oppRoute = if (side == traxColor.BLACK) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
+    else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
 
     assert(oppRoute.length < 2, "Incorrect move: Opponent side")
     (myRoute, oppRoute)
@@ -391,29 +394,38 @@ case class Move(_tile:traxTiles , _pos:Coordinate){
 
   override def toString: String = "("+pos+","+TileType+")"//super.toString
 }
-object Move{
-  def apply(move: Move):Move = {
-    new Move(move.TileType,move.pos)
+object Move {
+  def apply(move: Move): Move = {
+    new Move(move.TileType, move.pos)
   }
-  def apply(coordinate: Coordinate,margin1: Margin,margin2: Margin,isBlack :Boolean):Move = {
 
-    var marg1 = if(isBlack) Margin.flip(margin1) else margin1
-    var marg2 = if(isBlack) Margin.flip(margin2) else margin2
+  def apply(coordinate: Coordinate, margin1: Margin, margin2: Margin, isBlack: Boolean): Move = {
 
-    if(margin1 == Margin.TOP && margin2 == Margin.DOWN && isBlack){
+    var marg1 = if (isBlack) Margin.flip(margin1) else margin1
+    var marg2 = if (isBlack) Margin.flip(margin2) else margin2
+
+    if (margin1 == Margin.TOP && margin2 == Margin.DOWN && isBlack) {
       marg1 = Margin.LEFT
       marg2 = Margin.RIGHT
     }
 
-    if(margin1 == Margin.LEFT && margin2 == Margin.RIGHT && isBlack){
+    if (margin1 == Margin.LEFT && margin2 == Margin.RIGHT && isBlack) {
       marg1 = Margin.TOP
       marg2 = Margin.DOWN
     }
 
-    val tileNum = (1<<Margin.getVal(marg1)) + (1<<Margin.getVal(marg2))
+    val tileNum = (1 << Margin.getVal(marg1)) + (1 << Margin.getVal(marg2))
     val tile = traxTiles.INVALID.num2Tile(tileNum)
-    Move(tile,coordinate)
+    Move(tile, coordinate)
   }
+
+//    def apply(move:Game.montecarlo.MontecarloAlgorithm.TreeNode.Move):Move {
+//        Move movefinal = new Move
+//        movefinal. = move.x;
+//
+//
+//     return movefinal;
+//  }
 }
 
 ////////////////////////////////////////////////////////

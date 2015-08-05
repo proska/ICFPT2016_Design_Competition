@@ -3,57 +3,31 @@ package Game.TestPlayer
 import Game.World.Margin.Margin
 import Game.World.Margin.Margin
 import Game.World._
-import Game.World.traxColor.traxColor
+//import Game.World.traxColor.traxColor
 
 import scala.util.{Failure, Success, Try}
 
 /**
  * Created by proska on 7/11/15.
  */
-trait moveFinder {
+object moveFinder {
 
   type Terminal = Tuple2[Coordinate,Margin]
 
-  def giveCompatibleRoutesWithMove( routes:List[Route] , move:Move ): List[Route] = {
-    routes.filter( {
-      case (route:Route) => (isTerminalCompatibleWithMove(route.start,move) ) ||
-        (isTerminalCompatibleWithMove(route.end,move) )
-    } )
-  }
 
   ///////////////////////////////////////////
   ///////////////////////////////////////////
   ///////////////////////////////////////////
 
-  // Valid Move Rules
-  def isTerminalCompatibleWithMove(terminal:(Coordinate,Margin),move:Move): Boolean = {
-    (terminal._1 == move.pos) && isPathContinue(terminal._2,move)
-  }
-
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
-
-  def isPathContinue(dir:Margin , move:Move):Boolean = {
-
-    ((dir == Margin.TOP   )  & ((move.TileType.getVal & (1<<3))!=0)) |
-      ((dir == Margin.DOWN)  & ((move.TileType.getVal & (1<<2))!=0)) |
-      ((dir == Margin.RIGHT )  & ((move.TileType.getVal & (1<<1))!=0)) |
-      ((dir == Margin.LEFT  )  & ((move.TileType.getVal & (1<<0))!=0))
-  }
-
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
 
   def giveAllPossibleMoves(state:gameState , side:traxColor): List[Move] = {
     var movesList:List[Move] = List()
 
-    val comp = side.compare(traxColor.WHITE) == 0
+    //    val comp = side.compare(traxColor.WHITE) == 0
 
-    for( myRoute <- if( side.compare(traxColor.WHITE) == 0 )  state.whiteRoutes else state.blackRoutes ){
+    for( myRoute <- if( side == traxColor.WHITE )  state.whiteRoutes else state.blackRoutes ){
 
-//      val a = giveValidMoves(myRoute.start)
+      //      val a = giveValidMoves(myRoute.start)
       movesList = movesList ++ giveValidMoves(myRoute.start)
       movesList = movesList ++ giveValidMoves(myRoute.end)
 
@@ -68,6 +42,7 @@ trait moveFinder {
         }
         case None => tmpList
       }
+      def isPow2(in: Int):Boolean = (in & (in-1)) == 0
 
       tmpList
     }
@@ -87,7 +62,7 @@ trait moveFinder {
     movesList
   }
 
-  def giveBasicPossibleMovesOfTerminal(terminal: (Coordinate,Margin) , color:traxColor): Try[List[Move]] = {
+  private def giveBasicPossibleMovesOfTerminal(terminal: (Coordinate,Margin) , color:traxColor): Try[List[Move]] = {
 
     var out:Try[List[Move]] = null
 
@@ -116,7 +91,38 @@ trait moveFinder {
     out
   }
 
-  def isPow2(in: Int):Boolean = (in & (in-1)) == 0
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+
+  def giveCompatibleRoutesWithMove( routes:List[Route] , move:Move ): List[Route] = {
+    routes.filter( {
+      case (route:Route) => (isTerminalCompatibleWithMove(route.start,move) ) ||
+        (isTerminalCompatibleWithMove(route.end,move) )
+    } )
+  }
+
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+
+  // Valid Move Rules
+  def isTerminalCompatibleWithMove(terminal:(Coordinate,Margin),move:Move): Boolean = {
+    (terminal._1 == move.pos) && isPathContinue(terminal._2,move)
+  }
+
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+
+  private def isPathContinue(dir:Margin , move:Move):Boolean = {
+
+    ((dir == Margin.TOP   )  & ((move.TileType.getVal & (1<<3))!=0)) |
+      ((dir == Margin.DOWN)  & ((move.TileType.getVal & (1<<2))!=0)) |
+      ((dir == Margin.RIGHT )  & ((move.TileType.getVal & (1<<1))!=0)) |
+      ((dir == Margin.LEFT  )  & ((move.TileType.getVal & (1<<0))!=0))
+  }
+
 
   ////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////
