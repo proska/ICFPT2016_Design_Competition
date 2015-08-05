@@ -25,6 +25,7 @@ class stateMC {
         move = null;
     }
 
+
     stateMC(stateMC p){
         parent = p;
     }
