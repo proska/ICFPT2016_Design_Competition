@@ -188,8 +188,8 @@ class Route {
 
   def compare(that:Route): Boolean = {
     this.start == that.start &&
-    this.end   == that.end   &&
-    this.length == that.length
+      this.end   == that.end   &&
+      this.length == that.length
   }
 
 }
@@ -259,8 +259,9 @@ class gameState{
       case _:Throwable => throw new IllegalArgumentException("giveAllCompatibleRoutes failed!")
     }
 
+    if(myRoute.length == 1)
+      myRoute(0).update(move,side)
 
-    myRoute(0).update(move,side)
 
     if(oppRoute.length == 1){
 
@@ -331,7 +332,10 @@ class gameState{
     val myRoute = if (side == traxColor.WHITE) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
     else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
 
-    assert(myRoute.length == 1, "Incorrect move!")
+    assert(myRoute.length == 0 || myRoute.length == 1, "Incorrect move!")
+
+    if(myRoute.length == 0)
+      println("####[AUTO MOVE]####")
 
     val oppRoute = if (side == traxColor.BLACK) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
     else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
@@ -398,7 +402,7 @@ class gameState{
   ////////////////////////////////////////////////////////////////////////////
 
   def compare(that:gameState):Boolean = {
-      this.whiteRoutes.zip(that.whiteRoutes).map(x => x._1 compare x._2).reduceLeft(_&&_) &
+    this.whiteRoutes.zip(that.whiteRoutes).map(x => x._1 compare x._2).reduceLeft(_&&_) &
       this.blackRoutes.zip(that.blackRoutes).map(x => x._1 compare x._2).reduceLeft(_&&_)
   }
 
@@ -453,13 +457,13 @@ object Move {
     Move(tile, coordinate)
   }
 
-//    def apply(move:Game.montecarlo.MontecarloAlgorithm.TreeNode.Move):Move {
-//        Move movefinal = new Move
-//        movefinal. = move.x;
-//
-//
-//     return movefinal;
-//  }
+  //    def apply(move:Game.montecarlo.MontecarloAlgorithm.TreeNode.Move):Move {
+  //        Move movefinal = new Move
+  //        movefinal. = move.x;
+  //
+  //
+  //     return movefinal;
+  //  }
 }
 
 ////////////////////////////////////////////////////////
