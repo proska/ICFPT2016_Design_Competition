@@ -10,14 +10,14 @@ import scala.util.{Random, Failure, Success, Try}
 /**
  * Created by proska on 7/1/15.
  */
-class testPlayerScala(color:traxColor) extends PlayerScala with moveFinder{
+class testPlayerScala(color:traxColor) extends PlayerScala{
 
   override val side = color
   state = new gameState
   initialize()
   // Gives the indicated move
   override def play(): Move = {
-    val moveList = giveAllPossibleMoves(state,color)
+    val moveList = moveFinder.giveAllPossibleMoves(state,color)
 
     val r = new Random()
 

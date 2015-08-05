@@ -14,7 +14,7 @@ import scala.util.{Failure, Success, Try}
  */
 
 
-object traxWorld extends moveFinder {
+object traxWorld {
 
   var state = new gameState
 
