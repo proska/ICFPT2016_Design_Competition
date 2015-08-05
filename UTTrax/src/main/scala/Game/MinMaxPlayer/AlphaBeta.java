@@ -40,7 +40,7 @@ public class AlphaBeta implements moveFinder {
 		    		AlphaBetaGen(state, turn, d);
 		    	}
                 d = d - 1;
-                if(d==4) {//////////////////////////////////////////////////score!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if(d==4) {
                         score=state.score()
                     }
                 else {

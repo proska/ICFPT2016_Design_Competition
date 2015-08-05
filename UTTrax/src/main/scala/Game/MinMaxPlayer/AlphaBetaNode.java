@@ -10,6 +10,7 @@ import Game.World.gameState;
  * Created by sahand on 7/15/15.
  */
 public class AlphaBetaNode {
+    /////
     gameState PeresentState;
     int alpha=-1000;
     int beta=1000;
