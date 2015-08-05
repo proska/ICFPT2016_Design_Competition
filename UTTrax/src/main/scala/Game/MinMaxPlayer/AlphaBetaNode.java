@@ -17,14 +17,32 @@ public class AlphaBetaNode {
     int score=0;
     AlphaBetaNode parent;
     int Id;
+    List<AlphaBetaNode> children= new ArrayList<AlphaBetaNode>();
+    Move[] Mchild;
+
+    public AlphaBetaNode(){}
     public AlphaBetaNode(gameState start){
         PeresentState =start;
     }
-    public AlphaBetaNode(){};
-    List<AlphaBetaNode> children= new ArrayList<AlphaBetaNode>();
-    Move[] Mchild;
+    public AlphaBetaNode(AlphaBetaNode c){
+        this.PeresentState.apply(c.PeresentState);
+        this.alpha=c.alpha;
+        this.beta=c.beta;
+        this.Depth=c.Depth;
+        this.score=c.score;
+        this.parent=c.parent;
+        this.Id=c.Id;
+        for(int i=0;i<c.children.size();i++)
+            this.children.add(i, c.children.get(i));
+        for(int i=0;i<c.Mchild.length ;i++)
+            this.Mchild[i]=c.Mchild[i];
+
+
+    }
+
     void setMchild(Move[] possibleMoves){
-        Mchild=possibleMoves;
+        for(int i=0;i<possibleMoves.length ;i++)
+            this.Mchild[i]=possibleMoves[i];
     }
     void setParent (AlphaBetaNode parent){
         this.parent=parent;
@@ -34,6 +52,8 @@ public class AlphaBetaNode {
         children.add(i,child);
         children.get(i).Id=i;
         children.get(i).parent=this;
+        children.get(i).alpha=this.alpha;
+        children.get(i).beta=this.beta;
     }
     void setId(int i){
         this.Id=i;
@@ -61,4 +81,7 @@ public class AlphaBetaNode {
         else
             return true;
     }
+    void setScore(){
+        score=10;
+    }//////////////////////////////////////////////////////////////////////
 }
