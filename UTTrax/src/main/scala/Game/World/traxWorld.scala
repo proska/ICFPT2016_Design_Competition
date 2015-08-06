@@ -159,14 +159,10 @@ object traxWorld {
     gui.addTile(move.TileType,move.pos)
 
 //    gui.addTile(move._pos.X, move._pos.Y, move.TileType)
-    try {
+
       println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
       state.updateState(move, side,addMovetoGUI)
       return true
-    }
-    catch {
-      case _ :Throwable=> throw new IllegalArgumentException("");return false
-    }
 
   }
 

@@ -263,13 +263,17 @@ class gameState{
       myRoute(0).update(move,side)
 
 
-    if(oppRoute.length == 1){
+    try{
+      if(oppRoute.length == 1){
 
-      val prevlen = if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length
-      println("[TEST] RouteUpdated:"+oppRoute)
-      oppRoute.foreach(_.update(move,traxColor.flip(side)))
-      println("[TEST] RouteUpdated:"+oppRoute)
-      assert({if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length} == prevlen , "Wrong oppRoute Update!")
+        val prevlen = if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length
+        println("[TEST] RouteUpdated:"+oppRoute)
+        oppRoute.foreach(_.update(move,traxColor.flip(side)))
+        println("[TEST] RouteUpdated:"+oppRoute)
+        assert({if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length} == prevlen , "Wrong oppRoute Update!")
+      }
+    } catch {
+      case _:Throwable => throw new IllegalArgumentException("updating Opp Route Failed!")
     }
 
     try {
@@ -332,9 +336,9 @@ class gameState{
     val myRoute = if (side == traxColor.WHITE) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
     else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
 
-    assert(myRoute.length == 0 || myRoute.length == 1, "Incorrect move!")
+    assert(myRoute.length == 2 || myRoute.length == 1, "Incorrect move!")
 
-    if(myRoute.length == 0)
+    if(myRoute.length == 2)
       println("####[AUTO MOVE]####")
 
     val oppRoute = if (side == traxColor.BLACK) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
