@@ -51,7 +51,7 @@ public class GAPlayer implements Player {//implements Player
             default:
                 System.out.println("Invalid Tile Type");
         }
-        Tile newTile = new Tile(new Point(move.pos().X(), move.pos().Y()));
+        Tile newTile = new Tile(new Point(move.pos().X(), -move.pos().Y()));
         newTile.setTile(ch, dir, color);
         mainMap.addTile(newTile);
         mainMap.autoFill();
@@ -83,7 +83,7 @@ public class GAPlayer implements Player {//implements Player
                 tile = traxTiles.BWBW;
             }
         }
-        Coordinate coor = new Coordinate(nextMoveTile.coordinate.getX(), nextMoveTile.coordinate.getY());
+        Coordinate coor = new Coordinate(nextMoveTile.coordinate.getX(), -nextMoveTile.coordinate.getY());
         Move nextMove = new Move(tile, coor);
         return nextMove;
     }
