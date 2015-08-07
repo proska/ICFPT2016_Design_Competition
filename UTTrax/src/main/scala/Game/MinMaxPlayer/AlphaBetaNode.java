@@ -19,8 +19,7 @@ public class AlphaBetaNode {
     AlphaBetaNode parent;
     int Id;
     List<AlphaBetaNode> children= new ArrayList<AlphaBetaNode>();
-    Move[] Mchild;
-
+    List<Move> Mchild= new ArrayList<Move>();;
     public AlphaBetaNode(){}
     public AlphaBetaNode(gameState start){
         PeresentState =start;
@@ -35,15 +34,15 @@ public class AlphaBetaNode {
         this.Id=c.Id;
         for(int i=0;i<c.children.size();i++)
             this.children.add(i, c.children.get(i));
-        for(int i=0;i<c.Mchild.length ;i++)
-            this.Mchild[i]=c.Mchild[i];
+        for(int i=0;i<c.Mchild.size() ;i++)
+            this.Mchild.add(i,c.Mchild.get(i));
 
 
     }
 
-    void setMchild(Move[] possibleMoves){
-        for(int i=0;i<possibleMoves.length ;i++)
-            this.Mchild[i]=possibleMoves[i];
+    void setMchild(	scala.collection.immutable.List<Game.World.Move> possibleMoves){
+        for(int i=0;i<possibleMoves.size() ;i++)
+            this.Mchild.add(i,possibleMoves.apply(i));
     }
     void setParent (AlphaBetaNode parent){
         this.parent=parent;
@@ -60,7 +59,7 @@ public class AlphaBetaNode {
         this.Id=i;
     }
     void setAlphaBeta(AlphaBetaNode parent,int score,traxColor turn){
-        if (turn==traxColor.WHITE()){//////////////////////////////////////////////////?!
+        if (turn==traxColor.WHITE){//////////////////////////////////////////////////?!
             if(score>parent.alpha){
                 parent.alpha=score;
             }
@@ -85,4 +84,7 @@ public class AlphaBetaNode {
     void setScore(){
         score=10;
     }//////////////////////////////////////////////////////////////////////
+    int scoreGen(){
+        return 20;
+    }
 }

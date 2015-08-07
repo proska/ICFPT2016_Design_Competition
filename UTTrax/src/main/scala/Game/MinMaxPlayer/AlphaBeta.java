@@ -1,18 +1,42 @@
 package Game.MinMaxPlayer;
 import Game.World.*;
 import Game.TestPlayer.*;
+import scala.xml.Null;
 
 /**
  * Created by sahand on 7/27/15.
  */
-public class AlphaBeta implements moveFinder {
+public class AlphaBeta implements Player  {
+//    @Override
+//    public boolean isPow2(int in) {
+//        return false;//super.isPow2(in);
+//    }
+
+    traxColor side = null;
+    gameState state = null;
+
+    public AlphaBeta(traxColor side) {
+        this.side = side;
+    }
+
     @Override
-    public boolean isPow2(int in) {
-        return false;//super.isPow2(in);
+    public void initialize() {
+        state = moveFinder.initState();
+    }
+
+    @Override
+    public Move play() {
+        Move z=this.AlphaBetaGen(new AlphaBetaNode(state) , side ,0);
+        return z;
+    }
+
+    @Override
+    public void update(Move move, Boolean reAction) {
+        state.updateState(move,side,null);
     }
 
     Move AlphaBetaGen(AlphaBetaNode state, traxColor turn, int d){
-	    int Depth=4;
+	    int Depth=2;
     	boolean bw=false;
         boolean ww=false;
 	    Functions f=new Functions();
@@ -20,28 +44,31 @@ public class AlphaBeta implements moveFinder {
 	    int score=0 ;
         int finalsocre=0;
 
-	   	Move[] allmoves=this.giveAllPossibleMoves(state.PeresentState, turn);//////////////////////?
+	   	scala.collection.immutable.List<Game.World.Move> allmoves= moveFinder.giveAllPossibleMoves(state.PeresentState, turn);//////////////////////?
         state.setMchild(allmoves);
         WinCheck winCheck = new WinCheck(state, turn, bw, ww).invoke();
         ww = winCheck.isWw();
         bw = winCheck.isBw();
-        for(int j=0;j<state.Mchild.length;j++) {
+        for(int j=0;j<state.Mchild.size();j++) {
 		    if (AlphaBetaF && (state.alpha > state.beta)) {
     			break;
 	    	}
 		    else {
 		    	while (d < Depth && ww== false && bw==false) {
-		    		AlphaBetaNode newstate =new AlphaBetaNode(state);
-                    newstate.PeresentState.updateState(state.Mchild[j],turn);
+                    int MchSize=state.Mchild.size();
+                    Move mch=state.Mchild.get(j);
+                    gameState tmpstate = gameState.apply(state.PeresentState);
+                    tmpstate.updateState(state.Mchild.get(j),turn, null);
+                    AlphaBetaNode newstate =new AlphaBetaNode(tmpstate);
                     state.setChild(j,newstate);
 			    	state=state.children.get(j);
 			    	d = d + 1;
                     turn = traxColor.flip(turn);
 		    		AlphaBetaGen(state, turn, d);
 		    	}
-                d = d - 1;
-                if(d==4) {
-                        score=state.score()
+
+                if(d==2) {
+                        score=state.scoreGen();
                     }
                 else {
                     for (int i = 0; i < state.children.size(); i++) {
@@ -50,11 +77,15 @@ public class AlphaBeta implements moveFinder {
                     }
                 }
                 }
-                state=state.returnParent();
-			    state.setAlphaBeta(state,turn);/////////////////////////////////////////
-                state.setScore();
+
 	    	}
+
 	    }
+        state=state.returnParent();
+        state.setAlphaBeta(state,score,turn);/////////////////////////////////////////
+        state.setScore();
+        d = d - 1;
+        turn = traxColor.flip(turn);
         int finalid=0;
         for(int i=0;i<state.children.size();i++){
             if (finalsocre < state.children.get(i).score){
@@ -62,7 +93,7 @@ public class AlphaBeta implements moveFinder {
                 finalid=i;
             }
         }
-        return state.Mchild[finalid];
+        return state.Mchild.get(finalid);
     }
 
     public class WinCheck {
