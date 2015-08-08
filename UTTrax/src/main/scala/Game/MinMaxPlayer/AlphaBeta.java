@@ -9,10 +9,12 @@ import scala.xml.Null;
 public class AlphaBeta implements Player  {
 
     traxColor side = null;
+    traxColor ourcolor = null;
     gameState state = null;
 
     public AlphaBeta(traxColor side) {
         this.side = side;
+        this.ourcolor=side;
     }
 
     @Override
@@ -76,8 +78,9 @@ public class AlphaBeta implements Player  {
 		    	}
 
                 if(d==2) {
-                    score=state.scoreGen();
-//                        state.scoreGen(state.Mchild.get(j));
+//                    score=state.scoreGen();
+                        score=state.scoreGen(state.Mchild.get(j),state.PeresentState,ourcolor);
+                        state.setAlphaBeta(state,score,turn,ourcolor);
                     }
                 else {
                     for (int i = 0; i < state.children.size(); i++) {
@@ -90,21 +93,13 @@ public class AlphaBeta implements Player  {
 	    	}
 
 	    }
+        state.setScore(turn,ourcolor);
         state=state.returnParent();
-        state.setAlphaBeta(state,score,turn);/////////////////////////////////////////
-        state.setScore();
-//        if(d==2){
-//            state=state.returnParent();
-//            state=state.returnParent();
-//            d=d-2;
-//        }
-//
-//        else{
-            d = d - 1;
-           // state=state.returnParent();
-//        }
+        d = d - 1;
         turn = traxColor.flip(turn);
         int finalid=0;
+
+
         for(int i=0;i<state.parent.children.size();i++){
             if (finalsocre < state.parent.children.get(i).score){
                 finalsocre=state.parent.children.get(i).score;

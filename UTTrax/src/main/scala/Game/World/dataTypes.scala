@@ -248,9 +248,9 @@ class gameState{
 
 
   def dump: Any = {
-//    println("[TEST] WhiteRoute:");
+    println("[TEST] WhiteRoute:");
     this.whiteRoutes.foreach(x => println(x))
-//    println("[TEST] BlackRoutes:");
+    println("[TEST] BlackRoutes:");
     this.blackRoutes.foreach(x => println(x))
   }
 
@@ -324,7 +324,7 @@ class gameState{
         val isBlack = color == traxColor.BLACK
         tmpList(0).doMerge(tmpList(1), serverF, isBlack, null) match {
           case Some(x) => {
-
+            println("[INFO] Auto Move:"+x._2)
             autoList = autoList ++ giveAdjacentCoordinates(pos)
 
             newMove = x._2

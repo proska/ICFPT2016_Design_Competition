@@ -1,0 +1,210 @@
+/usr/lib/jvm/java-7-openjdk-amd64/bin/java -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:54790,suspend=y,server=n -Dfile.encoding=UTF-8 -classpath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/compilefontconfig.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/management-agent.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/javazic.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/java-atk-wrapper.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/zipfs.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/icedtea-sound.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/localedata.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunpkcs11.jar:/home/sahand/ICFPT2016_Design_Competition/UTTrax/target/scala-2.10/classes:/home/sahand/.sbt/boot/scala-2.10.4/lib/scala-library.jar:/home/sahand/Downloads/idea-IC-139.1117.1/lib/idea_rt.jar Game.World.traxWorld
+Connected to the target VM, address: '127.0.0.1:54790', transport: 'socket'
+[INFO] Tile:WWBB Added to GUI in (0,0)
+[INFO] Tile:WBBW Added to GUI in (0,-1)
+[INFO] Tile:BBWW Added to GUI in (-1,-1)
+[INFO] Automatic move:((-1,0),WBBW) is done.
+[INFO] Tile:WBBW Added to GUI in (-1,0)
+[INFO] Tile:BBWW Added to GUI in (-2,-1)
+[INFO] Tile:BWBW Added to GUI in (0,1)
+[INFO] Automatic move:((-1,1),BWWB) is done.
+[INFO] Tile:BWWB Added to GUI in (-1,1)
+[INFO] Tile:BBWW Added to GUI in (-3,-1)
+[INFO] Tile:WBBW Added to GUI in (-1,2)
+[INFO] Automatic move:((0,2),WBWB) is done.
+[INFO] Tile:WBWB Added to GUI in (0,2)
+[INFO] Tile:BBWW Added to GUI in (-4,-1)
+----------------------------------
+[INFO] Player BLACK updated its state with ((-3,0),WBBW)
+[INFO] Player BLACK returned move:((-3,0),WBBW)
+[INFO] Server is adding player BLACK's move:((-3,0),WBBW) to Map.
+[INFO] Tile:WBBW Added to GUI in (-3,0)
+[INFO] Server is updating player BLACK's move:((-3,0),WBBW) in states.
+[INFO] Automatic move:((-2,0),WBWB) is done.
+[INFO] Tile:WBWB Added to GUI in (-2,0)
+[INFO] Player WHITE updated its state with ((-3,0),WBBW),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-2,2),WBWB)
+[INFO] Player WHITE returned move:((-2,2),WBWB)
+[INFO] Server is adding player WHITE's move:((-2,2),WBWB) to Map.
+[INFO] Tile:WBWB Added to GUI in (-2,2)
+[INFO] Server is updating player WHITE's move:((-2,2),WBWB) in states.
+[INFO] Automatic move:((-2,1),BWBW) is done.
+[INFO] Tile:BWBW Added to GUI in (-2,1)
+[INFO] Automatic move:((-3,1),BWWB) is done.
+[INFO] Tile:BWWB Added to GUI in (-3,1)
+[INFO] Automatic move:((-3,2),WBBW) is done.
+[INFO] Tile:WBBW Added to GUI in (-3,2)
+[INFO] Player BLACK updated its state with ((-2,2),WBWB),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-4,2),WBWB)
+[INFO] Player BLACK returned move:((-4,2),WBWB)
+[INFO] Server is adding player BLACK's move:((-4,2),WBWB) to Map.
+[INFO] Tile:WBWB Added to GUI in (-4,2)
+[INFO] Server is updating player BLACK's move:((-4,2),WBWB) in states.
+[INFO] Automatic move:((-4,1),BWBW) is done.
+[INFO] Tile:BWBW Added to GUI in (-4,1)
+[INFO] Automatic move:((-4,0),WBWB) is done.
+[INFO] Tile:WBWB Added to GUI in (-4,0)
+[INFO] Player WHITE updated its state with ((-4,2),WBWB),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-3,-2),BWWB)
+[INFO] Player WHITE returned move:((-3,-2),BWWB)
+[INFO] Server is adding player WHITE's move:((-3,-2),BWWB) to Map.
+[INFO] Tile:BWWB Added to GUI in (-3,-2)
+[INFO] Server is updating player WHITE's move:((-3,-2),BWWB) in states.
+[INFO] Automatic move:((-4,-2),BWBW) is done.
+[INFO] Tile:BWBW Added to GUI in (-4,-2)
+[INFO] Player BLACK updated its state with ((-3,-2),BWWB),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((1,1),BWWB)
+[INFO] Player BLACK returned move:((1,1),BWWB)
+[INFO] Server is adding player BLACK's move:((1,1),BWWB) to Map.
+[INFO] Tile:BWWB Added to GUI in (1,1)
+[INFO] Server is updating player BLACK's move:((1,1),BWWB) in states.
+[INFO] Player WHITE updated its state with ((1,1),BWWB),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-4,3),BWBW)
+[INFO] Player WHITE returned move:((-4,3),BWBW)
+[INFO] Server is adding player WHITE's move:((-4,3),BWBW) to Map.
+[INFO] Tile:BWBW Added to GUI in (-4,3)
+[INFO] Server is updating player WHITE's move:((-4,3),BWBW) in states.
+[INFO] Player BLACK updated its state with ((-4,3),BWBW),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-1,-2),BBWW)
+[INFO] Player BLACK returned move:((-1,-2),BBWW)
+[INFO] Server is adding player BLACK's move:((-1,-2),BBWW) to Map.
+[INFO] Tile:BBWW Added to GUI in (-1,-2)
+[INFO] Server is updating player BLACK's move:((-1,-2),BBWW) in states.
+[INFO] Automatic move:((-2,-2),BBWW) is done.
+[INFO] Tile:BBWW Added to GUI in (-2,-2)
+[INFO] Player WHITE updated its state with ((-1,-2),BBWW),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-5,-1),BWWB)
+[INFO] Player WHITE returned move:((-5,-1),BWWB)
+[INFO] Server is adding player WHITE's move:((-5,-1),BWWB) to Map.
+[INFO] Tile:BWWB Added to GUI in (-5,-1)
+[INFO] Server is updating player WHITE's move:((-5,-1),BWWB) in states.
+[INFO] Automatic move:((-5,0),WBBW) is done.
+[INFO] Tile:WBBW Added to GUI in (-5,0)
+[INFO] Automatic move:((-5,-2),WBWB) is done.
+[INFO] Tile:WBWB Added to GUI in (-5,-2)
+[INFO] Automatic move:((-5,1),BWWB) is done.
+[INFO] Tile:BWWB Added to GUI in (-5,1)
+[INFO] Automatic move:((-5,2),WBBW) is done.
+[INFO] Tile:WBBW Added to GUI in (-5,2)
+[INFO] Automatic move:((-5,3),BWWB) is done.
+[INFO] Tile:BWWB Added to GUI in (-5,3)
+[INFO] Player BLACK updated its state with ((-5,-1),BWWB),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-1,-3),BBWW)
+[INFO] Player BLACK returned move:((-1,-3),BBWW)
+[INFO] Server is adding player BLACK's move:((-1,-3),BBWW) to Map.
+[INFO] Tile:BBWW Added to GUI in (-1,-3)
+[INFO] Server is updating player BLACK's move:((-1,-3),BBWW) in states.
+[INFO] Player WHITE updated its state with ((-1,-3),BBWW),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((0,3),BWWB)
+[INFO] Player WHITE returned move:((0,3),BWWB)
+[INFO] Server is adding player WHITE's move:((0,3),BWWB) to Map.
+[INFO] Tile:BWWB Added to GUI in (0,3)
+[INFO] Server is updating player WHITE's move:((0,3),BWWB) in states.
+[INFO] Player BLACK updated its state with ((0,3),BWWB),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-6,2),BWWB)
+[INFO] Player BLACK returned move:((-6,2),BWWB)
+[INFO] Server is adding player BLACK's move:((-6,2),BWWB) to Map.
+[INFO] Tile:BWWB Added to GUI in (-6,2)
+[INFO] Server is updating player BLACK's move:((-6,2),BWWB) in states.
+[INFO] Automatic move:((-6,3),WBBW) is done.
+[INFO] Tile:WBBW Added to GUI in (-6,3)
+[INFO] Player WHITE updated its state with ((-6,2),BWWB),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-7,3),BWWB)
+[INFO] Player WHITE returned move:((-7,3),BWWB)
+[INFO] Server is adding player WHITE's move:((-7,3),BWWB) to Map.
+[INFO] Tile:BWWB Added to GUI in (-7,3)
+[INFO] Server is updating player WHITE's move:((-7,3),BWWB) in states.
+[INFO] Player BLACK updated its state with ((-7,3),BWWB),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-6,0),BWWB)
+[INFO] Player BLACK returned move:((-6,0),BWWB)
+[INFO] Server is adding player BLACK's move:((-6,0),BWWB) to Map.
+[INFO] Tile:BWWB Added to GUI in (-6,0)
+[INFO] Server is updating player BLACK's move:((-6,0),BWWB) in states.
+[INFO] Automatic move:((-6,1),WBBW) is done.
+[INFO] Tile:WBBW Added to GUI in (-6,1)
+[INFO] Player WHITE updated its state with ((-6,0),BWWB),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-7,0),BWBW)
+[INFO] Player WHITE returned move:((-7,0),BWBW)
+[INFO] Server is adding player WHITE's move:((-7,0),BWBW) to Map.
+[INFO] Tile:BWBW Added to GUI in (-7,0)
+[INFO] Server is updating player WHITE's move:((-7,0),BWBW) in states.
+[INFO] Player BLACK updated its state with ((-7,0),BWBW),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-8,3),WWBB)
+[INFO] Player BLACK returned move:((-8,3),WWBB)
+[INFO] Server is adding player BLACK's move:((-8,3),WWBB) to Map.
+[INFO] Tile:WWBB Added to GUI in (-8,3)
+[INFO] Server is updating player BLACK's move:((-8,3),WWBB) in states.
+[INFO] Player WHITE updated its state with ((-8,3),WWBB),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-8,4),WWBB)
+[INFO] Player WHITE returned move:((-8,4),WWBB)
+[INFO] Server is adding player WHITE's move:((-8,4),WWBB) to Map.
+[INFO] Tile:WWBB Added to GUI in (-8,4)
+[INFO] Server is updating player WHITE's move:((-8,4),WWBB) in states.
+[INFO] Automatic move:((-7,4),WBWB) is done.
+[INFO] Tile:WBWB Added to GUI in (-7,4)
+[INFO] Automatic move:((-6,4),BWBW) is done.
+[INFO] Tile:BWBW Added to GUI in (-6,4)
+[INFO] Automatic move:((-5,4),WBWB) is done.
+[INFO] Tile:WBWB Added to GUI in (-5,4)
+[INFO] Player BLACK updated its state with ((-8,4),WWBB),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-8,5),BWBW)
+[INFO] Player BLACK returned move:((-8,5),BWBW)
+[INFO] Server is adding player BLACK's move:((-8,5),BWBW) to Map.
+[INFO] Tile:BWBW Added to GUI in (-8,5)
+[INFO] Server is updating player BLACK's move:((-8,5),BWBW) in states.
+[INFO] Player WHITE updated its state with ((-8,5),BWBW),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-8,6),BBWW)
+[INFO] Player WHITE returned move:((-8,6),BBWW)
+[INFO] Server is adding player WHITE's move:((-8,6),BBWW) to Map.
+[INFO] Tile:BBWW Added to GUI in (-8,6)
+[INFO] Server is updating player WHITE's move:((-8,6),BBWW) in states.
+[INFO] Player BLACK updated its state with ((-8,6),BBWW),in reaction mode
+----------------------------------
+----------------------------------
+[INFO] Player BLACK updated its state with ((-6,5),WBBW)
+[INFO] Player BLACK returned move:((-6,5),WBBW)
+[INFO] Server is adding player BLACK's move:((-6,5),WBBW) to Map.
+[INFO] Tile:WBBW Added to GUI in (-6,5)
+[INFO] Server is updating player BLACK's move:((-6,5),WBBW) in states.
+[INFO] Automatic move:((-7,5),BWWB) is done.
+[INFO] Tile:BWWB Added to GUI in (-7,5)
+[INFO] Player WHITE updated its state with ((-6,5),WBBW),in reaction mode
+----------------------------------
+[INFO] Player WHITE updated its state with ((-8,2),WBWB)
+[INFO] Player WHITE returned move:((-8,2),WBWB)
+[INFO] Server is adding player WHITE's move:((-8,2),WBWB) to Map.
+[INFO] Tile:WBWB Added to GUI in (-8,2)
+[INFO] Server is updating player WHITE's move:((-8,2),WBWB) in states.
+[INFO] Automatic move:((-7,2),WBBW) is done.
+[INFO] Tile:WBBW Added to GUI in (-7,2)
+[INFO] Automatic move:((-7,1),WWBB) is done.
+[INFO] Tile:WWBB Added to GUI in (-7,1)
+[INFO] Player BLACK updated its state with ((-8,2),WBWB),in reaction mode
+----------------------------------
+Move Limit Reached
+GAME ENDED!
