@@ -1,6 +1,8 @@
 package Game.World
 
 import GUI.traxGUI
+import Game.MinMaxPlayer.AlphaBeta
+
 //import Game.GeneticAlgorithmPlayer.GAPlayer
 import Game.TestPlayer._
 //import Game.World.traxColor.traxColor
@@ -19,13 +21,13 @@ object traxWorld {
   var state = new gameState
 
   var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)//new GAPlayer(false)//
-  var blackPlayer:Player = new testPlayerScala(traxColor.BLACK)
+  var blackPlayer:Player = new AlphaBeta(traxColor.BLACK)
 
   val gui = new traxGUI(30)
 
   def startGame: Unit ={
 
-//    testGUI
+    //    testGUI
 
     initializeBoard
 
@@ -33,7 +35,7 @@ object traxWorld {
 
 
     println("GAME ENDED!")
-//    state.whiteRoutes.append(mutable.LinkedList(new Route))
+    //    state.whiteRoutes.append(mutable.LinkedList(new Route))
   }
 
   ////////////////////////////////////
@@ -58,7 +60,8 @@ object traxWorld {
         }
         println("----------------------------------")
 
-        state.dump
+        assert(whitePlayer.getState().compare(blackPlayer.getState()) , "state mismatch!")
+        assert(whitePlayer.getState().compare(state) , "state mismatch!")
 
         getPlayerMove(traxColor.WHITE) match {
           case Failure(_) => break()
@@ -66,20 +69,9 @@ object traxWorld {
         }
 
 
+        assert(whitePlayer.getState().compare(blackPlayer.getState()) , "state mismatch!")
+        assert(whitePlayer.getState().compare(state) , "state mismatch!")
 
-        (whitePlayer,blackPlayer) match {
-          case(x:testPlayerScala,y:testPlayerScala) =>
-          {
-            assert(x.getState().compare(y.getState()) , "")
-            assert(x.getState().compare(state) , "")
-
-          }
-        }
-
-        println("----------------------------------")
-        println("----------------------------------")
-        state.dump
-        println("----------------------------------")
         println("----------------------------------")
         counter +=1
         gameEnd = isEndofGame()
@@ -103,7 +95,7 @@ object traxWorld {
   private def testGUI: Unit = {
     var i: Int = 0
     for (i <- 0 to 10) {
-//      gui.addTile(0, -i, traxTiles.BBWW)
+      //      gui.addTile(0, -i, traxTiles.BBWW)
       addMovetoGUI(Move(traxTiles.BBWW,Coordinate(0,-i)))
     }
   }
@@ -138,7 +130,7 @@ object traxWorld {
 
     if(assignMove(move,side)){
 
-//      val a = whitePlayer.getState().compare(blackPlayer.getState())
+      //      val a = whitePlayer.getState().compare(blackPlayer.getState())
 
       if(side == traxColor.WHITE){
         blackPlayer.update(move,true)
@@ -164,11 +156,11 @@ object traxWorld {
 
     gui.addTile(move.TileType,move.pos)
 
-//    gui.addTile(move._pos.X, move._pos.Y, move.TileType)
+    //    gui.addTile(move._pos.X, move._pos.Y, move.TileType)
 
-      println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
-      state.updateState(move, side,addMovetoGUI)
-      return true
+    println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
+    state.updateState(move, side,addMovetoGUI)
+    return true
 
   }
 
@@ -184,12 +176,13 @@ object traxWorld {
   private def initializeBoard(): Unit ={
 
     testBoardInitializer(Move(traxTiles.WWBB,Coordinate(0,0)))
-    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,0)))
-    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(1,1)))
-    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,-1)))
-    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(2,0)))
-    testBoardInitializer(Move(traxTiles.WBBW,Coordinate(3,0)))
-    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(3,-1)))
+
+    //    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,0)))
+    //    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(1,1)))
+    //    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,-1)))
+    //    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(2,0)))
+    //    testBoardInitializer(Move(traxTiles.WBBW,Coordinate(3,0)))
+    //    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(3,-1)))
 
     whitePlayer.setState(state)
     blackPlayer.setState(state)

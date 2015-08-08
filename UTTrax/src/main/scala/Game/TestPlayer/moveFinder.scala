@@ -1,6 +1,6 @@
 package Game.TestPlayer
 
-import javafx.geometry.Side
+//import javafx.geometry.Side
 
 import Game.World.Margin.Margin
 import Game.World.Margin.Margin
@@ -16,6 +16,21 @@ object moveFinder {
 
   type Terminal = Tuple2[Coordinate,Margin]
 
+
+  def initState:gameState = {
+
+    var state = new gameState();
+
+    state.whiteRoutes = List( Route( (Coordinate(0,1),Margin.DOWN),
+      (Coordinate(0,-1),Margin.TOP),
+      1))
+
+    state.blackRoutes = List(Route( (Coordinate(1,0),Margin.LEFT),
+      (Coordinate(-1,0),Margin.RIGHT),
+      1))
+    state
+
+  }
 
   ///////////////////////////////////////////
   ///////////////////////////////////////////

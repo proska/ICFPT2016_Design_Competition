@@ -248,9 +248,9 @@ class gameState{
 
 
   def dump: Any = {
-    println("[TEST] WhiteRoute:");
+//    println("[TEST] WhiteRoute:");
     this.whiteRoutes.foreach(x => println(x))
-    println("[TEST] BlackRoutes:");
+//    println("[TEST] BlackRoutes:");
     this.blackRoutes.foreach(x => println(x))
   }
 
@@ -270,7 +270,7 @@ class gameState{
 
     var autoList = giveAdjacentCoordinates(move._pos)
 
-    var needUpdate= true
+    var test4ValidMove= 0
 
     var newMove = move
 
@@ -287,7 +287,7 @@ class gameState{
       autoList = autoList.drop(1)
     }
 
-    println("Nothing")
+//    println("Nothing")
 
 
     def updateRouteList(list:List[Route],color:traxColor): Unit = {
@@ -299,6 +299,8 @@ class gameState{
       if (tmpRouteList.length == 0) {
         val tmpRoute: Route = getNewlyAddedRoute(newMove, color)
 
+        test4ValidMove += 1
+
         if(color == traxColor.WHITE)
           whiteRoutes = list ++ List(tmpRoute)
         else
@@ -306,7 +308,7 @@ class gameState{
       }
 
       if (tmpRouteList.length == 1) {
-        println("[TEST] Route Updated"+tmpRouteList(0).hashCode())
+//        println("[TEST] Route Updated"+tmpRouteList(0).hashCode())
         tmpRouteList(0).update(newMove, color)
       }
     }
@@ -323,20 +325,18 @@ class gameState{
         tmpList(0).doMerge(tmpList(1), serverF, isBlack, null) match {
           case Some(x) => {
 
-            needUpdate = true
-
             autoList = autoList ++ giveAdjacentCoordinates(pos)
 
             newMove = x._2
 
             if(color == traxColor.WHITE){
               whiteRoutes = list.diff(List(tmpList(0))).diff(List(tmpList(1))) ++ List(x._1)
-              println("[ASSERT] BlackDone")
+//              println("[ASSERT] BlackDone")
               updateRouteList(blackRoutes, traxColor.BLACK)
             }
             else{
               blackRoutes = list.diff(List(tmpList(0))).diff(List(tmpList(1))) ++ List(x._1)
-              println("[ASSERT] whiteDone")
+//              println("[ASSERT] whiteDone")
               updateRouteList(whiteRoutes, traxColor.WHITE)
             }
           }
@@ -346,12 +346,20 @@ class gameState{
     }
 
     def updateStateWithMove: Unit = {
-      println("[ASSERT] Update States")
+
+      test4ValidMove = 0
+      if(whiteRoutes.length == 0 && blackRoutes.length == 0){
+        test4ValidMove = -2
+      }
+
+//      println("[ASSERT] Update States")
 
       updateRouteList(whiteRoutes, traxColor.WHITE)
-      println("[ASSERT] whiteDone")
+//      println("[ASSERT] whiteDone")
       updateRouteList(blackRoutes, traxColor.BLACK)
-      println("[ASSERT] BlackDone")
+//      println("[ASSERT] BlackDone")
+
+      assert(test4ValidMove != 2,"Illegal Move!")
     }
 
 
@@ -436,7 +444,7 @@ class gameState{
     tmpRoute.start = tmpRoute.getNewTerminal(move, tmpRoute.start._2,side)
     tmpRoute.end = tmpRoute.getNewTerminal(move, tmpRoute.end._2,side)
 
-    println("[TEST] RouteAdded:"+tmpRoute)
+//    println("[TEST] RouteAdded:"+tmpRoute)
     tmpRoute
   }
 

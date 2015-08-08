@@ -8,7 +8,7 @@ import Game.World.*;
 */
 public interface Player {
 
-    traxColor side = traxColor.WHITE;
+    traxColor side = null;
 
 //    gameState state = new gameState();
 
