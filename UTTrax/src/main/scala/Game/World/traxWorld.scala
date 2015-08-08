@@ -167,7 +167,7 @@ object traxWorld {
 //    gui.addTile(move._pos.X, move._pos.Y, move.TileType)
 
       println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
-      state.updateStateNew(move, side,addMovetoGUI)
+      state.updateState(move, side,addMovetoGUI)
       return true
 
   }
@@ -178,7 +178,7 @@ object traxWorld {
 
   private def testBoardInitializer(move: Move): Unit ={
     addMovetoGUI(move)
-    state.updateStateNew(move,traxColor.WHITE,addMovetoGUI)
+    state.updateState(move,traxColor.WHITE,addMovetoGUI)
   }
 
   private def initializeBoard(): Unit ={

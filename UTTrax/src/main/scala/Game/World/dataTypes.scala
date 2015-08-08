@@ -258,7 +258,7 @@ class gameState{
   ///////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////
 
-  def updateStateNew(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
+  def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
 
     def giveAdjacentCoordinates(coordinate: Coordinate) : List[Coordinate] = {
       List(
@@ -362,58 +362,58 @@ class gameState{
   ///////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////
 
-  def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
-
-
-    val (myRoute: List[Route], oppRoute: List[Route]) = try {
-      giveAllCompatibleRoutes(move, side)
-    }
-    catch {
-      case _:Throwable => throw new IllegalArgumentException("giveAllCompatibleRoutes failed!")
-    }
-
-    if(myRoute.length == 1)
-      myRoute(0).update(move,side)
-
-
-    try{
-      if(oppRoute.length == 1){
-
-        val prevlen = if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length
-        println("[TEST] RouteUpdated:"+oppRoute)
-        oppRoute.foreach(_.update(move,traxColor.flip(side)))
-        println("[TEST] RouteUpdated:"+oppRoute)
-        assert({if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length} == prevlen , "Wrong oppRoute Update!")
-      }
-    } catch {
-      case _:Throwable => throw new IllegalArgumentException("updating Opp Route Failed!")
-    }
-
-    try {
-      if (oppRoute.length == 0) {
-
-        val tmpRoute: Route = getNewlyAddedRoute(move, traxColor.flip(side))
-
-        if (side == traxColor.WHITE)
-          blackRoutes = blackRoutes ++ List(tmpRoute)
-        else
-          whiteRoutes = whiteRoutes ++ List(tmpRoute)
-      }
-    }
-    catch {
-      case _:Throwable => throw new IllegalArgumentException("add new Route failed!")
-    }
-
-
-    try {
-      automaticMoves(serverF)
-    }
-    catch {
-      case _:Throwable => new IllegalArgumentException("Auto Move Failed!")
-    }
-
-    Success()
-  }
+//  def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
+//
+//
+//    val (myRoute: List[Route], oppRoute: List[Route]) = try {
+//      giveAllCompatibleRoutes(move, side)
+//    }
+//    catch {
+//      case _:Throwable => throw new IllegalArgumentException("giveAllCompatibleRoutes failed!")
+//    }
+//
+//    if(myRoute.length == 1)
+//      myRoute(0).update(move,side)
+//
+//
+//    try{
+//      if(oppRoute.length == 1){
+//
+//        val prevlen = if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length
+//        println("[TEST] RouteUpdated:"+oppRoute)
+//        oppRoute.foreach(_.update(move,traxColor.flip(side)))
+//        println("[TEST] RouteUpdated:"+oppRoute)
+//        assert({if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length} == prevlen , "Wrong oppRoute Update!")
+//      }
+//    } catch {
+//      case _:Throwable => throw new IllegalArgumentException("updating Opp Route Failed!")
+//    }
+//
+//    try {
+//      if (oppRoute.length == 0) {
+//
+//        val tmpRoute: Route = getNewlyAddedRoute(move, traxColor.flip(side))
+//
+//        if (side == traxColor.WHITE)
+//          blackRoutes = blackRoutes ++ List(tmpRoute)
+//        else
+//          whiteRoutes = whiteRoutes ++ List(tmpRoute)
+//      }
+//    }
+//    catch {
+//      case _:Throwable => throw new IllegalArgumentException("add new Route failed!")
+//    }
+//
+//
+//    try {
+//      automaticMoves(serverF)
+//    }
+//    catch {
+//      case _:Throwable => new IllegalArgumentException("Auto Move Failed!")
+//    }
+//
+//    Success()
+//  }
 
   ////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////
