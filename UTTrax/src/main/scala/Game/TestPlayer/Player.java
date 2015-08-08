@@ -10,7 +10,7 @@ public interface Player {
 
     traxColor side = traxColor.WHITE;
 
-    gameState state = new gameState();
+//    gameState state = new gameState();
 
     public void initialize();
 
@@ -18,6 +18,7 @@ public interface Player {
 
     public void update(Move move , Boolean reAction );
 
-   // public gameState getState();
+    public gameState getState();
+    public void setState(gameState st);
 }
 

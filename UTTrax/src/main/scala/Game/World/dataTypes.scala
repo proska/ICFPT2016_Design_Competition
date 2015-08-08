@@ -155,35 +155,40 @@ class Route {
     moveFinder.isTerminalCompatibleWithMove(start, move)
   }
 
-  def doMerge(that:Route ,serverF:Move => Any = null , isBlack:Boolean = false , stateUpdate:Move =>Any = null):Option[Route] = {
+  def doMerge(that:Route ,serverF:Move => Any = null , isBlack:Boolean = false , stateUpdate:Move =>Any = null):Option[(Route,Move)] = {
     var contact: (Terminal,Terminal) = null
-    var out:Option[Route] = None
+    var out:Route = null
 
     if(this.end._1 == that.end._1){
-      contact = (this.end , that.end);out = Some(Route(this.start,that.start,this.length + that.length + 1))
+      contact = (this.end , that.end);out = (Route(this.start,that.start,this.length + that.length + 1))
     } else if(this.end._1 == that.start._1){
-      contact = (this.end , that.start);out = Some(Route(this.start,that.end,this.length + that.length + 1))
+      contact = (this.end , that.start);out = (Route(this.start,that.end,this.length + that.length + 1))
     } else if(this.start._1 == that.end._1){
-      contact = (this.start , that.end);out = Some(Route(this.end,that.start,this.length + that.length + 1))
+      contact = (this.start , that.end);out = (Route(this.end,that.start,this.length + that.length + 1))
     } else if(this.start._1 == that.start._1){
-      contact = (this.start , that.start);out = Some(Route(this.end,that.end,this.length + that.length + 1))
+      contact = (this.start , that.start);out = (Route(this.end,that.end,this.length + that.length + 1))
     } else
-      out = None
+      out = null
 
     serverF match {
       case null =>
       case _ => out match {
-        case Some(_) => {
-          println("[INFO] Automatic move:"+Move(contact._1._1,contact._1._2,contact._2._2,isBlack)+" is done.")
-          serverF(Move(contact._1._1,contact._1._2,contact._2._2,isBlack))
-          stateUpdate(Move(contact._1._1,contact._1._2,contact._2._2,isBlack))
+        case _:Route => {
+          val newMove = Move(contact._1._1,contact._1._2,contact._2._2,isBlack)
+          println("[INFO] Automatic move:"+newMove+" is done.")
+          if(newMove._tile == traxTiles.INVALID){
+            println("Error")
+          }
+          serverF(newMove)
         }
         case _ =>
       }
     }
 
-
-    out
+    if(out != null)
+      Some(out,Move(contact._1._1,contact._1._2,contact._2._2,isBlack))
+    else
+      None
   }
 
   def compare(that:Route): Boolean = {
@@ -238,8 +243,8 @@ object Route {
 ////////////////////////////////////////////////////////
 
 class gameState{
-  var whiteRoutes : List[Route] = _
-  var blackRoutes : List[Route] = _
+  var whiteRoutes : List[Route] = List()
+  var blackRoutes : List[Route] = List()
 
 
   def dump: Any = {
@@ -248,6 +253,114 @@ class gameState{
     println("[TEST] BlackRoutes:");
     this.blackRoutes.foreach(x => println(x))
   }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+
+  def updateStateNew(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
+
+    def giveAdjacentCoordinates(coordinate: Coordinate) : List[Coordinate] = {
+      List(
+        Coordinate(coordinate.X + 1 , coordinate.Y    ) ,
+        Coordinate(coordinate.X - 1 , coordinate.Y    ) ,
+        Coordinate(coordinate.X     , coordinate.Y + 1) ,
+        Coordinate(coordinate.X     , coordinate.Y - 1))
+    }
+
+    var autoList = giveAdjacentCoordinates(move._pos)
+
+    var needUpdate= true
+
+    var newMove = move
+
+    var autoMove:List[Move] = List()
+
+
+    updateStateWithMove
+
+    while(autoList.length > 0){
+
+      checkMEcooridnates(autoList(0),whiteRoutes,traxColor.WHITE)
+      checkMEcooridnates(autoList(0),blackRoutes,traxColor.BLACK)
+
+      autoList = autoList.drop(1)
+    }
+
+    println("Nothing")
+
+
+    def updateRouteList(list:List[Route],color:traxColor): Unit = {
+
+      val tmpRouteList = moveFinder.giveCompatibleRoutesWithMove(list, {if(color == traxColor.WHITE)newMove else newMove.flip()})
+
+      assert(tmpRouteList.length < 3, "Illegal Move!")
+
+      if (tmpRouteList.length == 0) {
+        val tmpRoute: Route = getNewlyAddedRoute(newMove, color)
+
+        if(color == traxColor.WHITE)
+          whiteRoutes = list ++ List(tmpRoute)
+        else
+          blackRoutes = list ++ List(tmpRoute)
+      }
+
+      if (tmpRouteList.length == 1) {
+        println("[TEST] Route Updated"+tmpRouteList(0).hashCode())
+        tmpRouteList(0).update(newMove, color)
+      }
+    }
+
+    def checkMEcooridnates(pos: Coordinate , list: List[Route] , color:traxColor):Unit = {
+
+      val tmpList = list.filter(x => (x.start._1 == pos) || (x.end._1 == pos) )
+
+      assert(tmpList.length <=2 ,"Invalid Update: more that 2 comming routes")
+
+      if(tmpList.length == 2){
+
+        val isBlack = color == traxColor.BLACK
+        tmpList(0).doMerge(tmpList(1), serverF, isBlack, null) match {
+          case Some(x) => {
+
+            needUpdate = true
+
+            autoList = autoList ++ giveAdjacentCoordinates(pos)
+
+            newMove = x._2
+
+            if(color == traxColor.WHITE){
+              whiteRoutes = list.diff(List(tmpList(0))).diff(List(tmpList(1))) ++ List(x._1)
+              println("[ASSERT] BlackDone")
+              updateRouteList(blackRoutes, traxColor.BLACK)
+            }
+            else{
+              blackRoutes = list.diff(List(tmpList(0))).diff(List(tmpList(1))) ++ List(x._1)
+              println("[ASSERT] whiteDone")
+              updateRouteList(whiteRoutes, traxColor.WHITE)
+            }
+          }
+          case _ => //autoList = autoList.drop(0)
+        }
+      }
+    }
+
+    def updateStateWithMove: Unit = {
+      println("[ASSERT] Update States")
+
+      updateRouteList(whiteRoutes, traxColor.WHITE)
+      println("[ASSERT] whiteDone")
+      updateRouteList(blackRoutes, traxColor.BLACK)
+      println("[ASSERT] BlackDone")
+    }
+
+
+    Success(null)
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
 
   def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
 
@@ -318,7 +431,7 @@ class gameState{
     else if (move.TileType == traxTiles.WWBB) Route(move.pos, Margin.LEFT, Margin.RIGHT, isSideWhite)
     else {throw new IllegalArgumentException();new Route}
 
-    println("[TEST] RouteAdded:"+tmpRoute)
+//    println("[TEST] RouteAdded:"+tmpRoute)
 
     tmpRoute.start = tmpRoute.getNewTerminal(move, tmpRoute.start._2,side)
     tmpRoute.end = tmpRoute.getNewTerminal(move, tmpRoute.end._2,side)
@@ -384,7 +497,7 @@ class gameState{
            (inner,innerIdx) <- list.zipWithIndex.drop(outerIdx+1)) {
         inner.doMerge(outer,serverF,isBlack,selfUpdate) match {
           case Some(x) => {
-            tmp = tmp.diff(List(outer)).diff(List(inner)) ++ List(x)
+            tmp = tmp.diff(List(outer)).diff(List(inner)) ++ List(x._1)
             flag = false
             assert(tmp.length == list.length - 1 , "error in modifing routes in auto move")
             test +=1

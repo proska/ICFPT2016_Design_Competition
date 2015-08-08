@@ -7,10 +7,6 @@ import scala.xml.Null;
  * Created by sahand on 7/27/15.
  */
 public class AlphaBeta implements Player  {
-//    @Override
-//    public boolean isPow2(int in) {
-//        return false;//super.isPow2(in);
-//    }
 
     traxColor side = null;
     gameState state = null;
@@ -21,7 +17,17 @@ public class AlphaBeta implements Player  {
 
     @Override
     public void initialize() {
-        state = moveFinder.initState();
+
+    }
+
+    @Override
+    public gameState getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(gameState st) {
+        state = gameState.apply(st);
     }
 
     @Override

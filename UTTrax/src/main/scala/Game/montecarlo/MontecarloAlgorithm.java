@@ -3,33 +3,54 @@ package Game.montecarlo;
 import Game.TestPlayer.Player;
 import Game.TestPlayer.moveFinder;
 //import Game.TestPlayer.moveFinder$class;
-import Game.World.Move;
-import Game.World.gameState;
-import Game.World.traxColor;
+import Game.World.*;
+
 
 import java.lang.Boolean;
 import java.lang.Double;
 import java.util.Random;
 import java.util.Vector;
 
+
+
+
+
+
+import java.lang.String;
+
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util.println;
+
 /**
 * Created by saina on 7/28/15.
 */
 public class MontecarloAlgorithm implements Player {
 
-    gameState state ;
+
     traxColor side;
+    traxColor sidetmp;
 
     TreeNode root = new TreeNode();
+
+    gameState state = null;
 
     public MontecarloAlgorithm(traxColor side) {
         this.side = side;
     }
-
     @Override
     public void update(Move move, Boolean reAction) {
-        this.state.updateState(move,side,null);
+        println("start");
+        reAction = true;
+        if(!reAction)
+            sidetmp = side;
+        else
+            sidetmp = side.flip(side);
+
+
+        this.state.updateState(move, sidetmp, null);
+        println("update done");
     }
+
+
 
     @Override
     public Move play() {
@@ -39,10 +60,19 @@ public class MontecarloAlgorithm implements Player {
 
     @Override
     public void initialize() {
-
+    //state.whiteRoutes().apply(0) = new Route().apply(Coordinate.apply(0,0),true);
     }
 
 
+    @Override
+    public gameState getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(gameState st) {
+        state = gameState.apply(st);
+    }
 
 
     class TreeNode  {

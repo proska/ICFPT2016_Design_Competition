@@ -37,13 +37,13 @@ trait PlayerScala extends Player{
 
     val sidetmp  = {if(!reAction) side else traxColor.flip(side)}
 
-    state.updateState(move, sidetmp)
+    state.updateStateNew(move, sidetmp)
   }
 
 
   def setState(st:gameState) = state = gameState(st)
 
-//  override def getState():gameState = state
+  def getState():gameState = state
 
 }
 

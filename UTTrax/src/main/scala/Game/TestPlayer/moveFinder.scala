@@ -1,5 +1,7 @@
 package Game.TestPlayer
 
+import javafx.geometry.Side
+
 import Game.World.Margin.Margin
 import Game.World.Margin.Margin
 import Game.World._
@@ -23,20 +25,22 @@ object moveFinder {
   def giveAllPossibleMoves(state:gameState , side:traxColor): List[Move] = {
     var movesList:List[Move] = List()
 
-    //    val comp = side.compare(traxColor.WHITE) == 0
+    listAvailableMoves(state.whiteRoutes,traxColor.WHITE)
+    listAvailableMoves(state.blackRoutes,traxColor.BLACK)
 
-    for( myRoute <- if( side == traxColor.WHITE )  state.whiteRoutes else state.blackRoutes ){
 
-      //      val a = giveValidMoves(myRoute.start)
-      movesList = movesList ++ giveValidMoves(myRoute.start)
-      movesList = movesList ++ giveValidMoves(myRoute.end)
-
+    def listAvailableMoves(list:List[Route],side: traxColor): Unit = {
+      for (myRoute <- list) {
+        //      val a = giveValidMoves(myRoute.start)
+        movesList = movesList ++ giveValidMoves(myRoute.start, side)
+        movesList = movesList ++ giveValidMoves(myRoute.end, side)
+      }
     }
 
-    def giveValidMoves(terminal: Terminal): List[Move] = {
+    def giveValidMoves(terminal: Terminal,side:traxColor): List[Move] = {
       var tmpList: List[Move] = giveBasicPossibleMovesOfTerminal(terminal, side).get
 
-      tmpList = giveSharedTerminal(terminal) match {
+      tmpList = giveSharedTerminal(terminal,side) match {
         case Some(opp) => {
           tmpList.filter(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2))))
         }
@@ -47,7 +51,7 @@ object moveFinder {
       tmpList
     }
 
-    def giveSharedTerminal(myTerminal: Terminal): Option[Terminal] = {
+    def giveSharedTerminal(myTerminal: Terminal,side:traxColor): Option[Terminal] = {
       for ( oppRoute <-
             if (side == traxColor.WHITE ) state.blackRoutes else state.whiteRoutes) {
 
@@ -96,10 +100,16 @@ object moveFinder {
   ///////////////////////////////////////////
 
   def giveCompatibleRoutesWithMove( routes:List[Route] , move:Move ): List[Route] = {
-    routes.filter( {
-      case (route:Route) => (isTerminalCompatibleWithMove(route.start,move) ) ||
-        (isTerminalCompatibleWithMove(route.end,move) )
-    } )
+
+    routes match {
+      case _:List[Route] =>
+        routes.filter( {
+          case (route:Route) => (isTerminalCompatibleWithMove(route.start,move) ) ||
+            (isTerminalCompatibleWithMove(route.end,move) )
+        } )
+      case _ => List()
+    }
+
   }
 
   ///////////////////////////////////////////
