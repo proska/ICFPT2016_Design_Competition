@@ -1,4 +1,4 @@
-[info] Updating {file:/home/saina/ICFPT2016_Design_Competition/UTTrax/project/}uttrax-build...
+[info] Updating {file:/home/sahand/ICFPT2016_Design_Competition/UTTrax/project/}uttrax-build...
 [debug] :: resolving dependencies :: default#uttrax-build;0.1-SNAPSHOT
 [debug] 	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool]
 [debug] 	validate = true
@@ -16,7 +16,7 @@
 [debug] == resolving dependencies for default#uttrax-build;0.1-SNAPSHOT [provided]
 [debug] == resolving dependencies default#uttrax-build;0.1-SNAPSHOT->org.scala-lang#scala-library;2.10.4 [provided->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.10.4 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@250b0af0
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@2efbce1e
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.10.4
 [debug] 	found org.scala-lang#scala-library;2.10.4 in sbt-chain
 [debug] 	[2.10.4] org.scala-lang#scala-library;2.10.4
@@ -149,6 +149,9 @@
 [debug] sbt-chain: Checking cache for: dependency: jline#jline;2.11 {compile=[default(compile)]}
 [debug] sbt-chain: module revision found in cache: jline#jline;2.11
 [debug] 	found jline#jline;2.11 in sbt-chain
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->runtime]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->compile]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#actions;0.13.7->org.scala-sbt#api;0.13.7 [compile->default(compile)]
 [info] Resolving org.scala-sbt#api;0.13.7 ...
 [debug] sbt-chain: Checking cache for: dependency: org.scala-sbt#api;0.13.7 {compile=[default(compile)]}
@@ -199,6 +202,9 @@
 [debug] == resolving dependencies org.scala-sbt#process;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->compile]
 [debug] == resolving dependencies org.scala-sbt#process;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->default(compile)]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->runtime]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->compile]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#incremental-compiler;0.13.7->org.scala-sbt#classpath;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#incremental-compiler;0.13.7->org.scala-sbt#relation;0.13.7 [compile->default(compile)]
 [info] Resolving org.scala-sbt#relation;0.13.7 ...
@@ -793,6 +799,9 @@
 [debug] == resolving dependencies org.scala-sbt#completion;0.13.7->org.scala-sbt#control;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#completion;0.13.7->org.scala-sbt#io;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->default(compile)]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->runtime]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->compile]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#actions;0.13.7->org.scala-sbt#api;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#api;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#api;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->runtime]
@@ -823,6 +832,9 @@
 [debug] == resolving dependencies org.scala-sbt#process;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->compile]
 [debug] == resolving dependencies org.scala-sbt#process;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->default(compile)]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->runtime]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->compile]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#incremental-compiler;0.13.7->org.scala-sbt#classpath;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#incremental-compiler;0.13.7->org.scala-sbt#relation;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#relation;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->default(compile)]
@@ -1286,6 +1298,9 @@
 [debug] == resolving dependencies org.scala-sbt#completion;0.13.7->org.scala-sbt#control;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#completion;0.13.7->org.scala-sbt#io;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->default(compile)]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->runtime]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->compile]
+[debug] == resolving dependencies org.scala-sbt#completion;0.13.7->jline#jline;2.11 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#actions;0.13.7->org.scala-sbt#api;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#api;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#api;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->runtime]
@@ -1316,6 +1331,9 @@
 [debug] == resolving dependencies org.scala-sbt#process;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->compile]
 [debug] == resolving dependencies org.scala-sbt#process;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->default(compile)]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->runtime]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->compile]
+[debug] == resolving dependencies org.scala-sbt#logging;0.13.7->jline#jline;2.11 [compile->master]
 [debug] == resolving dependencies org.scala-sbt#incremental-compiler;0.13.7->org.scala-sbt#classpath;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#incremental-compiler;0.13.7->org.scala-sbt#relation;0.13.7 [compile->default(compile)]
 [debug] == resolving dependencies org.scala-sbt#relation;0.13.7->org.scala-lang#scala-library;2.10.4 [compile->default(compile)]
@@ -1800,19 +1818,19 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.7!apply-macro.jar
 [debug] 	[NOT REQUIRED] org.scala-lang#jline;2.10.4!jline.jar
 [debug] 	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar
-[debug] :: resolution report :: resolve 1865ms :: artifacts dl 39ms
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT provided produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-provided.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT optional produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-optional.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile-internal produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile-internal.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime-internal produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime-internal.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test-internal produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test-internal.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT plugin produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-plugin.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT sources produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-sources.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT docs produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-docs.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT pom produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-pom.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT scala-tool produced in /home/saina/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-scala-tool.xml
-[debug] 	resolve done (1865ms resolve - 39ms download)
+[debug] :: resolution report :: resolve 2252ms :: artifacts dl 99ms
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT provided produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-provided.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT optional produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-optional.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile-internal produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile-internal.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime-internal produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime-internal.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test-internal produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test-internal.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT plugin produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-plugin.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT sources produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-sources.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT docs produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-docs.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT pom produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-pom.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT scala-tool produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-scala-tool.xml
+[debug] 	resolve done (2252ms resolve - 99ms download)
 [info] Done updating.

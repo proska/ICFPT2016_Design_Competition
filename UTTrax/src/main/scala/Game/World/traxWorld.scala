@@ -1,9 +1,6 @@
 package Game.World
 
 import GUI.traxGUI
-import Game.World.traxColor
-import Game.montecarlo.MontecarloAlgorithm
-
 //import Game.GeneticAlgorithmPlayer.GAPlayer
 import Game.TestPlayer._
 //import Game.World.traxColor.traxColor
@@ -21,8 +18,8 @@ object traxWorld {
 
   var state = new gameState
 
-  var blackPlayer:Player = new MontecarloAlgorithm(traxColor.BLACK)//new GAPlayer(false)//
-  var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)
+  var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)//new GAPlayer(false)//
+  var blackPlayer:Player = new testPlayerScala(traxColor.BLACK)
 
   val gui = new traxGUI(30)
 
@@ -70,8 +67,14 @@ object traxWorld {
 
 
 
-//        assert(whitePlayer.getState().compare(blackPlayer.getState()) , "")
-//        assert(whitePlayer.getState().compare(state) , "")
+        (whitePlayer,blackPlayer) match {
+          case(x:testPlayerScala,y:testPlayerScala) =>
+          {
+            assert(x.getState().compare(y.getState()) , "")
+            assert(x.getState().compare(state) , "")
+
+          }
+        }
 
         println("----------------------------------")
         println("----------------------------------")
@@ -135,7 +138,7 @@ object traxWorld {
 
     if(assignMove(move,side)){
 
-      //val a = whitePlayer.getState().compare(blackPlayer.getState())
+//      val a = whitePlayer.getState().compare(blackPlayer.getState())
 
       if(side == traxColor.WHITE){
         blackPlayer.update(move,true)
@@ -162,14 +165,10 @@ object traxWorld {
     gui.addTile(move.TileType,move.pos)
 
 //    gui.addTile(move._pos.X, move._pos.Y, move.TileType)
-    try {
+
       println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
       state.updateState(move, side,addMovetoGUI)
       return true
-    }
-    catch {
-      case _ :Throwable=> throw new IllegalArgumentException("");return false
-    }
 
   }
 
@@ -177,31 +176,28 @@ object traxWorld {
     gui.addTile(move.TileType,move.pos)
   }
 
+  private def testBoardInitializer(move: Move): Unit ={
+    addMovetoGUI(move)
+    state.updateState(move,traxColor.WHITE,addMovetoGUI)
+  }
+
   private def initializeBoard(): Unit ={
 
-    addMovetoGUI(Move(traxTiles.WWBB,Coordinate(0,0)))
-//    gui.addTile(0,0, traxTiles.WWBB)
+    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(0,0)))
+    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,0)))
+    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(1,1)))
+    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,-1)))
+    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(2,0)))
+    testBoardInitializer(Move(traxTiles.WBBW,Coordinate(3,0)))
+    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(3,-1)))
 
-    state.whiteRoutes = List( Route( (Coordinate(0,1),Margin.DOWN),
-                                     (Coordinate(0,-1),Margin.TOP),
-                                      1))
-
-    state.blackRoutes = List(Route( (Coordinate(1,0),Margin.LEFT),
-                                    (Coordinate(-1,0),Margin.RIGHT),
-                                    1))
-
+    whitePlayer.setState(state)
+    blackPlayer.setState(state)
 
 
     whitePlayer.initialize()
+    blackPlayer.initialize()
 
-
-//    assignMove(Move(traxTiles.WBBW,Coordinate(-1,0)),traxColor.BLACK)
-//    println("----------------------------------")
-//    assignMove(Move(traxTiles.BBWW,Coordinate(-1,-1)),traxColor.BLACK)
-//    println("----------------------------------")
-//
-//    whitePlayer.setState(state)
-//    blackPlayer.setState(state)
   }
 
   ////////////////////////////////////

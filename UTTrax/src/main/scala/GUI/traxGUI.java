@@ -65,16 +65,19 @@ public class traxGUI {
         // surface and blank it out
 
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-        g.setColor(Color.GREEN);
-        g.fillRect(0, 0, screenWidth, screenHeight);
+        g.setBackground(Color.GREEN);
+//        g.fillRect(0, 0, screenWidth, screenHeight);
 
-        g.draw(new Rectangle(xZero,yZero,xZero+10,yZero+10));
+        int baseLen = 1;
 
         for(int i=0 ; i < tileList.size() ; i++){
             Sprite sprite = SpriteStore.get().getSprite("GUI/Images/"+tileList.get(i).tile.getVal()+".png");
 
-            sprite.draw(g,tileList.get(i).getPositioninScreen());
+            sprite.draw(g, tileList.get(i).getPositioninScreen());
         }
+        int size = SpriteStore.getSpriteSize()/2 - 5;
+        g.setColor(Color.BLUE);
+        g.fillRect(xZero+size,yZero+size,10,10);//(xZero - baseLen, yZero -baseLen,xZero+baseLen,yZero+baseLen );//draw(new Rectangle(xZero-baseLen,yZero-baseLen,xZero+baseLen,yZero+baseLen));
 
         // finally, we've completed drawing so clear up the graphics
         // and flip the buffer over

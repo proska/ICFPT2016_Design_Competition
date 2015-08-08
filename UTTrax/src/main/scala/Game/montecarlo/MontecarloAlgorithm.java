@@ -31,6 +31,8 @@ public class MontecarloAlgorithm implements Player {
 
     TreeNode root = new TreeNode();
 
+    gameState state = null;
+
     public MontecarloAlgorithm(traxColor side) {
         this.side = side;
     }
@@ -59,14 +61,18 @@ public class MontecarloAlgorithm implements Player {
     @Override
     public void initialize() {
     //state.whiteRoutes().apply(0) = new Route().apply(Coordinate.apply(0,0),true);
-
-
-
-
-
     }
 
 
+    @Override
+    public gameState getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(gameState st) {
+        state = gameState.apply(st);
+    }
 
 
     class TreeNode  {
