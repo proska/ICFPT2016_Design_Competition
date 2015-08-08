@@ -1,6 +1,9 @@
 package Game.World
 
 import GUI.traxGUI
+import Game.World.traxColor
+import Game.montecarlo.MontecarloAlgorithm
+
 //import Game.GeneticAlgorithmPlayer.GAPlayer
 import Game.TestPlayer._
 //import Game.World.traxColor.traxColor
@@ -18,8 +21,8 @@ object traxWorld {
 
   var state = new gameState
 
-  var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)//new GAPlayer(false)//
-  var blackPlayer:Player = new testPlayerScala(traxColor.BLACK)
+  var blackPlayer:Player = new MontecarloAlgorithm(traxColor.BLACK)//new GAPlayer(false)//
+  var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)
 
   val gui = new traxGUI(30)
 
@@ -132,7 +135,7 @@ object traxWorld {
 
     if(assignMove(move,side)){
 
-      val a = whitePlayer.getState().compare(blackPlayer.getState())
+      //val a = whitePlayer.getState().compare(blackPlayer.getState())
 
       if(side == traxColor.WHITE){
         blackPlayer.update(move,true)

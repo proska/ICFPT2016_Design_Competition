@@ -251,10 +251,13 @@ class gameState{
 
   def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
 
-
+print(move);
+    print(side);
     val (myRoute: List[Route], oppRoute: List[Route]) = try {
+
       giveAllCompatibleRoutes(move, side)
     }
+
     catch {
       case _:Throwable => throw new IllegalArgumentException("giveAllCompatibleRoutes failed!")
     }
@@ -328,8 +331,11 @@ class gameState{
   ////////////////////////////////////////////////////////////////////////////
 
   private def giveAllCompatibleRoutes(move: Move, side: traxColor): (List[Route], List[Route]) = {
+
     val myRoute = if (side == traxColor.WHITE) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
     else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
+
+
 
     assert(myRoute.length == 1, "Incorrect move!")
 
@@ -338,6 +344,9 @@ class gameState{
 
     assert(oppRoute.length < 2, "Incorrect move: Opponent side")
     (myRoute, oppRoute)
+
+
+
   }
 
   ////////////////////////////////////////////////////////////////////////////
