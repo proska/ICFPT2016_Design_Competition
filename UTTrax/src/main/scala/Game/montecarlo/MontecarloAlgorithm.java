@@ -1,260 +1,274 @@
-//package Game.montecarlo;
-////import Game.TestPlayer.*;
-//import Game.TestPlayer.Player;
-//import Game.TestPlayer.moveFinder;
-//import Game.World.Move;
-//import Game.World.gameState;
-//import Game.World.traxColor;
-//import Game.World.*;
-//import scala.*;
-//import scala.Enumeration;
-//
-//import java.lang.Boolean;
-//import java.util.LinkedList;
-//import java.util.*;
-//import java.util.Random;
-///**
-// * Created by saina on 7/28/15.
-// */
-//public class MontecarloAlgorithm implements moveFinder,Player {
-//
-//    gameState state ;
-//    traxColor side;
-//
-//    @Override
-//    public void update(Move move, Boolean reAction) {
-//
-//    }
-//
-//    @Override
-//    public Move play() {
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public void initialize() {
-//
-//    }
-//
-//    public class TreeNode  {
-//            Random r = new Random();
-//            int nActions = 5;
-//            double epsilon = 1e-6;
-//            TreeNode[] children;
-//            double nVisits, totValue;
-//
-////            public class Move{
-////                int x;
-////                int y;
-////                int tile;
-////            }
-//            public class state{
-//                state(){
-//                }
-//                state (state p){
-//                    parent = p;
-//                }
-//                state parent;
-//                Vector<state> children;
-//                int is_marked;
-//                int score;
-//                int visit;
-//                boolean win;
-//                Move move;
-//                gameState pegah;
-//
-//            }
-//            public class coordinate{
-//                int x;
-//                int y;
-//                int dir;
-//
-//            }
-//            public class Rout{
-//                coordinate start;
-//                coordinate end;
-//            }
-//
-//            public Vector<state> ConvertToState(Move[] allmoves,state game){
-//                Vector<state> ret = new Vector<state>();
-//
-//                for(int i = 0 ; i< allmoves.length; i++){
-//                    state n = new state();
-//                    n = game;
-//                    n.pegah.updateState(allmoves[i]);
-//                    n.move = allmoves[i];
-//                    ret.add(n);
-//                }
-//                return ret;
-//            }
-//
-//            public state simulation (state game)
-//            {
-//                Vector <state> moves = new Vector<state> ();
-//                Move[] allmoves ;
-//                state last = new state();
-//                int r =0;
-//                boolean flag1 = false;
-//                boolean flag2 = false;
-//                boolean W_iswon = false;
-//                boolean B_iswon = false;
-//                while( !flag1 && !flag2 )
+package Game.montecarlo;
+//import Game.TestPlayer.*;
+import Game.TestPlayer.Player;
+import Game.TestPlayer.moveFinder;
+//import Game.TestPlayer.moveFinder$class;
+import Game.World.*;
+
+
+import java.lang.Boolean;
+import java.lang.Double;
+import java.util.Random;
+import java.util.Vector;
+
+
+
+
+
+
+import java.lang.String;
+
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util.println;
+
+/**
+* Created by saina on 7/28/15.
+*/
+public class MontecarloAlgorithm implements Player {
+
+
+    traxColor side;
+    traxColor sidetmp;
+
+    TreeNode root = new TreeNode();
+
+    gameState state = null;
+
+    public MontecarloAlgorithm(traxColor side) {
+        this.side = side;
+    }
+    @Override
+    public void update(Move move, Boolean reAction) {
+        println("start");
+        reAction = true;
+        if(!reAction)
+            sidetmp = side;
+        else
+            sidetmp = side.flip(side);
+
+
+        this.state.updateState(move, sidetmp, null);
+        println("update done");
+    }
+
+
+
+    @Override
+    public Move play() {
+        return root.play(this.state);
+    }
+
+
+    @Override
+    public void initialize() {
+    //state.whiteRoutes().apply(0) = new Route().apply(Coordinate.apply(0,0),true);
+    }
+
+
+    @Override
+    public gameState getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(gameState st) {
+        state = gameState.apply(st);
+    }
+
+
+    class TreeNode  {
+        Random r = new Random();
+        int nActions = 5;
+        double epsilon = 1e-6;
+        TreeNode[] children;
+        double nVisits, totValue;
+
+        public stateMC stateMC2;
+
+        public Vector<stateMC> ConvertToState(scala.collection.immutable.List<Game.World.Move> allmoves,stateMC game){
+            Vector<stateMC> ret = new Vector<stateMC>();
+            int num = allmoves.size();
+            Game.World.Move[] moves = new Game.World.Move[num];
+
+//                for (int i=0 ; i< allmoves.size ; i++)
 //                {
-//                    for (int i=0 ; i<game.pegah.blackRoutes().length() ; i++)
-//                    {
-//                        if ( (game.pegah).blackRoutes().apply(i).isLoop() )
-//                            B_iswon = true;
-//                    }
-//                    for (int i=0 ; i<game.pegah.whiteRoutes().length() ; i++)
-//                    {
-//                        if ( game.pegah.whiteRoutes().apply(i).isLoop() )
-//                            W_iswon = true;
-//                    }
-//
-//                    if (!(B_iswon))
-//                    {
-//                        allmoves = giveAllPossibleMoves(game.pegah ,traxColor.WHITE);
-//                        moves = ConvertToState(allmoves,game);
-//                        Random e = new Random();
-//                        r = e.nextInt(moves.size()-0);
-//                        (moves.get(r)).is_marked = 1;
-//                        game = moves.get(r);
-//
-//                    }
-//                    else
-//                    {
-//                        flag2 = true;
-//                        last = moves.get(r);
-//
-//                    }
-//
-//                    if (!(W_iswon))
-//                    {
-//                        allmoves = giveAllPossibleMoves(game.pegah , traxColor.BLACK);
-//                        moves = ConvertToState(allmoves,game);
-//                        Random e = new Random();
-//                        r = e.nextInt(moves.size()-0);
-//                        (moves.get(r)).is_marked = 1;
-//                        game = moves.get(r);
-//
-//                    }
-//                    else
-//                    {
-//                        flag1 = true;
-//                        last = moves.get(r);
-//
-//                    }
+//                    moves[i] = change (allmoves[i]);
 //                }
-//                return last;
-//            }
-//
-//
-//            /////////////////////////////////////////////////////////////////
-//
-//            public void backpropagation (state last,state[] first,boolean flagwor){
-//                //boolean flagwor; //flagi ke maloom mikonand ma white hastim ya red!if white flag=1 else flag = 0;
-//                while(first[0] != last) {
-//                    last = last.parent;
-//                    if (last == first[1])
-//                    {
-//                        first[1].visit++;
-//
-//                        boolean W_iswon = false;
-//                        boolean B_iswon = false;
-//
-//                        for (int i=0 ; i<last.pegah.blackRoutes().length() ; i++)
-//                        {
-//                            if ( (last.pegah).blackRoutes().apply(i).isLoop() )
-//                                B_iswon = true;
-//                        }
-//                        for (int i=0 ; i<last.pegah.whiteRoutes().length() ; i++)
-//                        {
-//                            if ((last.pegah.whiteRoutes().apply(i)).isLoop() )
-//                                W_iswon = true;
-//                        }
-//
-//                        /////score
-//                        if(B_iswon && flagwor){ ////farz bar in ast ke ma white hastim!white = 1
-//                            first[1].score = -1;
-//
-//                        }
-//                        else if(flagwor && W_iswon) {
-//                            first[1].score = 1;
-//                        }
-//                        else if(W_iswon && !flagwor){
-//                            first[1].score = -1;
-//                        }
-//                        else if(!flagwor && B_iswon){
-//                            first[1].score = 1;
-//                        }
-//
-//
-//                    }
-//                }
-//                first[0].visit++;
-//
-//
-//
-//
-//            }
-///////////////////////////////////////////////////////////////////
-//
-//            private state select(Vector <state> saina ) {
-//                state selected = null;
-//                double bestValue = scala.Double.MIN_VALUE;
-//                for (state c : saina) {
-//                    double uctValue = c.score / (c.visit + epsilon) +
-//                            Math.sqrt(Math.log(nVisits+1) / (c.visit + epsilon)) +
-//                            r.nextDouble() * epsilon;
-//                    // small random number to break ties randomly in unexpanded nodes
-//                    if (uctValue > bestValue) {
-//                        selected = c;
-//                        bestValue = uctValue;
-//                    }
-//                }
-//                return selected;
-//            }
-//            public Move main(String []args){
-//                int simcount = 100000;
-//                int counter = 0;
-//                int flagsel = 0;
-//                boolean color = true;
-//                state lastgame = new state(); //= new state[];
-//                state firstgame = new state();
-//                state selected = new state();
-//                state finalmove = new state();
-//                selected = firstgame;
-//                state[] pegah = new state[2];
-//                pegah[0] = firstgame;
-//                pegah[1] = selected;
-//
-//                for(int co=0 ; co<simcount ; co++){
-//                    flagsel = 0;
-//                    lastgame = simulation(selected);
-//                    counter++;
-//                    backpropagation(lastgame,pegah,color);
-//                    for(state c:firstgame.children){
-//                        if(c.is_marked == 0){
-//                            flagsel = 1;
-//                        }
-//                    }
-//                    if(flagsel == 0){
-//                        selected = select(firstgame.children);
-//                        pegah[1]=selected;
-//                    }
-//                }
-//                finalmove = select(firstgame.children);
-//                return finalmove.move;
-//
-//
-//            }
-//
-//
-//
-//        }
-//
-//
-//
-//
-//}
+
+            for(int i = 0 ; i< allmoves.size(); i++){
+                stateMC n = new stateMC();
+                n = game;
+                n.pegah.updateState(allmoves.apply(i),side,null);
+                n.move = allmoves.apply(i);///be move khodeman change mikonad!!!!
+                ret.add(n);
+            }
+            return ret;
+        }
+
+        public stateMC simulation (stateMC game)
+        {
+            Vector <stateMC> moves = new Vector<stateMC> ();
+            scala.collection.immutable.List<Game.World.Move> allmoves ;
+            stateMC last = new stateMC();
+
+            int r =0;
+            boolean flag1 = false;
+            boolean flag2 = false;
+            boolean W_iswon = false;
+            boolean B_iswon = false;
+            while( !flag1 && !flag2 )
+            {
+                for (int i=0 ; i<game.pegah.blackRoutes().length() ; i++)
+                {
+                    if ( (game.pegah).blackRoutes().apply(i).isLoop() )
+                        B_iswon = true;
+                }
+                for (int i=0 ; i<game.pegah.whiteRoutes().length() ; i++)
+                {
+                    if ( game.pegah.whiteRoutes().apply(i).isLoop() )
+                        W_iswon = true;
+                }
+
+                if (!(B_iswon))
+                {
+
+                    allmoves = moveFinder.giveAllPossibleMoves(game.pegah, side);
+                    moves = ConvertToState(allmoves,game);
+                    Random e = new Random();
+                    r = e.nextInt(moves.size()-0);
+                    (moves.get(r)).is_marked = 1;
+                    game = moves.get(r);
+
+                }
+                else
+                {
+                    flag2 = true;
+                    last = moves.get(r);
+
+                }
+
+                if (!(W_iswon))
+                {
+                    allmoves = moveFinder.giveAllPossibleMoves(game.pegah, traxColor.flip(side));
+                    moves = ConvertToState(allmoves,game);
+                    Random e = new Random();
+                    r = e.nextInt(moves.size()-0);
+                    (moves.get(r)).is_marked = 1;
+                    game = moves.get(r);
+
+                }
+                else
+                {
+                    flag1 = true;
+                    last = moves.get(r);
+
+                }
+            }
+            return last;
+        }
+
+
+        /////////////////////////////////////////////////////////////////
+
+        public void backpropagation (stateMC last,stateMC[] first,boolean flagwor){
+            //boolean flagwor; //flagi ke maloom mikonand ma white hastim ya red!if white flag=1 else flag = 0;
+            while(first[0] != last) {
+                last = last.parent;
+                if (last == first[1])
+                {
+                    first[1].visit++;
+
+                    boolean W_iswon = false;
+                    boolean B_iswon = false;
+
+                    for (int i=0 ; i<last.pegah.blackRoutes().length() ; i++)
+                    {
+                        if ( (last.pegah).blackRoutes().apply(i).isLoop() )
+                            B_iswon = true;
+                    }
+                    for (int i=0 ; i<last.pegah.whiteRoutes().length() ; i++)
+                    {
+                        if ((last.pegah.whiteRoutes().apply(i)).isLoop() )
+                            W_iswon = true;
+                    }
+
+                    /////score
+                    if(B_iswon && flagwor){ ////farz bar in ast ke ma white hastim!white = 1
+                        first[1].score = -1;
+
+                    }
+                    else if(flagwor && W_iswon) {
+                        first[1].score = 1;
+                    }
+                    else if(W_iswon && !flagwor){
+                        first[1].score = -1;
+                    }
+                    else if(!flagwor && B_iswon){
+                        first[1].score = 1;
+                    }
+
+
+                }
+            }
+            first[0].visit++;
+
+
+
+
+        }
+/////////////////////////////////////////////////////////////////
+
+        private stateMC select(Vector <stateMC> saina ) {
+            stateMC selected = null;
+            double bestValue = Double.MIN_VALUE;
+            for (stateMC c : saina) {
+                double uctValue = c.score / (c.visit + epsilon) +
+                        Math.sqrt(Math.log(nVisits+1) / (c.visit + epsilon)) +
+                        r.nextDouble() * epsilon;
+                // small random number to break ties randomly in unexpanded nodes
+                if (uctValue > bestValue) {
+                    selected = c;
+                    bestValue = uctValue;
+                }
+            }
+            return selected;
+        }
+        public Move play(gameState st){
+            int simcount = 100000;
+            int counter = 0;
+            int flagsel = 0;
+            boolean color = true;
+            stateMC lastgame = new stateMC(); //= new state[];
+            stateMC firstgame = new stateMC(st);
+            stateMC selected = new stateMC();
+            stateMC finalmove = new stateMC();
+            selected = firstgame;
+            stateMC[] pegah = new stateMC[2];
+            pegah[0] = firstgame;
+            pegah[1] = selected;
+
+            for(int co=0 ; co<simcount ; co++){
+                flagsel = 0;
+                lastgame = simulation(selected);
+                counter++;
+                backpropagation(lastgame,pegah,color);
+                for(stateMC c:firstgame.children){
+                    if(c.is_marked == 0){
+                        flagsel = 1;
+                    }
+                }
+                if(flagsel == 0){
+                    selected = select(firstgame.children);
+                    pegah[1]=selected;
+                }
+            }
+            finalmove = select(firstgame.children);
+            return finalmove.move;
+
+
+        }
+
+
+
+    }
+
+}

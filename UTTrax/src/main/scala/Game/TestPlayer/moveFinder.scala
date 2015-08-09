@@ -1,5 +1,7 @@
 package Game.TestPlayer
 
+import javafx.geometry.Side
+
 import Game.World.Margin.Margin
 import Game.World.Margin.Margin
 import Game.World._
@@ -10,69 +12,46 @@ import scala.util.{Failure, Success, Try}
 /**
  * Created by proska on 7/11/15.
  */
-trait moveFinder {
+object moveFinder {
 
   type Terminal = Tuple2[Coordinate,Margin]
 
-  def giveCompatibleRoutesWithMove( routes:List[Route] , move:Move ): List[Route] = {
-    routes.filter( {
-      case (route:Route) => (isTerminalCompatibleWithMove(route.start,move) ) ||
-        (isTerminalCompatibleWithMove(route.end,move) )
-    } )
-  }
 
   ///////////////////////////////////////////
   ///////////////////////////////////////////
   ///////////////////////////////////////////
 
-  // Valid Move Rules
-  def isTerminalCompatibleWithMove(terminal:(Coordinate,Margin),move:Move): Boolean = {
-    (terminal._1 == move.pos) && isPathContinue(terminal._2,move)
-  }
-
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
-
-  def isPathContinue(dir:Margin , move:Move):Boolean = {
-
-    ((dir == Margin.TOP   )  & ((move.TileType.getVal & (1<<3))!=0)) |
-      ((dir == Margin.DOWN)  & ((move.TileType.getVal & (1<<2))!=0)) |
-      ((dir == Margin.RIGHT )  & ((move.TileType.getVal & (1<<1))!=0)) |
-      ((dir == Margin.LEFT  )  & ((move.TileType.getVal & (1<<0))!=0))
-  }
-
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
-  ///////////////////////////////////////////
 
   def giveAllPossibleMoves(state:gameState , side:traxColor): List[Move] = {
     var movesList:List[Move] = List()
 
-//    val comp = side.compare(traxColor.WHITE) == 0
+    listAvailableMoves(state.whiteRoutes,traxColor.WHITE)
+    listAvailableMoves(state.blackRoutes,traxColor.BLACK)
 
-    for( myRoute <- if( side == traxColor.WHITE )  state.whiteRoutes else state.blackRoutes ){
 
-//      val a = giveValidMoves(myRoute.start)
-      movesList = movesList ++ giveValidMoves(myRoute.start)
-      movesList = movesList ++ giveValidMoves(myRoute.end)
-
+    def listAvailableMoves(list:List[Route],side: traxColor): Unit = {
+      for (myRoute <- list) {
+        //      val a = giveValidMoves(myRoute.start)
+        movesList = movesList ++ giveValidMoves(myRoute.start, side)
+        movesList = movesList ++ giveValidMoves(myRoute.end, side)
+      }
     }
 
-    def giveValidMoves(terminal: Terminal): List[Move] = {
+    def giveValidMoves(terminal: Terminal,side:traxColor): List[Move] = {
       var tmpList: List[Move] = giveBasicPossibleMovesOfTerminal(terminal, side).get
 
-      tmpList = giveSharedTerminal(terminal) match {
+      tmpList = giveSharedTerminal(terminal,side) match {
         case Some(opp) => {
           tmpList.filter(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2))))
         }
         case None => tmpList
       }
+      def isPow2(in: Int):Boolean = (in & (in-1)) == 0
 
       tmpList
     }
 
-    def giveSharedTerminal(myTerminal: Terminal): Option[Terminal] = {
+    def giveSharedTerminal(myTerminal: Terminal,side:traxColor): Option[Terminal] = {
       for ( oppRoute <-
             if (side == traxColor.WHITE ) state.blackRoutes else state.whiteRoutes) {
 
@@ -87,7 +66,7 @@ trait moveFinder {
     movesList
   }
 
-  def giveBasicPossibleMovesOfTerminal(terminal: (Coordinate,Margin) , color:traxColor): Try[List[Move]] = {
+  private def giveBasicPossibleMovesOfTerminal(terminal: (Coordinate,Margin) , color:traxColor): Try[List[Move]] = {
 
     var out:Try[List[Move]] = null
 
@@ -116,7 +95,44 @@ trait moveFinder {
     out
   }
 
-  def isPow2(in: Int):Boolean = (in & (in-1)) == 0
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+
+  def giveCompatibleRoutesWithMove( routes:List[Route] , move:Move ): List[Route] = {
+
+    routes match {
+      case _:List[Route] =>
+        routes.filter( {
+          case (route:Route) => (isTerminalCompatibleWithMove(route.start,move) ) ||
+            (isTerminalCompatibleWithMove(route.end,move) )
+        } )
+      case _ => List()
+    }
+
+  }
+
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+
+  // Valid Move Rules
+  def isTerminalCompatibleWithMove(terminal:(Coordinate,Margin),move:Move): Boolean = {
+    (terminal._1 == move.pos) && isPathContinue(terminal._2,move)
+  }
+
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+  ///////////////////////////////////////////
+
+  private def isPathContinue(dir:Margin , move:Move):Boolean = {
+
+    ((dir == Margin.TOP   )  & ((move.TileType.getVal & (1<<3))!=0)) |
+      ((dir == Margin.DOWN)  & ((move.TileType.getVal & (1<<2))!=0)) |
+      ((dir == Margin.RIGHT )  & ((move.TileType.getVal & (1<<1))!=0)) |
+      ((dir == Margin.LEFT  )  & ((move.TileType.getVal & (1<<0))!=0))
+  }
+
 
   ////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////

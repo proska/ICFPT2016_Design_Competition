@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="default"
 		confs="default"
-		date="20150722192723"/>
+		date="20150805162801"/>
 	<dependencies>
 		<module organisation="org.scala-sbt" name="test-interface">
 			<revision name="1.0" status="release" pubdate="20130629031435" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-sbt.org" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="6">

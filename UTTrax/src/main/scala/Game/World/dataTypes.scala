@@ -2,7 +2,10 @@ package Game.World
 
 //import Game.Margin.Margin
 import Game.TestPlayer.moveFinder
+import Game.TestPlayer.moveFinder.Terminal
 import Game.World.Margin.Margin
+import Game.montecarlo.MontecarloAlgorithm
+
 //import Game.World.traxColor.traxColor
 
 import scala.Option
@@ -92,17 +95,12 @@ object Coordinate {
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-class Route extends moveFinder{
+class Route {
 
-  var start = new Terminal(new Coordinate,Margin.TOP)
-  var end = new Terminal(new Coordinate,Margin.TOP)
+  var start = new moveFinder.Terminal(new Coordinate,Margin.TOP)
+  var end = new moveFinder.Terminal(new Coordinate,Margin.TOP)
 
   var length = 0
-
-//  def Route={
-//    start = (Coordinate(0,1),Margin.DOWN)
-//    end = (Coordinate(0,-1),Margin.TOP)
-//  }
 
   override def toString: String = start +"<->"+end//super.toString
 
@@ -127,6 +125,7 @@ class Route extends moveFinder{
 
   }
 
+
   def getNewTerminal(move: Move , margin: Margin,side:traxColor):(Coordinate,Margin) = {
 
     val tmpMove = if(side == traxColor.WHITE) move else move.flip()
@@ -149,45 +148,58 @@ class Route extends moveFinder{
   }
 
   private def checkEnd(move: Move): Boolean = {
-    isTerminalCompatibleWithMove(end, move)
+    moveFinder.isTerminalCompatibleWithMove(end, move)
   }
 
   private def checkStart(move: Move): Boolean = {
-    isTerminalCompatibleWithMove(start, move)
+    moveFinder.isTerminalCompatibleWithMove(start, move)
   }
 
-  def doMerge(that:Route ,serverF:Move => Any = null , isBlack:Boolean = false):Option[Route] = {
+  def doMerge(that:Route ,serverF:Move => Any = null , isBlack:Boolean = false , stateUpdate:Move =>Any = null):Option[(Route,Move)] = {
     var contact: (Terminal,Terminal) = null
-    var out:Option[Route] = None
+    var out:Route = null
 
     if(this.end._1 == that.end._1){
-      contact = (this.end , that.end);out = Some(Route(this.start,that.start,this.length + that.length + 1))
+      contact = (this.end , that.end);out = (Route(this.start,that.start,this.length + that.length + 1))
     } else if(this.end._1 == that.start._1){
-      contact = (this.end , that.start);out = Some(Route(this.start,that.end,this.length + that.length + 1))
+      contact = (this.end , that.start);out = (Route(this.start,that.end,this.length + that.length + 1))
     } else if(this.start._1 == that.end._1){
-      contact = (this.start , that.end);out = Some(Route(this.end,that.start,this.length + that.length + 1))
+      contact = (this.start , that.end);out = (Route(this.end,that.start,this.length + that.length + 1))
     } else if(this.start._1 == that.start._1){
-      contact = (this.start , that.start);out = Some(Route(this.end,that.end,this.length + that.length + 1))
+      contact = (this.start , that.start);out = (Route(this.end,that.end,this.length + that.length + 1))
     } else
-      out = None
+      out = null
 
     serverF match {
       case null =>
       case _ => out match {
-        case Some(_) => {
-          println("[INFO] Automatic move:"+Move(contact._1._1,contact._1._2,contact._2._2,isBlack)+" is done.")
-          serverF(Move(contact._1._1,contact._1._2,contact._2._2,isBlack))
+        case _:Route => {
+          val newMove = Move(contact._1._1,contact._1._2,contact._2._2,isBlack)
+          println("[INFO] Automatic move:"+newMove+" is done.")
+          if(newMove._tile == traxTiles.INVALID){
+            println("Error")
+          }
+          serverF(newMove)
         }
         case _ =>
       }
     }
 
-
-    out
+    if(out != null)
+      Some(out,Move(contact._1._1,contact._1._2,contact._2._2,isBlack))
+    else
+      None
   }
+
+  def compare(that:Route): Boolean = {
+    this.start == that.start &&
+      this.end   == that.end   &&
+      this.length == that.length
+  }
+
 }
 
-object Route extends moveFinder{
+object Route {
   def apply(route: Route):Route = {
     val out = new Route
     out.start = new Terminal(route.start._1,route.start._2)
@@ -230,50 +242,178 @@ object Route extends moveFinder{
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-class gameState extends moveFinder{
-  var whiteRoutes : List[Route] = _
-  var blackRoutes : List[Route] = _
+class gameState{
+  var whiteRoutes : List[Route] = List()
+  var blackRoutes : List[Route] = List()
+
+
+  def dump: Any = {
+    println("[TEST] WhiteRoute:");
+    this.whiteRoutes.foreach(x => println(x))
+    println("[TEST] BlackRoutes:");
+    this.blackRoutes.foreach(x => println(x))
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
 
   def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
 
-
-    val (myRoute: List[Route], oppRoute: List[Route]) = try {
-      giveAllCompatibleRoutes(move, side)
+    def giveAdjacentCoordinates(coordinate: Coordinate) : List[Coordinate] = {
+      List(
+        Coordinate(coordinate.X + 1 , coordinate.Y    ) ,
+        Coordinate(coordinate.X - 1 , coordinate.Y    ) ,
+        Coordinate(coordinate.X     , coordinate.Y + 1) ,
+        Coordinate(coordinate.X     , coordinate.Y - 1))
     }
-    catch {
-      case _:Throwable => throw new IllegalArgumentException("giveAllCompatibleRoutes failed!")
+
+    var autoList = giveAdjacentCoordinates(move._pos)
+
+    var needUpdate= true
+
+    var newMove = move
+
+    var autoMove:List[Move] = List()
+
+
+    updateStateWithMove
+
+    while(autoList.length > 0){
+
+      checkMEcooridnates(autoList(0),whiteRoutes,traxColor.WHITE)
+      checkMEcooridnates(autoList(0),blackRoutes,traxColor.BLACK)
+
+      autoList = autoList.drop(1)
     }
 
-    myRoute(0).update(move,side)
+    println("Nothing")
 
-    if(oppRoute.length == 1)
-      oppRoute.foreach(_.update(move,traxColor.flip(side)))
 
-    try {
-      if (oppRoute.length == 0) {
+    def updateRouteList(list:List[Route],color:traxColor): Unit = {
 
-        val tmpRoute: Route = getNewlyAddedRoute(move, traxColor.flip(side))
+      val tmpRouteList = moveFinder.giveCompatibleRoutesWithMove(list, {if(color == traxColor.WHITE)newMove else newMove.flip()})
 
-        if (side == traxColor.WHITE)
-          blackRoutes = blackRoutes ++ List(tmpRoute)
+      assert(tmpRouteList.length < 3, "Illegal Move!")
+
+      if (tmpRouteList.length == 0) {
+        val tmpRoute: Route = getNewlyAddedRoute(newMove, color)
+
+        if(color == traxColor.WHITE)
+          whiteRoutes = list ++ List(tmpRoute)
         else
-          whiteRoutes = whiteRoutes ++ List(tmpRoute)
+          blackRoutes = list ++ List(tmpRoute)
+      }
+
+      if (tmpRouteList.length == 1) {
+        println("[TEST] Route Updated"+tmpRouteList(0).hashCode())
+        tmpRouteList(0).update(newMove, color)
       }
     }
-    catch {
-      case _:Throwable => throw new IllegalArgumentException("add new Route failed!")
+
+    def checkMEcooridnates(pos: Coordinate , list: List[Route] , color:traxColor):Unit = {
+
+      val tmpList = list.filter(x => (x.start._1 == pos) || (x.end._1 == pos) )
+
+      assert(tmpList.length <=2 ,"Invalid Update: more that 2 comming routes")
+
+      if(tmpList.length == 2){
+
+        val isBlack = color == traxColor.BLACK
+        tmpList(0).doMerge(tmpList(1), serverF, isBlack, null) match {
+          case Some(x) => {
+
+            needUpdate = true
+
+            autoList = autoList ++ giveAdjacentCoordinates(pos)
+
+            newMove = x._2
+
+            if(color == traxColor.WHITE){
+              whiteRoutes = list.diff(List(tmpList(0))).diff(List(tmpList(1))) ++ List(x._1)
+              println("[ASSERT] BlackDone")
+              updateRouteList(blackRoutes, traxColor.BLACK)
+            }
+            else{
+              blackRoutes = list.diff(List(tmpList(0))).diff(List(tmpList(1))) ++ List(x._1)
+              println("[ASSERT] whiteDone")
+              updateRouteList(whiteRoutes, traxColor.WHITE)
+            }
+          }
+          case _ => //autoList = autoList.drop(0)
+        }
+      }
+    }
+
+    def updateStateWithMove: Unit = {
+      println("[ASSERT] Update States")
+
+      updateRouteList(whiteRoutes, traxColor.WHITE)
+      println("[ASSERT] whiteDone")
+      updateRouteList(blackRoutes, traxColor.BLACK)
+      println("[ASSERT] BlackDone")
     }
 
 
-    try {
-      automaticMoves(serverF)
-    }
-    catch {
-      case _:Throwable => new IllegalArgumentException("Auto Move Failed!")
-    }
-
-    Success()
+    Success(null)
   }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+
+//  def updateState(move: Move,side:traxColor , serverF:Move => Any = null):Try[_]= {
+//
+//
+//    val (myRoute: List[Route], oppRoute: List[Route]) = try {
+//      giveAllCompatibleRoutes(move, side)
+//    }
+//    catch {
+//      case _:Throwable => throw new IllegalArgumentException("giveAllCompatibleRoutes failed!")
+//    }
+//
+//    if(myRoute.length == 1)
+//      myRoute(0).update(move,side)
+//
+//
+//    try{
+//      if(oppRoute.length == 1){
+//
+//        val prevlen = if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length
+//        println("[TEST] RouteUpdated:"+oppRoute)
+//        oppRoute.foreach(_.update(move,traxColor.flip(side)))
+//        println("[TEST] RouteUpdated:"+oppRoute)
+//        assert({if(side == traxColor.WHITE) blackRoutes.length else whiteRoutes.length} == prevlen , "Wrong oppRoute Update!")
+//      }
+//    } catch {
+//      case _:Throwable => throw new IllegalArgumentException("updating Opp Route Failed!")
+//    }
+//
+//    try {
+//      if (oppRoute.length == 0) {
+//
+//        val tmpRoute: Route = getNewlyAddedRoute(move, traxColor.flip(side))
+//
+//        if (side == traxColor.WHITE)
+//          blackRoutes = blackRoutes ++ List(tmpRoute)
+//        else
+//          whiteRoutes = whiteRoutes ++ List(tmpRoute)
+//      }
+//    }
+//    catch {
+//      case _:Throwable => throw new IllegalArgumentException("add new Route failed!")
+//    }
+//
+//
+//    try {
+//      automaticMoves(serverF)
+//    }
+//    catch {
+//      case _:Throwable => new IllegalArgumentException("Auto Move Failed!")
+//    }
+//
+//    Success()
+//  }
 
   ////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////
@@ -289,11 +429,14 @@ class gameState extends moveFinder{
     else if (move.TileType == traxTiles.WBBW) Route(move.pos, Margin.DOWN, Margin.RIGHT, isSideWhite)
     else if (move.TileType == traxTiles.WBWB) Route(move.pos, Margin.DOWN, Margin.LEFT, isSideWhite)
     else if (move.TileType == traxTiles.WWBB) Route(move.pos, Margin.LEFT, Margin.RIGHT, isSideWhite)
-    else new Route
+    else {throw new IllegalArgumentException();new Route}
+
+//    println("[TEST] RouteAdded:"+tmpRoute)
 
     tmpRoute.start = tmpRoute.getNewTerminal(move, tmpRoute.start._2,side)
     tmpRoute.end = tmpRoute.getNewTerminal(move, tmpRoute.end._2,side)
 
+    println("[TEST] RouteAdded:"+tmpRoute)
     tmpRoute
   }
 
@@ -303,13 +446,16 @@ class gameState extends moveFinder{
   ////////////////////////////////////////////////////////////////////////////
 
   private def giveAllCompatibleRoutes(move: Move, side: traxColor): (List[Route], List[Route]) = {
-    val myRoute = if (side == traxColor.WHITE) giveCompatibleRoutesWithMove(whiteRoutes, move)
-    else giveCompatibleRoutesWithMove(blackRoutes, move.flip())
+    val myRoute = if (side == traxColor.WHITE) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
+    else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
 
-    assert(myRoute.length == 1, "Incorrect move!")
+    assert(myRoute.length == 2 || myRoute.length == 1, "Incorrect move!")
 
-    val oppRoute = if (side == traxColor.BLACK) giveCompatibleRoutesWithMove(whiteRoutes, move)
-    else giveCompatibleRoutesWithMove(blackRoutes, move.flip())
+    if(myRoute.length == 2)
+      println("####[AUTO MOVE]####")
+
+    val oppRoute = if (side == traxColor.BLACK) moveFinder.giveCompatibleRoutesWithMove(whiteRoutes, move)
+    else moveFinder.giveCompatibleRoutesWithMove(blackRoutes, move.flip())
 
     assert(oppRoute.length < 2, "Incorrect move: Opponent side")
     (myRoute, oppRoute)
@@ -343,11 +489,15 @@ class gameState extends moveFinder{
 
       var test = 0
 
+      def selfUpdate(move: Move): Unit ={
+        this.updateState(move,{if(isBlack) traxColor.BLACK else traxColor.WHITE})
+      }
+
       for ((outer,outerIdx) <- list.zipWithIndex;
            (inner,innerIdx) <- list.zipWithIndex.drop(outerIdx+1)) {
-        inner.doMerge(outer,serverF,isBlack) match {
+        inner.doMerge(outer,serverF,isBlack,selfUpdate) match {
           case Some(x) => {
-            tmp = tmp.diff(List(outer)).diff(List(inner)) ++ List(x)
+            tmp = tmp.diff(List(outer)).diff(List(inner)) ++ List(x._1)
             flag = false
             assert(tmp.length == list.length - 1 , "error in modifing routes in auto move")
             test +=1
@@ -364,6 +514,14 @@ class gameState extends moveFinder{
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  def compare(that:gameState):Boolean = {
+    this.whiteRoutes.zip(that.whiteRoutes).map(x => x._1 compare x._2).reduceLeft(_&&_) &
+      this.blackRoutes.zip(that.blackRoutes).map(x => x._1 compare x._2).reduceLeft(_&&_)
+  }
 
 }
 
@@ -391,29 +549,38 @@ case class Move(_tile:traxTiles , _pos:Coordinate){
 
   override def toString: String = "("+pos+","+TileType+")"//super.toString
 }
-object Move{
-  def apply(move: Move):Move = {
-    new Move(move.TileType,move.pos)
+object Move {
+  def apply(move: Move): Move = {
+    new Move(move.TileType, move.pos)
   }
-  def apply(coordinate: Coordinate,margin1: Margin,margin2: Margin,isBlack :Boolean):Move = {
 
-    var marg1 = if(isBlack) Margin.flip(margin1) else margin1
-    var marg2 = if(isBlack) Margin.flip(margin2) else margin2
+  def apply(coordinate: Coordinate, margin1: Margin, margin2: Margin, isBlack: Boolean): Move = {
 
-    if(margin1 == Margin.TOP && margin2 == Margin.DOWN && isBlack){
+    var marg1 = if (isBlack) Margin.flip(margin1) else margin1
+    var marg2 = if (isBlack) Margin.flip(margin2) else margin2
+
+    if (margin1 == Margin.TOP && margin2 == Margin.DOWN && isBlack) {
       marg1 = Margin.LEFT
       marg2 = Margin.RIGHT
     }
 
-    if(margin1 == Margin.LEFT && margin2 == Margin.RIGHT && isBlack){
+    if (margin1 == Margin.LEFT && margin2 == Margin.RIGHT && isBlack) {
       marg1 = Margin.TOP
       marg2 = Margin.DOWN
     }
 
-    val tileNum = (1<<Margin.getVal(marg1)) + (1<<Margin.getVal(marg2))
+    val tileNum = (1 << Margin.getVal(marg1)) + (1 << Margin.getVal(marg2))
     val tile = traxTiles.INVALID.num2Tile(tileNum)
-    Move(tile,coordinate)
+    Move(tile, coordinate)
   }
+
+  //    def apply(move:Game.montecarlo.MontecarloAlgorithm.TreeNode.Move):Move {
+  //        Move movefinal = new Move
+  //        movefinal. = move.x;
+  //
+  //
+  //     return movefinal;
+  //  }
 }
 
 ////////////////////////////////////////////////////////

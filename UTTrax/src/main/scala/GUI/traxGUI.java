@@ -1,254 +1,232 @@
 package GUI;
 
+import Game.World.Coordinate;
 import Game.World.traxTiles;
 
-import java.awt.*;
-
-/*
- * AbsoluteLayoutDemo.java requires no other files.
- */
-
-import java.awt.Insets;
-import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.image.BufferStrategy;
-import java.util.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
+import java.util.LinkedList;
 
 public class traxGUI {
 
+    /** The stragey that allows us to use accelerate page flipping */
+    private BufferStrategy strategy;
 
-    static final int TILESIZE = 50;
+    /** The stragey that allows us to use accelerate page flipping */
+    private Canvas window = new Canvas();
 
-    public static class TileType{
-        public JLabel label;
-        public int X;
-        public int Y;
-        TileType(JLabel _label, int x , int y){
-            label = _label;
-            X = x;
-            Y = y;
+    JFrame container = null;
+
+    private int xZero;
+    private int yZero;
+
+    private int screenWidth  = 600;//1200;
+    private int screenHeight = 500;//700;
+
+
+    private void updateZero(){
+        xZero = screenWidth/2;
+        yZero = screenHeight/2;
+    }
+
+    /** The datatype containing info on each tile on screen **/
+    private class tileGUI{
+        public Coordinate pos;
+        public traxTiles tile;
+
+        public tileGUI(Coordinate pos, traxTiles tile) {
+            int size  = SpriteStore.getSpriteSize();
+            this.pos = new Coordinate(pos.X() * size , pos.Y()*size);
+            this.tile = tile;
+        }
+        public Coordinate getPositioninScreen(){
+            return new Coordinate(pos.X() + xZero , -pos.Y() + yZero);
         }
     }
 
-    static final JPanel panel = new JPanel();
-    static final JFrame frame = new JFrame("AbsoluteLayoutDemo");
+    /** The list containing all info of all tiles on screen **/
+    private LinkedList<tileGUI> tileList = null;
 
-    static LinkedList tilesOnMap = new LinkedList<TileType> ();
+    /** redrawing the screen based on tileList with use of double buffering to prevent flickering **/
+    public void redraw (){
 
-    static int xZero;
-    static int yZero;
+        // Set screen and container size
+        window.setSize(screenWidth,screenHeight);
+//        container.getContentPane().setSize(screenWidth, screenHeight);
+//
+//        strategy = window.getBufferStrategy();
 
-    static int FrameWidth  = 1300;
-    static int FrameHeight = 650;
+        // Get hold of a graphics context for the accelerated
+        // surface and blank it out
 
-    ////////////////////////////////////////////////////////////
+        Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+        g.setBackground(Color.GREEN);
+//        g.fillRect(0, 0, screenWidth, screenHeight);
 
-    public static void addTile(int x, int y , traxTiles tile) {
+        int baseLen = 1;
 
-        System.out.println("[INFO] Tile:"+tile+" Added to GUI in ("+x+","+y+").");
+        for(int i=0 ; i < tileList.size() ; i++){
+            Sprite sprite = SpriteStore.get().getSprite("GUI/Images/"+tileList.get(i).tile.getVal()+".png");
 
-        JLabel    label    = new JLabel();
-        ImageIcon icon = createImageIcon("Images/" + tile.getVal() + ".png");
-        //home/proska/Desktop/UTTrax/src/main/scala/GUI/Images/
-        label.setIcon(icon);
-
-        label.setToolTipText("A drawing of a " + (tile.getVal()));
-        if (icon != null) {
-            label.setText(null);
-        } else {
-            label.setText("Image not found");
+            sprite.draw(g, tileList.get(i).getPositioninScreen());
         }
+        int size = SpriteStore.getSpriteSize()/2 - 5;
+        g.setColor(Color.BLUE);
+        g.fillRect(xZero+size,yZero+size,10,10);//(xZero - baseLen, yZero -baseLen,xZero+baseLen,yZero+baseLen );//draw(new Rectangle(xZero-baseLen,yZero-baseLen,xZero+baseLen,yZero+baseLen));
 
-//        label.updateUI();
+        // finally, we've completed drawing so clear up the graphics
+        // and flip the buffer over
 
+        g.dispose();
+        strategy.show();
 
-        updateGUI(x, y, label);
-
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                // Here, we can safely update the GUI
-//                // because we'll be called from the
-//                // event dispatch thread
-//                updateGUI(x, y, label);
-//            }
-//        });
     }
 
-    ////////////////////////////////////////////////////////////
+    /** Generating the screen **/
+    public traxGUI(int size) {
 
-    private static void updateGUI(int x, int y, JLabel label) {
+        SpriteStore.setSpriteSize(size);
 
-        tilesOnMap.add(new TileType(label, x, y));
+        updateZero();
+        // create a frame to contain our game
 
-        if(x < -(int)(xZero/TILESIZE) ){
-            shiftAllRigth();
-            System.out.println("shiftAllRigth");
-        }
-        if(y < -(int)((FrameHeight - yZero)/TILESIZE)){
-            extendHeight();
-            System.out.println("Height Extended");
+        container = new JFrame("Proska's TRAX");
 
-        }
-        if(x >= (int)((FrameWidth - xZero)/TILESIZE)){
-            extendWidth();
-            System.out.println("Width Extended");
-        }
-        if(y >= (int)(yZero/TILESIZE)){
-            shiftAllDown();
-            System.out.println("shiftAllDown");
-        }
-        panel.removeAll();
-        reDrawPane();
-    }
+        // get hold the content of the frame
 
-    ////////////////////////////////////////////////////////////
+        JPanel panel = (JPanel) container.getContentPane();
 
-    //  Create the GUI and show it.  For thread safety,this method should be invoked from the event-dispatching thread.
-    public static void startGUI() {
-        //Create and set up the window.
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //set up the resolution of the game
+        panel.setPreferredSize(new Dimension(screenWidth,screenHeight));
+        panel.setLayout(null);
 
-        JScrollPane scrol = new JScrollPane(panel);
-
-        //Size and display the window.
-        Insets insets = frame.getInsets();
-        frame.setSize(  FrameWidth + insets.left + insets.right,
-                FrameHeight + insets.top + insets.bottom);
-
-        xZero = FrameWidth /2;
-        yZero = FrameHeight /2;
-
-        frame.getContentPane().add(scrol,BorderLayout.CENTER);
-        frame.setVisible(true);
+        // setup our canvas size and put it into the content of the frame
+        window.setBounds(0, 0, screenWidth, screenHeight);
+        window.setBackground(Color.GREEN);
+        panel.add(window);
 
 
-        // Double Buffering Codes
-        frame.createBufferStrategy(2);
-        frame.setIgnoreRepaint(true);
+        // Closing Strategy
+        container.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Tell AWT not to bother repainting our canvas since we're
 
+        // going to do that our self in accelerated mode
 
-        //------------------------//
+        window.setIgnoreRepaint(true);
 
-        reDrawPane();
+        // finally make the window visible
 
-        frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                // This is only called when the user releases the mouse button.
-                panel.removeAll();
-                reDrawPane();
+        container.pack();
+//        container.setResizable(false);
+        container.setVisible(true);
+
+        // add a listener to respond to the user closing the window. If they
+
+        // do we'd like to exit the game
+
+        container.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
             }
         });
 
+        // create the buffering strategy which will allow AWT
+        // to manage our accelerated graphics
+
+        window.createBufferStrategy(2);
+        strategy = window.getBufferStrategy();
 
 
+        container.addComponentListener(new ComponentListener() {
+            public void componentResized(ComponentEvent e) {
+                updateScreenDimension(container);
 
+                updateZero();
+//                System.out.println("("+container.getWidth()+","+container.getHeight()+")");
+                redraw();
+
+                try { Thread.sleep(1000); } catch (Exception d) {}
+            }
+            @Override
+            public void componentHidden(ComponentEvent componentEvent) {
+
+            }
+            @Override
+            public void componentShown(ComponentEvent componentEvent) {
+
+            }
+            @Override
+            public void componentMoved(ComponentEvent componentEvent) {
+
+            }
+        });
+
+        tileList = new LinkedList<tileGUI>();
+    }
+
+    private void updateScreenDimension(JFrame container) {
+        screenWidth = container.getWidth();
+        screenHeight = container.getHeight();
+    }
+
+    ///////////////////////////////////////////////////////////
+
+    public void addTile(traxTiles tile , Coordinate pos){
+
+        System.out.println("[INFO] Tile:"+tile+" Added to GUI in "+pos);
+
+        tileList.add(new tileGUI(pos, tile));
+
+        checkCorners(pos);
+
+        redraw();
 
     }
 
-    ////////////////////////////////////////////////////////////
+    private void checkCorners(Coordinate pos) {
+        if(pos.X() < -(int)(xZero/tileSize()) ){
+            shiftAllRigth();
 
-    private static void reDrawPane() {
-
-//        System.out.println(">> Redraw GUI <<");
-
-        BufferStrategy bf = frame.getBufferStrategy();
-
-
-        panel.setLayout(null);
-        Insets insets = panel.getInsets();
-
-        for(int i =0 ; i < tilesOnMap.size()  ;i++ ){
-
-            TileType tmp = (TileType)tilesOnMap.get(i);
-
-            tmp.label.setBounds(    xZero + tmp.X * TILESIZE - TILESIZE/2,
-                    yZero - tmp.Y * TILESIZE - TILESIZE/2,
-                    TILESIZE, TILESIZE);
-
-//            System.out.println("("+tmp.label.getAlignmentX()+","+tmp.label.getAlignmentY()+")");
-            panel.add(tmp.label);
         }
-        panel.setPreferredSize(new Dimension(FrameWidth, FrameHeight));
-        panel.setBackground(Color.green);
-
-
-        assert(frame.getHeight() == FrameHeight);
-        assert(frame.getWidth() == FrameWidth);
-//        System.out.println(tilesOnMap.size());
-    }
-
-    ////////////////////////////////////////////////////////////
-
-    /** Returns an ImageIcon, or null if the path was invalid. */
-    private static ImageIcon createImageIcon(String path) {
-
-        java.net.URL imgURL = traxGUI.class.getResource(path);
-        ImageIcon icon = new ImageIcon(imgURL);
-        icon.setImage(icon.getImage().getScaledInstance(TILESIZE,TILESIZE,Image.SCALE_DEFAULT));
-
-        if(icon == null){
-            System.err.println("Couldn't find file: " + path);
+        if(pos.Y() < -(int)((screenHeight - yZero)/tileSize())){
+            extendHeight();
         }
-        return icon;
+        if(pos.X() >= (int)((screenWidth - xZero)/tileSize())){
+            extendWidth();
+        }
+        if(pos.Y() >= (int)(yZero/tileSize())){
+            shiftAllDown();
+
+        }
     }
 
+    private int tileSize(){
+        return SpriteStore.getSpriteSize();
+    }
 
-
-    ////////////////////////////////////////////////////////////
-
-    private static void shiftAllRigth(){
-        xZero += 5*TILESIZE;
+    private void shiftAllRigth(){
+        xZero += 5*tileSize();
+        System.out.println("shiftAllRigth");
         System.out.println("New xZero="+xZero);
     }
-    private static void shiftAllDown(){
-        yZero += 5*TILESIZE;
+    private void shiftAllDown(){
+        yZero += 5*tileSize();
+        System.out.println("shiftAllDown");
         System.out.println("New yZero="+yZero);
     }
-    private static void extendWidth(){
-        FrameWidth  += 5*TILESIZE;
-        updateFrameSize();
-//        xZero += 5*TILESIZE;
+    private void extendWidth(){
+        screenWidth += 5*tileSize();
+        System.out.println("Width Extended");
     }
-    private static void extendHeight(){
-        FrameHeight += 5*TILESIZE;
-        updateFrameSize();
-    }
-    private static void updateFrameSize(){
-        Insets insets = frame.getInsets();
-        frame.setSize(  FrameWidth + insets.left + insets.right,
-                FrameHeight + insets.top + insets.bottom);
-
-        assert(frame.getHeight() == FrameHeight);
-        assert(frame.getWidth() == FrameWidth);
-
+    private void extendHeight(){
+        screenHeight += 5*tileSize();
+        System.out.println("Height Extended");
     }
 
-    ////////////////////////////////////////////////////////////
-
-
-    public static void main(String[] args) {
-
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                startGUI();
-            }
-        });
-
-
-//        addTile(0,-10, traxTiles.BBWW);
-//        addTile(14,0, traxTiles.BBWW);
-//        addTile(0,0, traxTiles.BBWW);
-
-        for(int i = 0 ; i <= 10 ; i++){
-            addTile(-i,i, traxTiles.BBWW);
-            System.out.println(">> 1 sec passed!");
-
-        }
-
-    }
 }
