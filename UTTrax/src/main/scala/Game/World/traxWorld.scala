@@ -21,7 +21,7 @@ object traxWorld {
   var state = new gameState
 
   var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)//new GAPlayer(false)//
-  var blackPlayer:Player = new AlphaBeta(traxColor.BLACK)
+  var blackPlayer:Player = new testPlayerScala(traxColor.BLACK)//new AlphaBeta(traxColor.BLACK)//new testPlayerScala(traxColor.BLACK)//
 
   val gui = new traxGUI(30)
 
@@ -81,8 +81,6 @@ object traxWorld {
     if(counter == LIMIT){
       println("Move Limit Reached")
     }
-
-    state.dump
 
     if(gameEnd == 1){
       println("White Player Won!")
@@ -177,12 +175,15 @@ object traxWorld {
 
     testBoardInitializer(Move(traxTiles.WWBB,Coordinate(0,0)))
 
-    //    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,0)))
-    //    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(1,1)))
-    //    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(1,-1)))
-    //    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(2,0)))
-    //    testBoardInitializer(Move(traxTiles.WBBW,Coordinate(3,0)))
-    //    testBoardInitializer(Move(traxTiles.BWWB,Coordinate(3,-1)))
+
+        testBoardInitializer(Move(traxTiles.WBBW,Coordinate(0,-1)))
+        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-1,-1)))
+        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-2,-1)))
+        testBoardInitializer(Move(traxTiles.BWBW,Coordinate(0,1)))
+        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-3,-1)))
+        testBoardInitializer(Move(traxTiles.WBBW,Coordinate(-1,2)))
+        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-4,-1)))
+//        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-3,0)))
 
     whitePlayer.setState(state)
     blackPlayer.setState(state)

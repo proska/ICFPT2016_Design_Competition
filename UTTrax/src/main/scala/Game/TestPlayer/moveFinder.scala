@@ -53,17 +53,26 @@ object moveFinder {
     }
 
     def giveValidMoves(terminal: Terminal,side:traxColor): List[Move] = {
-      var tmpList: List[Move] = giveBasicPossibleMovesOfTerminal(terminal, side).get
+      val tmpList: List[Move] = giveBasicPossibleMovesOfTerminal(terminal, side).get
+      def isPow2(in: Int):Boolean = ((in & (in-1)) == 0) & (in != 0)
 
-      tmpList = giveSharedTerminal(terminal,side) match {
-        case Some(opp) => {
-          tmpList.filter(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2))))
+
+
+      def checkShared: List[Move] = {
+        giveSharedTerminal(terminal, side) match {
+          case Some(opp) => {
+
+            assert(tmpList.map(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2)))).reduceLeft(_||_),"shared failed")
+
+            tmpList.filter(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2))))
+          }
+          case None => tmpList
         }
-        case None => tmpList
       }
-      def isPow2(in: Int):Boolean = (in & (in-1)) == 0
 
-      tmpList
+      val list  = checkShared
+
+      list
     }
 
     def giveSharedTerminal(myTerminal: Terminal,side:traxColor): Option[Terminal] = {
