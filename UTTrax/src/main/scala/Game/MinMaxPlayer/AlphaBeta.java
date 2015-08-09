@@ -1,6 +1,8 @@
 package Game.MinMaxPlayer;
 import Game.World.*;
 import Game.TestPlayer.*;
+import scala.*;
+import scala.Boolean;
 import scala.xml.Null;
 
 /**
@@ -35,15 +37,15 @@ public class AlphaBeta implements Player  {
     @Override
     public Move play() {
         Move z=this.AlphaBetaGen(new AlphaBetaNode(state) , side ,0);
-        this.update(z,true);
+        this.update(z);
         return z;
     }
 
     @Override
-    public void update(Move move, Boolean reAction) {
-
+    public void update(Move move) {
         state.updateState(move,side,null);
     }
+
 
     Move AlphaBetaGen(AlphaBetaNode state, traxColor turn, int d){
 	    int Depth=2;

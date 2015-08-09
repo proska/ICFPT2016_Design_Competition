@@ -37,13 +37,8 @@ public class MontecarloAlgorithm implements Player {
         this.side = side;
     }
     @Override
-    public void update(Move move, Boolean reAction) {
+    public void update(Move move) {
         println("start");
-        reAction = true;
-        if(!reAction)
-            sidetmp = side;
-        else
-            sidetmp = side.flip(side);
 
 
         this.state.updateState(move, sidetmp, null);

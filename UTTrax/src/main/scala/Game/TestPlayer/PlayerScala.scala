@@ -20,13 +20,12 @@ trait PlayerScala extends Player{
 
   def play(): Move
 
-  override def update(move: Move, reAction: lang.Boolean = false): Unit =  {
 
-    println("[INFO] Player "+side+" updated its state with "+move + {if(reAction) ",in reaction mode" else ""})
+  override def update(move: Move): Unit = {
+    println("[INFO] Player "+side+" updated its state with "+move)
 
     state.updateState(move, side)
   }
-
 
   def setState(st:gameState) = state = gameState(st)
 

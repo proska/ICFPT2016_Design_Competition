@@ -131,9 +131,9 @@ object traxWorld {
       //      val a = whitePlayer.getState().compare(blackPlayer.getState())
 
       if(side == traxColor.WHITE){
-        blackPlayer.update(move,true)
+        blackPlayer.update(move)
       } else {
-        whitePlayer.update(move,true)
+        whitePlayer.update(move)
       }
 
       Success(0)
