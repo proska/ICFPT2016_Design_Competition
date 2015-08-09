@@ -19,6 +19,8 @@ class testPlayerScala(color:traxColor) extends PlayerScala{
   override def play(): Move = {
     val moveList = moveFinder.giveAllPossibleMoves(state,color)
 
+    println(moveList)
+
     val r = new Random()
 
     assert(moveList.length > 0 , "No move is Available!")

@@ -3,6 +3,9 @@ package Game.World
 import GUI.traxGUI
 import Game.MinMaxPlayer.AlphaBeta
 
+import scala.io.Source
+import scala.util.matching.Regex
+
 //import Game.GeneticAlgorithmPlayer.GAPlayer
 import Game.TestPlayer._
 //import Game.World.traxColor.traxColor
@@ -10,7 +13,7 @@ import Game.TestPlayer._
 import scala.collection.mutable
 import scala.util.control.Breaks._
 import scala.util.{Failure, Success, Try}
-
+import java.io._
 /**
  * Created by proska on 6/29/15.
  */
@@ -31,7 +34,17 @@ object traxWorld {
 
     initializeBoard
 
-    doGame
+    try {
+      doGame
+    }
+    catch {
+      case _ => pw.close()
+    } finally {
+      pw.close()
+      val a = 0
+    }
+
+
 
 
     println("GAME ENDED!")
@@ -43,11 +56,10 @@ object traxWorld {
   ////////////////////////////////////
 
   var counter = 0;
-  val LIMIT = 10;
+  val LIMIT = 15;
   def doGame: Unit = {
 
     var gameEnd = 0
-    val a = ()
 
     breakable {
       while ( gameEnd == 0 && counter < LIMIT ) {
@@ -60,17 +72,10 @@ object traxWorld {
         }
         println("----------------------------------")
 
-        assert(whitePlayer.getState().compare(blackPlayer.getState()) , "state mismatch!")
-        assert(whitePlayer.getState().compare(state) , "state mismatch!")
-
         getPlayerMove(traxColor.WHITE) match {
           case Failure(_) => break()
           case Success(_) =>
         }
-
-
-        assert(whitePlayer.getState().compare(blackPlayer.getState()) , "state mismatch!")
-        assert(whitePlayer.getState().compare(state) , "state mismatch!")
 
         println("----------------------------------")
         counter +=1
@@ -93,7 +98,6 @@ object traxWorld {
   private def testGUI: Unit = {
     var i: Int = 0
     for (i <- 0 to 10) {
-      //      gui.addTile(0, -i, traxTiles.BBWW)
       addMovetoGUI(Move(traxTiles.BBWW,Coordinate(0,-i)))
     }
   }
@@ -128,13 +132,15 @@ object traxWorld {
 
     if(assignMove(move,side)){
 
-      //      val a = whitePlayer.getState().compare(blackPlayer.getState())
-
       if(side == traxColor.WHITE){
         blackPlayer.update(move)
       } else {
         whitePlayer.update(move)
       }
+
+      assert(whitePlayer.getState().compare(blackPlayer.getState()) , "state mismatch!")
+      assert(whitePlayer.getState().compare(state) , "state mismatch!")
+
 
       Success(0)
     } else {
@@ -146,27 +152,29 @@ object traxWorld {
   ////////////////////////////////////
   ////////////////////////////////////
 
+  var doDump:Boolean = false
   private def assignMove(move: Move , side:traxColor):Boolean = {
 
     println("[INFO] Server is adding player "+side+"'s move:"+move+" to Map." )
 
-    //addMovetoGUI(move)
-
-    gui.addTile(move.TileType,move.pos)
-
-    //    gui.addTile(move._pos.X, move._pos.Y, move.TileType)
+    doDump = true
+    addMovetoGUI(move)
+    doDump = false
 
     println("[INFO] Server is updating player "+side+"'s move:"+move+" in states." )
     state.updateState(move, side,addMovetoGUI)
     return true
 
   }
-
+  val pw = new PrintWriter(new File("dump.txt"))
   private def addMovetoGUI(move: Move) = {
     gui.addTile(move.TileType,move.pos)
+    if(doDump)
+      pw.append(move.toString + "\n")
   }
 
   private def testBoardInitializer(move: Move): Unit ={
+    println("[ASSERT] init Move:"+move)
     addMovetoGUI(move)
     state.updateState(move,traxColor.WHITE,addMovetoGUI)
   }
@@ -175,29 +183,38 @@ object traxWorld {
 
     testBoardInitializer(Move(traxTiles.WWBB,Coordinate(0,0)))
 
-
-        testBoardInitializer(Move(traxTiles.WBBW,Coordinate(0,-1)))
-        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-1,-1)))
-        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-2,-1)))
-        testBoardInitializer(Move(traxTiles.BWBW,Coordinate(0,1)))
-        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-3,-1)))
-        testBoardInitializer(Move(traxTiles.WBBW,Coordinate(-1,2)))
-        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-4,-1)))
-//        testBoardInitializer(Move(traxTiles.BBWW,Coordinate(-3,0)))
+    readInitFile
 
     whitePlayer.setState(state)
     blackPlayer.setState(state)
 
-
     whitePlayer.initialize()
     blackPlayer.initialize()
 
+    def str2Tile(in: String): traxTiles = {
+      if (in == "WWBB") return traxTiles.WWBB
+      if (in == "BBWW") return traxTiles.BBWW
+      if (in == "WBWB") return traxTiles.WBWB
+      if (in == "BWBW") return traxTiles.BWBW
+      if (in == "WBBW") return traxTiles.WBBW
+      if (in == "BWWB") return traxTiles.BWWB
+      return traxTiles.INVALID
+    }
+
+    def readInitFile: Unit = {
+      val a = Source.fromFile("dumpin.txt").getLines()
+
+      for (line <- a) {
+        val spl = line.replaceAll("[()]","").split(',')
+        val move = Move(str2Tile(spl(2)),Coordinate(spl(0).toInt,spl(1).toInt))
+        testBoardInitializer(move)
+      }
+    }
   }
 
   ////////////////////////////////////
   ////////////////////////////////////
   ////////////////////////////////////
-
   def main (args: Array[String]): Unit ={
     startGame
 

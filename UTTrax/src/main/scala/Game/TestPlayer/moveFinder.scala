@@ -16,22 +16,6 @@ object moveFinder {
 
   type Terminal = Tuple2[Coordinate,Margin]
 
-
-  def initState:gameState = {
-
-    var state = new gameState();
-
-    state.whiteRoutes = List( Route( (Coordinate(0,1),Margin.DOWN),
-      (Coordinate(0,-1),Margin.TOP),
-      1))
-
-    state.blackRoutes = List(Route( (Coordinate(1,0),Margin.LEFT),
-      (Coordinate(-1,0),Margin.RIGHT),
-      1))
-    state
-
-  }
-
   ///////////////////////////////////////////
   ///////////////////////////////////////////
   ///////////////////////////////////////////
@@ -47,8 +31,10 @@ object moveFinder {
     def listAvailableMoves(list:List[Route],side: traxColor): Unit = {
       for (myRoute <- list) {
         //      val a = giveValidMoves(myRoute.start)
-        movesList = movesList ++ giveValidMoves(myRoute.start, side)
-        movesList = movesList ++ giveValidMoves(myRoute.end, side)
+        if(movesList.forall(x => !(x.pos == myRoute.start._1)))
+          movesList = movesList ++ giveValidMoves(myRoute.start, side)
+        if(movesList.forall(x => !(x.pos == myRoute.end._1)))
+          movesList = movesList ++ giveValidMoves(myRoute.end, side)
       }
     }
 

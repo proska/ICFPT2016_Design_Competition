@@ -281,7 +281,9 @@ class gameState{
 
     while(autoList.length > 0){
 
+//      println("[ASSERT] White Auto Move Check!")
       checkMEcooridnates(autoList(0),whiteRoutes,traxColor.WHITE)
+//      println("[ASSERT] Black Auto Move Check!")
       checkMEcooridnates(autoList(0),blackRoutes,traxColor.BLACK)
 
       autoList = autoList.drop(1)
@@ -556,6 +558,11 @@ case class Move(_tile:traxTiles , _pos:Coordinate){
   }
 
   override def toString: String = "("+pos+","+TileType+")"//super.toString
+
+  def ==(that:Move):Boolean = {
+    this.TileType == that.TileType &&
+    this.pos == that.pos
+  }
 }
 object Move {
   def apply(move: Move): Move = {
@@ -567,12 +574,16 @@ object Move {
     var marg1 = if (isBlack) Margin.flip(margin1) else margin1
     var marg2 = if (isBlack) Margin.flip(margin2) else margin2
 
-    if (margin1 == Margin.TOP && margin2 == Margin.DOWN && isBlack) {
+    if (( (margin1 == Margin.TOP && margin2 == Margin.DOWN)||
+          (margin1 == Margin.DOWN && margin2 == Margin.TOP)
+        ) && isBlack) {
       marg1 = Margin.LEFT
       marg2 = Margin.RIGHT
     }
 
-    if (margin1 == Margin.LEFT && margin2 == Margin.RIGHT && isBlack) {
+    if (( (margin1 == Margin.LEFT && margin2 == Margin.RIGHT)||
+          (margin1 == Margin.RIGHT && margin2 == Margin.LEFT)
+        ) && isBlack) {
       marg1 = Margin.TOP
       marg2 = Margin.DOWN
     }
