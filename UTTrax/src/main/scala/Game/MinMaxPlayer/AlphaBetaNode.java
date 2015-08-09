@@ -87,4 +87,9 @@ public class AlphaBetaNode {
     int scoreGen(){
         return 20;
     }
+//    void scoreGen(Move m, gameState s, traxColor ourColor){
+//        s.updateState(m,ourColor,null);
+//        for(int )
+//
+//    }
 }

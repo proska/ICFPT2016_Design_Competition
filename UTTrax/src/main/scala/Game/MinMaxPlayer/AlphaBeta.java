@@ -33,11 +33,13 @@ public class AlphaBeta implements Player  {
     @Override
     public Move play() {
         Move z=this.AlphaBetaGen(new AlphaBetaNode(state) , side ,0);
+        this.update(z,true);
         return z;
     }
 
     @Override
     public void update(Move move, Boolean reAction) {
+
         state.updateState(move,side,null);
     }
 
@@ -74,7 +76,8 @@ public class AlphaBeta implements Player  {
 		    	}
 
                 if(d==2) {
-                        score=state.scoreGen();
+                    score=state.scoreGen();
+//                        state.scoreGen(state.Mchild.get(j));
                     }
                 else {
                     for (int i = 0; i < state.children.size(); i++) {
@@ -90,16 +93,25 @@ public class AlphaBeta implements Player  {
         state=state.returnParent();
         state.setAlphaBeta(state,score,turn);/////////////////////////////////////////
         state.setScore();
-        d = d - 1;
+//        if(d==2){
+//            state=state.returnParent();
+//            state=state.returnParent();
+//            d=d-2;
+//        }
+//
+//        else{
+            d = d - 1;
+           // state=state.returnParent();
+//        }
         turn = traxColor.flip(turn);
         int finalid=0;
-        for(int i=0;i<state.children.size();i++){
-            if (finalsocre < state.children.get(i).score){
-                finalsocre=state.children.get(i).score;
+        for(int i=0;i<state.parent.children.size();i++){
+            if (finalsocre < state.parent.children.get(i).score){
+                finalsocre=state.parent.children.get(i).score;
                 finalid=i;
             }
         }
-        return state.Mchild.get(finalid);
+        return state.parent.Mchild.get(finalid);
     }
 
     public class WinCheck {
