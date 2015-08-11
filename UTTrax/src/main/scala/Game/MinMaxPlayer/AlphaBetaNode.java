@@ -17,6 +17,7 @@ public class AlphaBetaNode {
     int Depth = 0;
     int score = 0;
     int chScore=0;
+    int j=0;
     AlphaBetaNode parent = this;
     int Id;
     List<AlphaBetaNode> children = new ArrayList<AlphaBetaNode>();
@@ -24,11 +25,19 @@ public class AlphaBetaNode {
 
     public AlphaBetaNode() {
     }
-
     public AlphaBetaNode(gameState start) {
         PeresentState = start;
-    }
+        AlphaBetaNode parent = this;
 
+    }
+    public AlphaBetaNode(gameState start,AlphaBetaNode p) {
+        PeresentState = start;
+        AlphaBetaNode parent = this;
+        this.alpha=p.alpha;
+        this.beta=p.beta;
+
+
+    }
     public AlphaBetaNode(AlphaBetaNode c) {
         this.PeresentState.apply(c.PeresentState);
         this.alpha = c.alpha;
@@ -37,6 +46,7 @@ public class AlphaBetaNode {
         this.score = c.score;
         this.parent = c.parent;
         this.chScore=c.chScore;
+        this.j=c.j;
         this.Id = c.Id;
         for (int i = 0; i < c.children.size(); i++)
             this.children.add(i, c.children.get(i));
@@ -47,7 +57,7 @@ public class AlphaBetaNode {
     }
 
     void setMchild(scala.collection.immutable.List<Game.World.Move> possibleMoves) {
-        for (int i = 0; i < possibleMoves.size(); i++)
+        for (int i = 0; i <2 ; i++)/*possibleMoves.size()*/
             this.Mchild.add(i, possibleMoves.apply(i));
     }
 
@@ -105,17 +115,6 @@ public class AlphaBetaNode {
         gameState s=null;
         s=gameState.apply(t);
 
-        System.out.println("[ASSERT] move:"+m);
-        System.out.println("[ASSERT] state:");
-        s.dump();
-
-        try {
-            s.updateState(m, ourColor, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            s=gameState.apply(t);
-            s.updateState(m, ourColor, null);
-        }
         for (int i = 0; i < s.whiteRoutes().length(); i++) {
             if (s.whiteRoutes().apply(i).isLoop()) {
                 if (ourColor == traxColor.WHITE)
