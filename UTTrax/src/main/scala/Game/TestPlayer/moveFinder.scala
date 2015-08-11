@@ -1,6 +1,6 @@
 package Game.TestPlayer
 
-import javafx.geometry.Side
+//import javafx.geometry.Side
 
 import Game.World.Margin.Margin
 import Game.World.Margin.Margin
@@ -15,7 +15,6 @@ import scala.util.{Failure, Success, Try}
 object moveFinder {
 
   type Terminal = Tuple2[Coordinate,Margin]
-
 
   ///////////////////////////////////////////
   ///////////////////////////////////////////
@@ -32,23 +31,34 @@ object moveFinder {
     def listAvailableMoves(list:List[Route],side: traxColor): Unit = {
       for (myRoute <- list) {
         //      val a = giveValidMoves(myRoute.start)
-        movesList = movesList ++ giveValidMoves(myRoute.start, side)
-        movesList = movesList ++ giveValidMoves(myRoute.end, side)
+        if(movesList.forall(x => !(x.pos == myRoute.start._1)))
+          movesList = movesList ++ giveValidMoves(myRoute.start, side)
+        if(movesList.forall(x => !(x.pos == myRoute.end._1)))
+          movesList = movesList ++ giveValidMoves(myRoute.end, side)
       }
     }
 
     def giveValidMoves(terminal: Terminal,side:traxColor): List[Move] = {
-      var tmpList: List[Move] = giveBasicPossibleMovesOfTerminal(terminal, side).get
+      val tmpList: List[Move] = giveBasicPossibleMovesOfTerminal(terminal, side).get
+      def isPow2(in: Int):Boolean = ((in & (in-1)) == 0) & (in != 0)
 
-      tmpList = giveSharedTerminal(terminal,side) match {
-        case Some(opp) => {
-          tmpList.filter(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2))))
+
+
+      def checkShared: List[Move] = {
+        giveSharedTerminal(terminal, side) match {
+          case Some(opp) => {
+
+            assert(tmpList.map(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2)))).reduceLeft(_||_),"shared failed")
+
+            tmpList.filter(x => !isPow2(x.TileType.getVal & (1 << Margin.getVal(opp._2))))
+          }
+          case None => tmpList
         }
-        case None => tmpList
       }
-      def isPow2(in: Int):Boolean = (in & (in-1)) == 0
 
-      tmpList
+      val list  = checkShared
+
+      list
     }
 
     def giveSharedTerminal(myTerminal: Terminal,side:traxColor): Option[Terminal] = {

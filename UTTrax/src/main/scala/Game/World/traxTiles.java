@@ -70,6 +70,20 @@ public enum traxTiles {
 //    Map(traxType -> 12 , BBWW -> 3 , WBBW -> 9 , BWWB -> 6 , WBWB -> 10 , BWBW -> 5)
 //  }
 
+    public traxTiles str2Tile(String in){
+
+        if (in == "WWBB") return WWBB;
+        if (in == "BBWW") return BBWW;
+
+        if (in == "WBWB") return WBWB;
+        if (in == "BWBW") return BWBW;
+
+        if (in == "WBBW") return WBBW;
+        if (in == "BWWB") return BWWB;
+
+        return INVALID;
+    }
+
     public traxTiles flip(){
         if (this == WWBB) return BBWW;
         if (this == BBWW) return WWBB;

@@ -1,6 +1,8 @@
 package Game.MinMaxPlayer;
 import Game.World.*;
 import Game.TestPlayer.*;
+import scala.*;
+import scala.Boolean;
 import scala.xml.Null;
 
 /**
@@ -9,10 +11,12 @@ import scala.xml.Null;
 public class AlphaBeta implements Player  {
 
     traxColor side = null;
+    traxColor ourcolor = null;
     gameState state = null;
 
     public AlphaBeta(traxColor side) {
         this.side = side;
+        this.ourcolor=side;
     }
 
     @Override
@@ -33,13 +37,15 @@ public class AlphaBeta implements Player  {
     @Override
     public Move play() {
         Move z=this.AlphaBetaGen(new AlphaBetaNode(state) , side ,0);
+        this.update(z);
         return z;
     }
 
     @Override
-    public void update(Move move, Boolean reAction) {
+    public void update(Move move) {
         state.updateState(move,side,null);
     }
+
 
     Move AlphaBetaGen(AlphaBetaNode state, traxColor turn, int d){
 	    int Depth=2;
@@ -74,7 +80,9 @@ public class AlphaBeta implements Player  {
 		    	}
 
                 if(d==2) {
-                        score=state.scoreGen();
+//                    score=state.scoreGen();
+                        score=state.scoreGen(state.Mchild.get(j),state.PeresentState,ourcolor);
+                        state.setAlphaBeta(state,score,turn,ourcolor);
                     }
                 else {
                     for (int i = 0; i < state.children.size(); i++) {
@@ -87,19 +95,20 @@ public class AlphaBeta implements Player  {
 	    	}
 
 	    }
+        state.setScore(turn,ourcolor);
         state=state.returnParent();
-        state.setAlphaBeta(state,score,turn);/////////////////////////////////////////
-        state.setScore();
         d = d - 1;
         turn = traxColor.flip(turn);
         int finalid=0;
-        for(int i=0;i<state.children.size();i++){
-            if (finalsocre < state.children.get(i).score){
-                finalsocre=state.children.get(i).score;
+
+
+        for(int i=0;i<state.parent.children.size();i++){
+            if (finalsocre < state.parent.children.get(i).score){
+                finalsocre=state.parent.children.get(i).score;
                 finalid=i;
             }
         }
-        return state.Mchild.get(finalid);
+        return state.parent.Mchild.get(finalid);
     }
 
     public class WinCheck {

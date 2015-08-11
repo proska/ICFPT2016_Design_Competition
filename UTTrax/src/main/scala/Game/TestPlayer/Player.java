@@ -1,6 +1,7 @@
 package Game.TestPlayer;
 
 import Game.World.*;
+import scala.Boolean;
 
 
 /**
@@ -8,7 +9,7 @@ import Game.World.*;
 */
 public interface Player {
 
-    traxColor side = traxColor.WHITE;
+    traxColor side = null;
 
 //    gameState state = new gameState();
 
@@ -16,7 +17,7 @@ public interface Player {
 
     public Move play();
 
-    public void update(Move move , Boolean reAction );
+    public void update(Move move);
 
     public gameState getState();
     public void setState(gameState st);

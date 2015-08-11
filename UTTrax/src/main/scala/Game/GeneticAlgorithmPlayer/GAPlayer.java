@@ -8,8 +8,8 @@
 //import Game.World.traxTiles;
 //
 ///**
-// * Created by mohammad on 7/28/15.
-// */
+//* Created by mohammad on 7/28/15.
+//*/
 //public class GAPlayer implements Player {//implements Player
 //    Map mainMap = new Map();
 //    boolean myColor = Tile.red;

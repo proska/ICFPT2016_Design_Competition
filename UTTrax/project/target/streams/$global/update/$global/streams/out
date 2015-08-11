@@ -1,4 +1,4 @@
-[info] Updating {file:/home/sahand/ICFPT2016_Design_Competition/UTTrax/project/}uttrax-build...
+[info] Updating {file:/home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/}uttrax-build...
 [debug] :: resolving dependencies :: default#uttrax-build;0.1-SNAPSHOT
 [debug] 	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool]
 [debug] 	validate = true
@@ -16,7 +16,7 @@
 [debug] == resolving dependencies for default#uttrax-build;0.1-SNAPSHOT [provided]
 [debug] == resolving dependencies default#uttrax-build;0.1-SNAPSHOT->org.scala-lang#scala-library;2.10.4 [provided->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.10.4 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@2efbce1e
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@2a3ca6ec
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.10.4
 [debug] 	found org.scala-lang#scala-library;2.10.4 in sbt-chain
 [debug] 	[2.10.4] org.scala-lang#scala-library;2.10.4
@@ -1818,19 +1818,19 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.7!apply-macro.jar
 [debug] 	[NOT REQUIRED] org.scala-lang#jline;2.10.4!jline.jar
 [debug] 	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar
-[debug] :: resolution report :: resolve 2252ms :: artifacts dl 99ms
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT provided produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-provided.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT optional produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-optional.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile-internal produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile-internal.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime-internal produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime-internal.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test-internal produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test-internal.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT plugin produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-plugin.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT sources produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-sources.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT docs produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-docs.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT pom produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-pom.xml
-[debug] 	report for default#uttrax-build;0.1-SNAPSHOT scala-tool produced in /home/sahand/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-scala-tool.xml
-[debug] 	resolve done (2252ms resolve - 99ms download)
+[debug] :: resolution report :: resolve 3030ms :: artifacts dl 64ms
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT provided produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-provided.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT optional produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-optional.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT compile-internal produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-compile-internal.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT runtime-internal produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-runtime-internal.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT test-internal produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-test-internal.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT plugin produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-plugin.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT sources produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-sources.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT docs produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-docs.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT pom produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-pom.xml
+[debug] 	report for default#uttrax-build;0.1-SNAPSHOT scala-tool produced in /home/mohammad/ICFPT2016_Design_Competition/UTTrax/project/target/resolution-cache/reports/default-uttrax-build-scala-tool.xml
+[debug] 	resolve done (3030ms resolve - 64ms download)
 [info] Done updating.
