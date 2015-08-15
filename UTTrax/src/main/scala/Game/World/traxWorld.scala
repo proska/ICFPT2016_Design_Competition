@@ -2,6 +2,7 @@ package Game.World
 
 import GUI.traxGUI
 import Game.MinMaxPlayer.AlphaBeta
+import Game.montecarlo.MontecarloAlgorithm
 
 import scala.io.Source
 import scala.util.matching.Regex
