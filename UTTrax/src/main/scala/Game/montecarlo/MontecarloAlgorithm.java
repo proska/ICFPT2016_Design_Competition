@@ -111,29 +111,32 @@ public class MontecarloAlgorithm implements Player {
 //            return selected;
 //        }
         public Move play(gameState st){
-            int simcount = 20;
             stateMC root = createRoot(st);
-            stateMC tmpMCState = new stateMC(root);
-            stateMC selected = new stateMC(root);
+
+//            tmpMCState = selected;
+            int simcount = root.children.size();
 
             for(int co=0 ; co<simcount ; co++){
 
+                stateMC tmpMCState = root;//new stateMC(root);
+                stateMC selected = root;//new stateMC(root);
                 //tmpMCState =new  stateMC(root); // Copy///pegah deleted!!!!
 
 
-                /*stateMC*/ selected = selection(tmpMCState);
+                /*stateMC*/ tmpMCState = selection(tmpMCState);
 
-                expansion(tmpMCState);
+                selected = expansion(tmpMCState);
+                tmpMCState = selected;
 
                 int score = simulation(tmpMCState);
 
 
-                backpropagation(root,selected,score);
+                backpropagation(selected,score);
 
             }
             Move finalmove = null;
 
-            finalmove = (tmpMCState.select()).move;
+            finalmove = (root.select()).move;
 
 
             return finalmove;
@@ -150,15 +153,11 @@ public class MontecarloAlgorithm implements Player {
             return tmpMCState ;///pegah deleted + new kardan ra ham bardashtim!!!!!!!
         }
 
-        private void expansion(stateMC tmpMCState){
+        private stateMC expansion(stateMC tmpMCState){
 
-//            assert(tmpMCState.isAllMArked());
-            if (tmpMCState.isAllMArked())
-                return;
+            assert(tmpMCState.isAllMArked());
 
             scala.collection.immutable.List<Game.World.Move> allmoves =  moveFinder.giveAllPossibleMoves(tmpMCState.pegah, traxColor.flip(side));
-
-           // tmpMCState.setChildrenNum(allmoves.length());
 
             boolean flag = true;
             while(flag){
@@ -178,6 +177,8 @@ public class MontecarloAlgorithm implements Player {
 
                     child.setChildNumber(allmoves.length());
 
+                    assert(tmpMCState.children.get(randVal) == null);
+
                     tmpMCState.children.remove(randVal);/////removing at first
 
                     tmpMCState.children.add(randVal,child);
@@ -188,7 +189,7 @@ public class MontecarloAlgorithm implements Player {
                     flag = false;
                 }
             }
-
+            return  tmpMCState;
         }
 
         private int simulation (stateMC tmpGame)
@@ -239,13 +240,15 @@ public class MontecarloAlgorithm implements Player {
             return 0;
         }
 
-        private void backpropagation (stateMC root ,stateMC selected , int score){
+        private void backpropagation (stateMC selected , int score){
 
 //            assert ((root != selected) == (root != selected[0]));
 
-            while(selected.parent != null) {
+            while(true) {
                 selected.updateScore(score);
+                if (selected.parent == null){break;}
                 selected = selected.parent;
+
             }
 
         }
@@ -268,7 +271,7 @@ public class MontecarloAlgorithm implements Player {
 
             root.setChildNumber(allmoves.length());
 
-            root.rootSetChildrenNum(allmoves.length());
+//            root.rootSetChildrenNum(allmoves.length());
 
             return root;
         }

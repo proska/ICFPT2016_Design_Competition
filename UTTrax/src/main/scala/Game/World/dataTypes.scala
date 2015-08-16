@@ -327,7 +327,7 @@ class gameState{
         val isBlack = color == traxColor.BLACK
         tmpList(0).doMerge(tmpList(1), serverF, isBlack, null) match {
           case Some(x) => {
-            println("[INFO] Auto Move:"+x._2)
+//            println("[INFO] Auto Move:"+x._2)
             autoList = autoList ++ giveAdjacentCoordinates(pos)
 
             newMove = x._2

@@ -33,9 +33,13 @@ class stateMC {
 
     public void setChildNumber(int num){ // TODO call this func for root node
         isChildMarked = new boolean[num];
+        children.removeAllElements();
 
-        for(int i=0 ; i<num ; i++)
+        for(int i=0 ; i<num ; i++){
             isChildMarked[i] = false;
+            children.add(i,null);
+        }
+
 
     }
 
@@ -58,11 +62,11 @@ class stateMC {
         }
     }
 
-    public void rootSetChildrenNum (int num)
-    {
-        for (int i=0 ; i<num ; i++)
-            children.add(i,null);
-    }
+//    public void rootSetChildrenNum (int num)
+//    {
+//        for (int i=0 ; i<num ; i++)
+//            children.add(i,null);
+//    }
     ///////////////////
 
     stateMC(stateMC p){ // Copy Contructor // TODO Change
