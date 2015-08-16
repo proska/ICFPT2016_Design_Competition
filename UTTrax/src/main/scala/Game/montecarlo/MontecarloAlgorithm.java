@@ -6,7 +6,11 @@ import Game.TestPlayer.moveFinder;
 import Game.World.*;
 
 
+import java.io.*;
 import java.lang.Boolean;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Random;
 import java.util.Vector;
 
@@ -110,13 +114,27 @@ public class MontecarloAlgorithm implements Player {
 //            }
 //            return selected;
 //        }
+
+        private void dumpMove(Move move){
+            try {
+                Files.write(Paths.get("myfile.txt"), (move.toString()+"\n").getBytes() , StandardOpenOption.APPEND);
+                System.out.println("[DUMP] Move:"+move);
+            }catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
+
         public Move play(gameState st){
+
+
             stateMC root = createRoot(st);
 
 //            tmpMCState = selected;
             int simcount = root.children.size();
 
             for(int co=0 ; co<simcount ; co++){
+
+                clearDumpFile();
 
                 stateMC tmpMCState = root;//new stateMC(root);
                 stateMC selected = root;//new stateMC(root);
@@ -133,6 +151,8 @@ public class MontecarloAlgorithm implements Player {
 
                 backpropagation(selected,score);
 
+                System.out.println("SimulationEnded");
+
             }
             Move finalmove = null;
 
@@ -144,10 +164,27 @@ public class MontecarloAlgorithm implements Player {
 
         }
 
+        private void clearDumpFile() {
+
+            try {
+                Files.delete(Paths.get("myfile.txt"));
+                Files.copy(Paths.get("dump.txt"), Paths.get("myfile.txt"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Files.write(Paths.get("myfile.txt"), ("").getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         private stateMC selection(stateMC tmpMCState) {
 
             while(tmpMCState.isAllMArked()){
                 tmpMCState = tmpMCState.select();
+                dumpMove(tmpMCState.move);
             }
 
             return tmpMCState ;///pegah deleted + new kardan ra ham bardashtim!!!!!!!
@@ -187,6 +224,8 @@ public class MontecarloAlgorithm implements Player {
 
                     //break;
                     flag = false;
+
+                    dumpMove(child.move);
                 }
             }
             return  tmpMCState;
@@ -202,13 +241,19 @@ public class MontecarloAlgorithm implements Player {
 
             Random e = new Random();
 
+            int cnt = 0;
+
             while( !(B_iswon || W_iswon) )
             {
-
+                cnt +=1;
                 scala.collection.immutable.List<Game.World.Move> allmoves = moveFinder.giveAllPossibleMoves(help.pegah, side);
+
+                System.out.println(cnt+ " ====> " + allmoves);
+
                 int r = e.nextInt(allmoves.size());
 
                 try {
+                    dumpMove(allmoves.apply(r));
                     help.pegah.updateState(allmoves.apply(r),side,null);
                 } catch (Exception e1) {
                     help.pegah.dump();

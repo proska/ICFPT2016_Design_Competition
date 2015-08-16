@@ -320,7 +320,7 @@ class gameState{
 
       val tmpList = list.filter(x => (x.start._1 == pos) || (x.end._1 == pos) )
 
-      assert(tmpList.length <=2 ,"Invalid Update: more that 2 comming routes")
+      assert(tmpList.length <=2 ,"Invalid Update:"+tmpList.length+" more that 2 comming routes! move:"+move+","+color+", state:"+list)
 
       if(tmpList.length == 2){
 
