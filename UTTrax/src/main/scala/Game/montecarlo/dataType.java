@@ -51,12 +51,17 @@ class stateMC {
 
     public void setChildrenNum (int num)
     {
-        stateMC MC = new stateMC(this);
-         for (int i=0 ; i<num ; i++)
-         {
-             this.children.add(i,MC);
-         }
+        for (int i=0 ; i <children.size() ; i++)
+            children.remove(i);
+        for (int i=0 ; i<num ; i++){
+            children.add(i, null);
+        }
+    }
 
+    public void rootSetChildrenNum (int num)
+    {
+        for (int i=0 ; i<num ; i++)
+            children.add(i,null);
     }
     ///////////////////
 
@@ -108,13 +113,13 @@ class stateMC {
     public stateMC select(){
         stateMC selected = null;
         double bestValue = Double.MIN_VALUE;
-        for (stateMC c : this.children) {
-            double uctValue = c.score / (c.visit + epsilon) +
-                    Math.sqrt(Math.log(c.parent.visit+1) / (c.visit + epsilon)) +
+        for (int i=0 ; i<this.children.size() ; i++){//(stateMC c : this.children) {
+            double uctValue = this.children.get(i).score / (this.children.get(i).visit + epsilon) +
+                    Math.sqrt(Math.log(this.children.get(i).parent.visit+1) / (this.children.get(i).visit + epsilon)) +
                     r.nextDouble() * epsilon;
             // small random number to break ties randomly in unexpanded nodes
             if (uctValue > bestValue) {
-                selected = c;
+                selected = this.children.get(i);
                 bestValue = uctValue;
             }
         }

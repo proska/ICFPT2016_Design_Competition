@@ -111,15 +111,17 @@ public class MontecarloAlgorithm implements Player {
 //            return selected;
 //        }
         public Move play(gameState st){
-            int simcount = 10;
+            int simcount = 20;
             stateMC root = createRoot(st);
+            stateMC tmpMCState = new stateMC(root);
+            stateMC selected = new stateMC(root);
 
             for(int co=0 ; co<simcount ; co++){
 
-                stateMC tmpMCState = new stateMC(root); // Copy///pegah deleted!!!!
+                //tmpMCState =new  stateMC(root); // Copy///pegah deleted!!!!
 
 
-                stateMC selected = selection(tmpMCState);
+                /*stateMC*/ selected = selection(tmpMCState);
 
                 expansion(tmpMCState);
 
@@ -130,12 +132,9 @@ public class MontecarloAlgorithm implements Player {
 
             }
             Move finalmove = null;
-            try {
-                finalmove = (root.select()).move;
-            } catch (Exception e) {
-                e.printStackTrace();
 
-            }
+            finalmove = (tmpMCState.select()).move;
+
 
             return finalmove;
 
@@ -154,16 +153,20 @@ public class MontecarloAlgorithm implements Player {
         private void expansion(stateMC tmpMCState){
 
 //            assert(tmpMCState.isAllMArked());
+            if (tmpMCState.isAllMArked())
+                return;
 
             scala.collection.immutable.List<Game.World.Move> allmoves =  moveFinder.giveAllPossibleMoves(tmpMCState.pegah, traxColor.flip(side));
 
-            tmpMCState.setChildrenNum(allmoves.length());
+           // tmpMCState.setChildrenNum(allmoves.length());
 
             boolean flag = true;
             while(flag){
                 int randVal = r.nextInt(allmoves.length());
 
                 if(! (tmpMCState.isChildMarked[randVal])){
+
+                    tmpMCState.isChildMarked[randVal] = true;
 
                     stateMC child = new stateMC(tmpMCState);///pegah deleted!!!
                     child.setParent(tmpMCState);
@@ -174,6 +177,8 @@ public class MontecarloAlgorithm implements Player {
                     allmoves =  moveFinder.giveAllPossibleMoves(child.pegah, traxColor.flip(side));
 
                     child.setChildNumber(allmoves.length());
+
+                    tmpMCState.children.remove(randVal);/////removing at first
 
                     tmpMCState.children.add(randVal,child);
 
@@ -188,21 +193,31 @@ public class MontecarloAlgorithm implements Player {
 
         private int simulation (stateMC tmpGame)
         {
-            boolean B_iswon = isGameEnded(tmpGame.pegah.blackRoutes());
-            boolean W_iswon = isGameEnded(tmpGame.pegah.whiteRoutes());
+
+            stateMC help = new stateMC(tmpGame);
+
+            boolean B_iswon = isGameEnded(help.pegah.blackRoutes());
+            boolean W_iswon = isGameEnded(help.pegah.whiteRoutes());
 
             Random e = new Random();
 
             while( !(B_iswon || W_iswon) )
             {
 
-                scala.collection.immutable.List<Game.World.Move> allmoves = moveFinder.giveAllPossibleMoves(tmpGame.pegah, side);
+                scala.collection.immutable.List<Game.World.Move> allmoves = moveFinder.giveAllPossibleMoves(help.pegah, side);
                 int r = e.nextInt(allmoves.size());
 
-                tmpGame.pegah.updateState(allmoves.apply(r),side,null);
+                try {
+                    help.pegah.updateState(allmoves.apply(r),side,null);
+                } catch (Exception e1) {
+                    help.pegah.dump();
+                    println(allmoves.apply(r).toString());
+                    println(e1.getMessage());
+//                    e1.printStackTrace();
+                }
 
-                B_iswon = isGameEnded(tmpGame.pegah.blackRoutes());
-                W_iswon = isGameEnded(tmpGame.pegah.whiteRoutes());
+                B_iswon = isGameEnded(help.pegah.blackRoutes());
+                W_iswon = isGameEnded(help.pegah.whiteRoutes());
             }
 
             boolean flagwor = side == traxColor.WHITE;
@@ -232,6 +247,7 @@ public class MontecarloAlgorithm implements Player {
                 selected.updateScore(score);
                 selected = selected.parent;
             }
+
         }
 
         private boolean isGameEnded(scala.collection.immutable.List<Route> list) {
@@ -251,6 +267,8 @@ public class MontecarloAlgorithm implements Player {
             scala.collection.immutable.List<Game.World.Move> allmoves =  moveFinder.giveAllPossibleMoves(root.pegah, side);
 
             root.setChildNumber(allmoves.length());
+
+            root.rootSetChildrenNum(allmoves.length());
 
             return root;
         }

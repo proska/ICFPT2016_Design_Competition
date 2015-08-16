@@ -309,6 +309,7 @@ class gameState{
           blackRoutes = list ++ List(tmpRoute)
       }
 
+
       if (tmpRouteList.length == 1) {
 //        println("[TEST] Route Updated"+tmpRouteList(0).hashCode())
         tmpRouteList(0).update(newMove, color)
