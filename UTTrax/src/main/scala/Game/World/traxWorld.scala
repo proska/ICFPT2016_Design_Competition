@@ -2,6 +2,7 @@ package Game.World
 
 import GUI.traxGUI
 import Game.MinMaxPlayer.AlphaBeta
+import Game.montecarlo.MontecarloAlgorithm
 
 import scala.io.Source
 import scala.util.matching.Regex
@@ -24,7 +25,7 @@ object traxWorld {
   var state = new gameState
 
   var whitePlayer:Player = new testPlayerScala(traxColor.WHITE)//new GAPlayer(false)//
-  var blackPlayer:Player = new testPlayerScala(traxColor.BLACK)//new AlphaBeta(traxColor.BLACK)//new testPlayerScala(traxColor.BLACK)//
+  var blackPlayer:Player = new MontecarloAlgorithm(traxColor.BLACK)//new AlphaBeta(traxColor.BLACK)//new testPlayerScala(traxColor.BLACK)//
 
   val gui = new traxGUI(30)
 
@@ -38,7 +39,9 @@ object traxWorld {
       doGame
     }
     catch {
-      case _ => pw.close()
+      case e:Exception => pw.close()
+        println("GAME FAILED!")
+        println(e.getMessage)
     } finally {
       pw.close()
       val a = 0

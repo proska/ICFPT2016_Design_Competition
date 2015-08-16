@@ -6,23 +6,20 @@ import Game.TestPlayer.moveFinder;
 import Game.World.*;
 
 
+import java.io.*;
 import java.lang.Boolean;
-import java.lang.Double;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Random;
 import java.util.Vector;
 
 
-
-
-
-
-import java.lang.String;
-
 import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util.println;
 
 /**
-* Created by saina on 7/28/15.
-*/
+ * Created by saina on 7/28/15.
+ */
 public class MontecarloAlgorithm implements Player {
 
 
@@ -49,13 +46,15 @@ public class MontecarloAlgorithm implements Player {
 
     @Override
     public Move play() {
-        return root.play(this.state);
+        Move move =  root.play(this.state);
+        this.state.updateState(move,side,null);
+        return move;
     }
 
 
     @Override
     public void initialize() {
-    //state.whiteRoutes().apply(0) = new Route().apply(Coordinate.apply(0,0),true);
+        //state.whiteRoutes().apply(0) = new Route().apply(Coordinate.apply(0,0),true);
     }
 
 
@@ -72,197 +71,255 @@ public class MontecarloAlgorithm implements Player {
 
     class TreeNode  {
         Random r = new Random();
-        int nActions = 5;
-        double epsilon = 1e-6;
-        TreeNode[] children;
-        double nVisits, totValue;
 
-        public stateMC stateMC2;
+//        public Vector<stateMC> ConvertToState(scala.collection.immutable.List<Game.World.Move> allmoves,stateMC game){
+//            Vector<stateMC> ret = new Vector<stateMC>();
+//            int num = allmoves.size();
+//            Game.World.Move[] moves = new Game.World.Move[num];
+//
+////                for (int i=0 ; i< allmoves.size ; i++)
+////                {
+////                    moves[i] = change (allmoves[i]);
+////                }
+//
+//            for(int i = 0 ; i< allmoves.size(); i++){
+//                stateMC n = new stateMC();
+//                n = game;
+//                n.pegah.updateState(allmoves.apply(i),side,null);
+//                n.move = allmoves.apply(i);///be move khodeman change mikonad!!!!
+//                ret.add(n);
+//            }
+//            return ret;
+//        }
 
-        public Vector<stateMC> ConvertToState(scala.collection.immutable.List<Game.World.Move> allmoves,stateMC game){
-            Vector<stateMC> ret = new Vector<stateMC>();
-            int num = allmoves.size();
-            Game.World.Move[] moves = new Game.World.Move[num];
-
-//                for (int i=0 ; i< allmoves.size ; i++)
-//                {
-//                    moves[i] = change (allmoves[i]);
-//                }
-
-            for(int i = 0 ; i< allmoves.size(); i++){
-                stateMC n = new stateMC();
-                n = game;
-                n.pegah.updateState(allmoves.apply(i),side,null);
-                n.move = allmoves.apply(i);///be move khodeman change mikonad!!!!
-                ret.add(n);
-            }
-            return ret;
-        }
-
-        public stateMC simulation (stateMC game)
-        {
-            Vector <stateMC> moves = new Vector<stateMC> ();
-            scala.collection.immutable.List<Game.World.Move> allmoves ;
-            stateMC last = new stateMC();
-
-            int r =0;
-            boolean flag1 = false;
-            boolean flag2 = false;
-            boolean W_iswon = false;
-            boolean B_iswon = false;
-            while( !flag1 && !flag2 )
-            {
-                for (int i=0 ; i<game.pegah.blackRoutes().length() ; i++)
-                {
-                    if ( (game.pegah).blackRoutes().apply(i).isLoop() )
-                        B_iswon = true;
-                }
-                for (int i=0 ; i<game.pegah.whiteRoutes().length() ; i++)
-                {
-                    if ( game.pegah.whiteRoutes().apply(i).isLoop() )
-                        W_iswon = true;
-                }
-
-                if (!(B_iswon))
-                {
-
-                    allmoves = moveFinder.giveAllPossibleMoves(game.pegah, side);
-                    moves = ConvertToState(allmoves,game);
-                    Random e = new Random();
-                    r = e.nextInt(moves.size()-0);
-                    (moves.get(r)).is_marked = 1;
-                    game = moves.get(r);
-
-                }
-                else
-                {
-                    flag2 = true;
-                    last = moves.get(r);
-
-                }
-
-                if (!(W_iswon))
-                {
-                    allmoves = moveFinder.giveAllPossibleMoves(game.pegah, traxColor.flip(side));
-                    moves = ConvertToState(allmoves,game);
-                    Random e = new Random();
-                    r = e.nextInt(moves.size()-0);
-                    (moves.get(r)).is_marked = 1;
-                    game = moves.get(r);
-
-                }
-                else
-                {
-                    flag1 = true;
-                    last = moves.get(r);
-
-                }
-            }
-            return last;
-        }
 
 
         /////////////////////////////////////////////////////////////////
 
-        public void backpropagation (stateMC last,stateMC[] first,boolean flagwor){
-            //boolean flagwor; //flagi ke maloom mikonand ma white hastim ya red!if white flag=1 else flag = 0;
-            while(first[0] != last) {
-                last = last.parent;
-                if (last == first[1])
-                {
-                    first[1].visit++;
-
-                    boolean W_iswon = false;
-                    boolean B_iswon = false;
-
-                    for (int i=0 ; i<last.pegah.blackRoutes().length() ; i++)
-                    {
-                        if ( (last.pegah).blackRoutes().apply(i).isLoop() )
-                            B_iswon = true;
-                    }
-                    for (int i=0 ; i<last.pegah.whiteRoutes().length() ; i++)
-                    {
-                        if ((last.pegah.whiteRoutes().apply(i)).isLoop() )
-                            W_iswon = true;
-                    }
-
-                    /////score
-                    if(B_iswon && flagwor){ ////farz bar in ast ke ma white hastim!white = 1
-                        first[1].score = -1;
-
-                    }
-                    else if(flagwor && W_iswon) {
-                        first[1].score = 1;
-                    }
-                    else if(W_iswon && !flagwor){
-                        first[1].score = -1;
-                    }
-                    else if(!flagwor && B_iswon){
-                        first[1].score = 1;
-                    }
-
-
-                }
-            }
-            first[0].visit++;
-
-
-
-
-        }
 /////////////////////////////////////////////////////////////////
 
-        private stateMC select(Vector <stateMC> saina ) {
-            stateMC selected = null;
-            double bestValue = Double.MIN_VALUE;
-            for (stateMC c : saina) {
-                double uctValue = c.score / (c.visit + epsilon) +
-                        Math.sqrt(Math.log(nVisits+1) / (c.visit + epsilon)) +
-                        r.nextDouble() * epsilon;
-                // small random number to break ties randomly in unexpanded nodes
-                if (uctValue > bestValue) {
-                    selected = c;
-                    bestValue = uctValue;
-                }
+        //        private stateMC select(Vector <stateMC> saina ) {
+
+//            stateMC selected = null;
+//            double bestValue = Double.MIN_VALUE;
+//            for (stateMC c : saina) {
+//                double uctValue = c.score / (c.visit + epsilon) +
+//                        Math.sqrt(Math.log(c.parent.visit+1) / (c.visit + epsilon)) +
+//                        r.nextDouble() * epsilon;
+//                // small random number to break ties randomly in unexpanded nodes
+//                if (uctValue > bestValue) {
+//                    selected = c;
+//                    bestValue = uctValue;
+//                }
+//            }
+//            return selected;
+//        }
+
+        private void dumpMove(Move move){
+            try {
+                Files.write(Paths.get("myfile.txt"), (move.toString()+"\n").getBytes() , StandardOpenOption.APPEND);
+                System.out.println("[DUMP] Move:"+move);
+            }catch (IOException e) {
+                //exception handling left as an exercise for the reader
             }
-            return selected;
         }
+
         public Move play(gameState st){
-            int simcount = 100000;
-            int counter = 0;
-            int flagsel = 0;
-            boolean color = true;
-            stateMC lastgame = new stateMC(); //= new state[];
-            stateMC firstgame = new stateMC(st);
-            stateMC selected = new stateMC();
-            stateMC finalmove = new stateMC();
-            selected = firstgame;
-            stateMC[] pegah = new stateMC[2];
-            pegah[0] = firstgame;
-            pegah[1] = selected;
+
+
+            stateMC root = createRoot(st);
+
+//            tmpMCState = selected;
+            int simcount = root.children.size();
 
             for(int co=0 ; co<simcount ; co++){
-                flagsel = 0;
-                lastgame = simulation(selected);
-                counter++;
-                backpropagation(lastgame,pegah,color);
-                for(stateMC c:firstgame.children){
-                    if(c.is_marked == 0){
-                        flagsel = 1;
-                    }
-                }
-                if(flagsel == 0){
-                    selected = select(firstgame.children);
-                    pegah[1]=selected;
-                }
+
+                clearDumpFile();
+
+                stateMC tmpMCState = root;//new stateMC(root);
+                stateMC selected = root;//new stateMC(root);
+                //tmpMCState =new  stateMC(root); // Copy///pegah deleted!!!!
+
+
+                /*stateMC*/ tmpMCState = selection(tmpMCState);
+
+                selected = expansion(tmpMCState);
+                tmpMCState = selected;
+
+                int score = simulation(tmpMCState);
+
+
+                backpropagation(selected,score);
+
+                System.out.println("SimulationEnded");
+
             }
-            finalmove = select(firstgame.children);
-            return finalmove.move;
+            Move finalmove = null;
+
+            finalmove = (root.select()).move;
+
+
+            return finalmove;
 
 
         }
 
+        private void clearDumpFile() {
 
+            try {
+                Files.delete(Paths.get("myfile.txt"));
+                Files.copy(Paths.get("dump.txt"), Paths.get("myfile.txt"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Files.write(Paths.get("myfile.txt"), ("").getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private stateMC selection(stateMC tmpMCState) {
+
+            while(tmpMCState.isAllMArked()){
+                tmpMCState = tmpMCState.select();
+                dumpMove(tmpMCState.move);
+            }
+
+            return tmpMCState ;///pegah deleted + new kardan ra ham bardashtim!!!!!!!
+        }
+
+        private stateMC expansion(stateMC tmpMCState){
+
+            assert(tmpMCState.isAllMArked());
+
+            scala.collection.immutable.List<Game.World.Move> allmoves =  moveFinder.giveAllPossibleMoves(tmpMCState.pegah, traxColor.flip(side));
+
+            boolean flag = true;
+            while(flag){
+                int randVal = r.nextInt(allmoves.length());
+
+                if(! (tmpMCState.isChildMarked[randVal])){
+
+                    tmpMCState.isChildMarked[randVal] = true;
+
+                    stateMC child = new stateMC(tmpMCState);///pegah deleted!!!
+                    child.setParent(tmpMCState);
+                    child.pegah.updateState(allmoves.apply(randVal),side,null);
+
+                    child.setMove(allmoves.apply(randVal));
+
+                    allmoves =  moveFinder.giveAllPossibleMoves(child.pegah, traxColor.flip(side));
+
+                    child.setChildNumber(allmoves.length());
+
+                    assert(tmpMCState.children.get(randVal) == null);
+
+                    tmpMCState.children.remove(randVal);/////removing at first
+
+                    tmpMCState.children.add(randVal,child);
+
+                    tmpMCState = tmpMCState.children.get(randVal);
+
+                    //break;
+                    flag = false;
+
+                    dumpMove(child.move);
+                }
+            }
+            return  tmpMCState;
+        }
+
+        private int simulation (stateMC tmpGame)
+        {
+
+            stateMC help = new stateMC(tmpGame);
+
+            boolean B_iswon = isGameEnded(help.pegah.blackRoutes());
+            boolean W_iswon = isGameEnded(help.pegah.whiteRoutes());
+
+            Random e = new Random();
+
+            int cnt = 0;
+
+            while( !(B_iswon || W_iswon) )
+            {
+                cnt +=1;
+                scala.collection.immutable.List<Game.World.Move> allmoves = moveFinder.giveAllPossibleMoves(help.pegah, side);
+
+                System.out.println(cnt+ " ====> " + allmoves);
+
+                int r = e.nextInt(allmoves.size());
+
+                try {
+                    dumpMove(allmoves.apply(r));
+                    help.pegah.updateState(allmoves.apply(r),side,null);
+                } catch (Exception e1) {
+                    help.pegah.dump();
+                    println(allmoves.apply(r).toString());
+                    println(e1.getMessage());
+//                    e1.printStackTrace();
+                }
+
+                B_iswon = isGameEnded(help.pegah.blackRoutes());
+                W_iswon = isGameEnded(help.pegah.whiteRoutes());
+            }
+
+            boolean flagwor = side == traxColor.WHITE;
+
+            if(B_iswon && flagwor){ ////farz bar in ast ke ma white hastim!white = 1
+                return -1;
+
+            }
+            else if(flagwor && W_iswon) {
+                return 1;
+            }
+            else if(W_iswon && !flagwor){
+                return -1;
+            }
+            else if(!flagwor && B_iswon){
+                return 1;
+            }
+
+            return 0;
+        }
+
+        private void backpropagation (stateMC selected , int score){
+
+//            assert ((root != selected) == (root != selected[0]));
+
+            while(true) {
+                selected.updateScore(score);
+                if (selected.parent == null){break;}
+                selected = selected.parent;
+
+            }
+
+        }
+
+        private boolean isGameEnded(scala.collection.immutable.List<Route> list) {
+            boolean iswon = false;
+            for (int i=0 ; i< list.length() ; i++)
+            {
+                if ( list.apply(i).isLoop() )
+                    iswon = true;
+            }
+            return iswon;
+        }
+
+        private stateMC createRoot(gameState st){
+
+            stateMC root = new stateMC(st);
+
+            scala.collection.immutable.List<Game.World.Move> allmoves =  moveFinder.giveAllPossibleMoves(root.pegah, side);
+
+            root.setChildNumber(allmoves.length());
+
+//            root.rootSetChildrenNum(allmoves.length());
+
+            return root;
+        }
 
     }
 

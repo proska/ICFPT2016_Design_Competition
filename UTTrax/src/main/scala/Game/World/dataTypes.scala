@@ -309,6 +309,7 @@ class gameState{
           blackRoutes = list ++ List(tmpRoute)
       }
 
+
       if (tmpRouteList.length == 1) {
 //        println("[TEST] Route Updated"+tmpRouteList(0).hashCode())
         tmpRouteList(0).update(newMove, color)
@@ -319,14 +320,14 @@ class gameState{
 
       val tmpList = list.filter(x => (x.start._1 == pos) || (x.end._1 == pos) )
 
-      assert(tmpList.length <=2 ,"Invalid Update: more that 2 comming routes")
+      assert(tmpList.length <=2 ,"Invalid Update:"+tmpList.length+" more that 2 comming routes! move:"+move+","+color+", state:"+list)
 
       if(tmpList.length == 2){
 
         val isBlack = color == traxColor.BLACK
         tmpList(0).doMerge(tmpList(1), serverF, isBlack, null) match {
           case Some(x) => {
-            println("[INFO] Auto Move:"+x._2)
+//            println("[INFO] Auto Move:"+x._2)
             autoList = autoList ++ giveAdjacentCoordinates(pos)
 
             newMove = x._2
