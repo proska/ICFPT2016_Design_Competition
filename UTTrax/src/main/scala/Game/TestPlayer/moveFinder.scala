@@ -147,4 +147,14 @@ object moveFinder {
   ////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////
+  def isGameEnded(list: List[Route]): Boolean = {
+    var iswon: Boolean = false
+
+    var i: Int = 0
+    while (i < list.length) {
+      if (list.apply(i).isLoop) iswon = true
+      i += 1;
+    }
+    return iswon
+  }
 }

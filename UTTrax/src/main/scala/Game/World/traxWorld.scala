@@ -141,8 +141,8 @@ object traxWorld {
         whitePlayer.update(move)
       }
 
-      assert(whitePlayer.getState().compare(blackPlayer.getState()) , "state mismatch!")
-      assert(whitePlayer.getState().compare(state) , "state mismatch!")
+      assert(whitePlayer.getState().isEqual(blackPlayer.getState()) , "state mismatch!")
+      assert(whitePlayer.getState().isEqual(state) , "state mismatch!")
 
 
       Success(0)
@@ -178,21 +178,34 @@ object traxWorld {
 
   private def testBoardInitializer(move: Move): Unit ={
     println("[ASSERT] init Move:"+move)
+    //    if(move._pos == Coordinate(6,7)){
+    //      val a= 0 ;
+    //    }
     addMovetoGUI(move)
     state.updateState(move,traxColor.WHITE,addMovetoGUI)
   }
 
   private def initializeBoard(): Unit ={
 
-    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(0,0)))
-
-    readInitFile
-
     whitePlayer.setState(state)
     blackPlayer.setState(state)
 
     whitePlayer.initialize()
     blackPlayer.initialize()
+
+
+  }
+  private def readInitFile: Unit = {
+
+    testBoardInitializer(Move(traxTiles.WWBB,Coordinate(0,0)))
+
+    val a = Source.fromFile("dumpin.txt").getLines()
+
+    for (line <- a) {
+      val spl = line.replaceAll("[()]","").split(',')
+      val move = Move(str2Tile(spl(2)),Coordinate(spl(0).toInt,spl(1).toInt))
+      testBoardInitializer(move)
+    }
 
     def str2Tile(in: String): traxTiles = {
       if (in == "WWBB") return traxTiles.WWBB
@@ -203,23 +216,27 @@ object traxWorld {
       if (in == "BWWB") return traxTiles.BWWB
       return traxTiles.INVALID
     }
-
-    def readInitFile: Unit = {
-      val a = Source.fromFile("dumpin.txt").getLines()
-
-      for (line <- a) {
-        val spl = line.replaceAll("[()]","").split(',')
-        val move = Move(str2Tile(spl(2)),Coordinate(spl(0).toInt,spl(1).toInt))
-        testBoardInitializer(move)
-      }
-    }
   }
 
   ////////////////////////////////////
   ////////////////////////////////////
   ////////////////////////////////////
   def main (args: Array[String]): Unit ={
-    startGame
+    args(0) match {
+      case "ResumeGame" =>
+        readInitFile
+        startGame
+      case "OnlyMap" =>
+        readInitFile
 
+        val a = moveFinder.giveAllPossibleMoves(state,traxColor.WHITE)
+        println(a)
+        val b = (moveFinder.isGameEnded(state.blackRoutes)) || (moveFinder.isGameEnded(state.whiteRoutes))
+        println(b)
+
+      case _ =>
+        testBoardInitializer(Move(traxTiles.WWBB,Coordinate(0,0)))
+        startGame
+    }
   }
 }

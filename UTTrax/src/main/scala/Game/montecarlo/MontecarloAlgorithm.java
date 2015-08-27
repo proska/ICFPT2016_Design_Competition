@@ -7,12 +7,10 @@ import Game.World.*;
 
 
 import java.io.*;
-import java.lang.Boolean;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Random;
-import java.util.Vector;
 
 
 import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util.println;
@@ -26,7 +24,7 @@ public class MontecarloAlgorithm implements Player {
     traxColor side;
     traxColor sidetmp;
 
-    TreeNode root = new TreeNode();
+    public TreeNode root = new TreeNode();
 
     gameState state = null;
 
@@ -118,19 +116,21 @@ public class MontecarloAlgorithm implements Player {
         private void dumpMove(Move move){
             try {
                 Files.write(Paths.get("myfile.txt"), (move.toString()+"\n").getBytes() , StandardOpenOption.APPEND);
-                System.out.println("[DUMP] Move:"+move);
+//                System.out.println("[DUMP] Move:"+move);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
         }
 
+        stateMC root = null;
+
         public Move play(gameState st){
 
 
-            stateMC root = createRoot(st);
+            root = createRoot(st);
 
 //            tmpMCState = selected;
-            int simcount = root.children.size();
+            int simcount = 5000;//root.children.size();
 
             for(int co=0 ; co<simcount ; co++){
 
@@ -140,7 +140,6 @@ public class MontecarloAlgorithm implements Player {
                 stateMC selected = root;//new stateMC(root);
                 //tmpMCState =new  stateMC(root); // Copy///pegah deleted!!!!
 
-
                 /*stateMC*/ tmpMCState = selection(tmpMCState);
 
                 selected = expansion(tmpMCState);
@@ -148,11 +147,9 @@ public class MontecarloAlgorithm implements Player {
 
                 int score = simulation(tmpMCState);
 
-
                 backpropagation(selected,score);
 
-                System.out.println("SimulationEnded");
-
+                System.out.println(co);
             }
             Move finalmove = null;
 
@@ -183,18 +180,35 @@ public class MontecarloAlgorithm implements Player {
         private stateMC selection(stateMC tmpMCState) {
 
             while(tmpMCState.isAllMArked()){
-                tmpMCState = tmpMCState.select();
+                stateMC tmp = tmpMCState.select();
+
+                if(isGameEnded(tmpMCState.pegah.blackRoutes()) || isGameEnded(tmpMCState.pegah.whiteRoutes())){
+                    tmp = root.select();
+                    while(true){
+                        tmpMCState = root.children.get(r.nextInt(root.children.size()));
+                        if(!tmpMCState.pegah.isEqual(tmp.pegah)){
+                            break;
+                        }
+                    }
+
+                } else {
+                    tmpMCState = tmp;
+                }
                 dumpMove(tmpMCState.move);
             }
+
+
 
             return tmpMCState ;///pegah deleted + new kardan ra ham bardashtim!!!!!!!
         }
 
         private stateMC expansion(stateMC tmpMCState){
 
-            assert(tmpMCState.isAllMArked());
+            assert(tmpMCState.isAllMArked()):"Flag 1";
 
             scala.collection.immutable.List<Game.World.Move> allmoves =  moveFinder.giveAllPossibleMoves(tmpMCState.pegah, traxColor.flip(side));
+
+            assert(allmoves.length() > 0):"end of game reached";
 
             boolean flag = true;
             while(flag){
@@ -206,6 +220,7 @@ public class MontecarloAlgorithm implements Player {
 
                     stateMC child = new stateMC(tmpMCState);///pegah deleted!!!
                     child.setParent(tmpMCState);
+
                     child.pegah.updateState(allmoves.apply(randVal),side,null);
 
                     child.setMove(allmoves.apply(randVal));
@@ -214,7 +229,7 @@ public class MontecarloAlgorithm implements Player {
 
                     child.setChildNumber(allmoves.length());
 
-                    assert(tmpMCState.children.get(randVal) == null);
+                    assert(tmpMCState.children.get(randVal) == null):"I don't know why!";
 
                     tmpMCState.children.remove(randVal);/////removing at first
 
@@ -247,14 +262,12 @@ public class MontecarloAlgorithm implements Player {
             {
                 cnt +=1;
                 scala.collection.immutable.List<Game.World.Move> allmoves = moveFinder.giveAllPossibleMoves(help.pegah, side);
-
-                System.out.println(cnt+ " ====> " + allmoves);
-
                 int r = e.nextInt(allmoves.size());
 
+                boolean res = true;
                 try {
                     dumpMove(allmoves.apply(r));
-                    help.pegah.updateState(allmoves.apply(r),side,null);
+                    res = help.pegah.updateState(allmoves.apply(r),side,null);
                 } catch (Exception e1) {
                     help.pegah.dump();
                     println(allmoves.apply(r).toString());
@@ -262,13 +275,17 @@ public class MontecarloAlgorithm implements Player {
 //                    e1.printStackTrace();
                 }
 
-                B_iswon = isGameEnded(help.pegah.blackRoutes());
-                W_iswon = isGameEnded(help.pegah.whiteRoutes());
+                if(!res){
+                    return -1;
+                } else {
+                    B_iswon = isGameEnded(help.pegah.blackRoutes());
+                    W_iswon = isGameEnded(help.pegah.whiteRoutes());
+                }
             }
 
             boolean flagwor = side == traxColor.WHITE;
 
-            if(B_iswon && flagwor){ ////farz bar in ast ke ma white hastim!white = 1
+            if(B_iswon && flagwor){
                 return -1;
 
             }
@@ -298,7 +315,7 @@ public class MontecarloAlgorithm implements Player {
 
         }
 
-        private boolean isGameEnded(scala.collection.immutable.List<Route> list) {
+        public boolean isGameEnded(scala.collection.immutable.List<Route> list) {
             boolean iswon = false;
             for (int i=0 ; i< list.length() ; i++)
             {

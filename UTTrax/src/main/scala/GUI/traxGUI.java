@@ -75,9 +75,11 @@ public class traxGUI {
 
             sprite.draw(g, tileList.get(i).getPositioninScreen());
         }
-        int size = SpriteStore.getSpriteSize()/2 - 5;
+
+        int markerSize = 10;
+        int size = SpriteStore.getSpriteSize()/2 - markerSize/2;
         g.setColor(Color.BLUE);
-        g.fillRect(xZero+size,yZero+size,10,10);//(xZero - baseLen, yZero -baseLen,xZero+baseLen,yZero+baseLen );//draw(new Rectangle(xZero-baseLen,yZero-baseLen,xZero+baseLen,yZero+baseLen));
+        g.fillRect(xZero+size,yZero+size,markerSize,markerSize);//(xZero - baseLen, yZero -baseLen,xZero+baseLen,yZero+baseLen );//draw(new Rectangle(xZero-baseLen,yZero-baseLen,xZero+baseLen,yZero+baseLen));
 
         // finally, we've completed drawing so clear up the graphics
         // and flip the buffer over
