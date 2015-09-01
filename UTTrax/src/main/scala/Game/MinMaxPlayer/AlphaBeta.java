@@ -3,6 +3,7 @@ import Game.World.*;
 import Game.TestPlayer.*;
 import scala.*;
 import scala.Boolean;
+import scala.collection.immutable.List;
 import scala.xml.Null;
 
 /**
@@ -48,19 +49,19 @@ public class AlphaBeta implements Player  {
 
     Move AlphaBetaGen(AlphaBetaNode state, traxColor turn, int d){
 	    int Depth=4;
-    	boolean bw=false;
-        boolean ww=false;
+    	boolean l=false;
+        boolean w=false;
 //        Functions f=new Functions();
 	    boolean AlphaBetaF=false;///alphabeta or minimax
 	    int score=0 ;
         int finalsocre=0;
 
-	   	scala.collection.immutable.List<Game.World.Move> allmoves= moveFinder.giveAllPossibleMoves(state.PeresentState, turn);//////////////////////?
+	   	List<Move> allmoves= moveFinder.giveAllPossibleMoves(state.PeresentState, turn);//////////////////////?
         state.setMchild(allmoves);
 
-        WinCheck winCheck = new WinCheck(state, turn, bw, ww).invoke();
-        ww = winCheck.isWw();
-        bw = winCheck.isBw();
+        WinCheck winCheck = new WinCheck(state, turn,ourcolor , l, w).invoke();
+        w = winCheck.isWw();
+        l = winCheck.isBw();
 
         for(int j=0;j<state.Mchild.size();j++) {
             int MchSize = state.Mchild.size();
@@ -70,10 +71,10 @@ public class AlphaBeta implements Player  {
             AlphaBetaNode newstate = new AlphaBetaNode(tmpstate,state);
             state.setChild(j, newstate);
             //////////////////////////////////////////
-            WinCheck winCheck0 = new WinCheck(newstate, turn, bw, ww).invoke();
-            ww = winCheck.isWw();
-            bw = winCheck.isBw();
-            if(ww) {
+            WinCheck winCheck0 = new WinCheck(newstate, turn,ourcolor, l, w).invoke();
+            w = winCheck.isWw();
+            l = winCheck.isBw();
+            if(w) {
                 state.children.get(j).score = 1000;
                 break;
             }
@@ -96,10 +97,10 @@ public class AlphaBeta implements Player  {
                 AlphaBetaNode newstate1 = new AlphaBetaNode(tmpstate1,state);
                 state.setChild(k, newstate1);
                 /////////////////////////////////////
-                WinCheck winCheck1 = new WinCheck(newstate, turn, bw, ww).invoke();
-                ww = winCheck.isWw();
-                bw = winCheck.isBw();
-                if(bw){
+                WinCheck winCheck1 = new WinCheck(newstate, turn,ourcolor, l, w).invoke();
+                w = winCheck.isWw();
+                l = winCheck.isBw();
+                if(l){
                     state.children.get(j).score=-1000;
                     break;
                 }
@@ -121,10 +122,10 @@ public class AlphaBeta implements Player  {
                     AlphaBetaNode newstate2 = new AlphaBetaNode(tmpstate2,state);
                     state.setChild(m, newstate2);
                     ///////////////////////////
-                    WinCheck winCheck2 = new WinCheck(newstate, turn, bw, ww).invoke();
-                    ww = winCheck.isWw();
-                    bw = winCheck.isBw();
-                    if(ww){
+                    WinCheck winCheck2 = new WinCheck(newstate, turn,ourcolor, l, w).invoke();
+                    w = winCheck.isWw();
+                    l = winCheck.isBw();
+                    if(w){
                         state.children.get(j).score=1000;
                         break;
                     }
@@ -184,14 +185,16 @@ public class AlphaBeta implements Player  {
     public class WinCheck {
         private AlphaBetaNode state;
         private traxColor turn;
+        private traxColor ourcolor;
         private boolean bw;
         private boolean ww;
 
-        public WinCheck(AlphaBetaNode state, traxColor turn, boolean bw, boolean ww) {
+        public WinCheck(AlphaBetaNode state, traxColor turn,traxColor ourcolor, boolean l, boolean w) {
             this.state = state;
             this.turn = turn;
-            this.bw = bw;
-            this.ww = ww;
+            this.bw = l;
+            this.ww = w;
+            this.ourcolor=ourcolor;
         }
 
         public boolean isBw() {
@@ -203,17 +206,30 @@ public class AlphaBeta implements Player  {
         }
 
         public WinCheck invoke() {
-            if (turn== traxColor.WHITE) {
+            if ((turn == ourcolor ) && (turn== traxColor.WHITE)) {
                 for (int i = 0; i < state.PeresentState.whiteRoutes().size(); i++) {
                     ww = state.PeresentState.whiteRoutes().apply(i).isLoop();
                     if(ww)
                         break;
                 }
             }
-            else
-            {
+            else if ((turn == ourcolor ) && (turn== traxColor.BLACK)) {
+                for (int i = 0; i < state.PeresentState.blackRoutes().size(); i++) {
+                    ww = state.PeresentState.blackRoutes().apply(i).isLoop();
+                    if(ww)
+                        break;
+                }
+            }
+            else if ((turn != ourcolor ) && (turn== traxColor.BLACK)) {
                 for (int i = 0; i < state.PeresentState.blackRoutes().size(); i++) {
                     bw = state.PeresentState.blackRoutes().apply(i).isLoop();
+                    if(bw)
+                        break;
+                }
+            }
+            else if ((turn != ourcolor ) && (turn== traxColor.WHITE)) {
+                for (int i = 0; i < state.PeresentState.whiteRoutes().size(); i++) {
+                    bw = state.PeresentState.whiteRoutes().apply(i).isLoop();
                     if(bw)
                         break;
                 }
