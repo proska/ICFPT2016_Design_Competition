@@ -57,9 +57,11 @@ public class AlphaBeta implements Player  {
 
 	   	scala.collection.immutable.List<Game.World.Move> allmoves= moveFinder.giveAllPossibleMoves(state.PeresentState, turn);//////////////////////?
         state.setMchild(allmoves);
+
         WinCheck winCheck = new WinCheck(state, turn, bw, ww).invoke();
         ww = winCheck.isWw();
         bw = winCheck.isBw();
+
         for(int j=0;j<state.Mchild.size();j++) {
             int MchSize = state.Mchild.size();
             Move mch = state.Mchild.get(j);
@@ -67,28 +69,66 @@ public class AlphaBeta implements Player  {
             tmpstate.updateState(state.Mchild.get(j), turn, null);
             AlphaBetaNode newstate = new AlphaBetaNode(tmpstate,state);
             state.setChild(j, newstate);
+            //////////////////////////////////////////
+            WinCheck winCheck0 = new WinCheck(newstate, turn, bw, ww).invoke();
+            ww = winCheck.isWw();
+            bw = winCheck.isBw();
+            if(ww) {
+                state.children.get(j).score = 1000;
+                break;
+            }
+            /////////////////////////////////////////////
+
             state = state.children.get(j);
             d = d + 1;
             turn = traxColor.flip(turn);
             allmoves = moveFinder.giveAllPossibleMoves(state.PeresentState, turn);
             state.setMchild(allmoves);
             for (int k = 0; k < state.Mchild.size(); k++) {
+                ////
+                if(state.alpha>state.beta){
+                    break;
+                }
+                /////
                 Move mch1 = state.Mchild.get(k);
                 gameState tmpstate1 = gameState.apply(state.PeresentState);
                 tmpstate1.updateState(state.Mchild.get(k), turn, null);
                 AlphaBetaNode newstate1 = new AlphaBetaNode(tmpstate1,state);
                 state.setChild(k, newstate1);
+                /////////////////////////////////////
+                WinCheck winCheck1 = new WinCheck(newstate, turn, bw, ww).invoke();
+                ww = winCheck.isWw();
+                bw = winCheck.isBw();
+                if(bw){
+                    state.children.get(j).score=-1000;
+                    break;
+                }
+                /////////////////////////////////////
                 state = state.children.get(k);
                 d = d + 1;
                 turn = traxColor.flip(turn);
                 allmoves = moveFinder.giveAllPossibleMoves(state.PeresentState, turn);
                 state.setMchild(allmoves);
                 for (int m = 0; m < state.Mchild.size(); m++) {
+                    ////
+                    if(state.alpha>state.beta){
+                        break;
+                    }
+                    /////
                     Move mch2 = state.Mchild.get(m);
                     gameState tmpstate2 = gameState.apply(state.PeresentState);
                     tmpstate2.updateState(state.Mchild.get(m), turn, null);
                     AlphaBetaNode newstate2 = new AlphaBetaNode(tmpstate2,state);
                     state.setChild(m, newstate2);
+                    ///////////////////////////
+                    WinCheck winCheck2 = new WinCheck(newstate, turn, bw, ww).invoke();
+                    ww = winCheck.isWw();
+                    bw = winCheck.isBw();
+                    if(ww){
+                        state.children.get(j).score=1000;
+                        break;
+                    }
+                    //////////////////////////////////
                     state = state.children.get(m);
                     d = d + 1;
                     turn = traxColor.flip(turn);

@@ -57,7 +57,7 @@ public class AlphaBetaNode {
     }
 
     void setMchild(scala.collection.immutable.List<Game.World.Move> possibleMoves) {
-        for (int i = 0; i <2 ; i++)/*possibleMoves.size()*/
+        for (int i = 0; i <possibleMoves.size(); i++)/*possibleMoves.size()*/
             this.Mchild.add(i, possibleMoves.apply(i));
     }
 
