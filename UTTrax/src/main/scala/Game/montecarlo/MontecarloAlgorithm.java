@@ -42,10 +42,17 @@ public class MontecarloAlgorithm implements Player {
 
 
 
+
+
     @Override
     public Move play() {
+        long startTime = System.currentTimeMillis();
         Move move =  root.play(this.state);
         this.state.updateState(move,side,null);
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        println("total time in mili seconds is : ");
+        System.out.println(totalTime);
         return move;
     }
 
@@ -130,7 +137,7 @@ public class MontecarloAlgorithm implements Player {
             root = createRoot(st);
 
 //            tmpMCState = selected;
-            int simcount = 5000;//root.children.size();
+            int simcount = 1000;//root.children.size();
 
             for(int co=0 ; co<simcount ; co++){
 
